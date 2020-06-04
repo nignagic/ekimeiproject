@@ -355,32 +355,32 @@ def uploadStationService(request):
 				i += 1
 				continue
 
-			name = line[0]
+			name = line[7]
 
-			tmp = Station.objects.filter(name__iexact=line[1]).filter(line__company__name__iexact=line[2]).filter(line__name__iexact=line[3]).filter(line__name_sub__iexact=line[4])
+			tmp = Station.objects.filter(name__iexact=line[8]).filter(line__company__name__iexact=line[9]).filter(line__name__iexact=line[10]).filter(line__name_sub__iexact=line[11])
 			if tmp.count() == 1:
 				station = tmp.first()
 			else:
 				station = None
 				fail_category = 'StationService-Station'
-				text = line[0] + "'s " + line[1] + line[2] + line[3] + line[4] + " failure."
+				text = line[7] + "'s " + line[8] + line[9] + line[10] + line[11] + " failure."
 				ErrorList.objects.create(category=fail_category, text=text)			
 
-			tmp = LineService.objects.filter(company__name__iexact=line[5]).filter(name__iexact=line[6]).filter(name_sub__iexact=line[7]).filter(is_formal=line[8]).filter(is_service=line[9])
+			tmp = LineService.objects.filter(company__name__iexact=line[12]).filter(name__iexact=line[13]).filter(name_sub__iexact=line[14]).filter(is_formal=line[15]).filter(is_service=line[16])
 			if tmp.count() == 1:
 				line_service = tmp.first()
 			else:
 				line_service = None
 				fail_category = 'StationService-LineService'
-				text = line[0] + "'s " + line[5] + line[6] + line[7] + line[8] + line[9] + " failure."
+				text = line[7] + "'s " + line[12] + line[13] + line[14] + line[15] + line[16] + " failure."
 				ErrorList.objects.create(category=fail_category, text=text)			
 
-			numbering_head = line[10]
-			numbering_symbol = line[11]
-			numbering_middle = line[12]
-			numbering_number = line[13]
-			sort_by_line_service = line[14]
-			color = line[15]
+			numbering_head = line[17]
+			numbering_symbol = line[18]
+			numbering_middle = line[19]
+			numbering_number = line[20]
+			sort_by_line_service = line[21]
+			color = line[22]
 
 			item = StationService(
 				name=name,
