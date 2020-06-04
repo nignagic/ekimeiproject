@@ -1,0 +1,322 @@
+.top-menu-container {
+	background: #ccc;
+	position: relative;
+}
+
+.top-menu-background {
+	width: 100%;
+	height: 32vw;
+	background: #f0f0f0;
+}
+
+.top-search-container {
+	text-align: center;
+	position: absolute;
+	top: 12vw;
+	width: 100%;
+}
+
+.search-form {
+	position: relative;
+	width: 16rem;
+	height: 2rem;
+	margin: 0.5rem auto;
+}
+
+.search-container .search-form {
+	margin: 0;
+}
+
+.search-box {
+	position: absolute;
+	top: 0;
+	left: 0;
+	font-size: 1.2rem;
+	width: 100%;
+	height: 100%;
+	padding: 0 2rem 0 1.5rem;
+	background: #fff;
+	border-radius: 1.0rem;
+	border: none;
+}
+
+.search-button {
+	position: absolute;
+	top: 0;
+	right: 0.5rem;
+	height: 100%;
+	background: none;
+	color: #666;
+	border: none;
+	font-size: 1.2rem;
+	transition: all .3s;
+	cursor: pointer;
+}
+
+.search-button:hover{
+	color:#7fbfff;
+}
+
+.top-menu {
+	display: block;
+	width: 80%;
+	max-width: 960px;
+	margin: 0 auto;
+	margin-top: -8vw;
+	margin-bottom: 8vw;
+	background: #fff;
+}
+
+.top-menu > ul {
+	width: 100%;
+	margin: 0;
+	padding: 1rem;
+	display: flex;
+	justify-content: space-between;
+}
+
+.top-menu > ul > li {
+	width: 100%;
+	margin: 0 0 0 1rem;
+}
+
+.top-menu > ul > li > a {
+	text-align: center;
+	padding: 1rem;
+	display: block;
+	color: #fff;
+	transition: all .3s;
+}
+
+.top-menu > ul > li > a:hover {
+	background: #fff;
+	color: #06262b;
+}
+
+.top-movie-list {
+	width: 86%;
+	max-width: 1280px;
+	margin: 0 auto;
+	display: flex;
+}
+
+.movie-list-left {
+	width: 64%;
+	padding: 1rem;
+}
+
+.content-header {
+	position: relative;
+	font-size: 1.1em;
+	overflow: hidden;
+	padding: 0.25rem 0.5rem;
+	margin: 0 0 0.25rem 0;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+.movie-ul {
+	margin: 0;
+	padding: 0;
+}
+
+.movie-card {
+	border-bottom: 1px solid #ccc;
+}
+
+.movie-card a {
+	display: flex;
+	align-items: flex-start;
+	justify-content: flex-start;
+	padding: 0.25rem 0;
+	color: #333;
+}
+
+.movie-img {
+	width: 128px;
+	height: calc(128px / 16 * 9 - 2px);
+	object-fit: cover;
+}
+
+.movie-info {
+	padding: 0.25rem 0 0 1rem;
+	overflow: hidden;
+}
+
+.movie-published,
+.movie-duration {
+	font-size: 0.7em;
+	font-weight: normal;
+	color: #666;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.movie-title {
+	margin: 0.25rem 0;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 1;
+	overflow: hidden;
+	line-height: 1.0;
+}
+
+.movie-title span {
+	line-height: 1.0rem;
+}
+
+.movie-channel {
+	font-size: 0.7em;
+	color: #666;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.movie-category {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.movie-list-right {
+	width: 36%;
+	padding: 2.0rem;
+}
+
+.movie-list-right-inner {
+	text-align: center;
+	border: 1px solid #cc0;
+	padding: 1rem;
+	width: 100%;
+	height: 100%;
+}
+
+.top-notice-container {
+	display: flex;
+	width: 86%;
+	max-width: 1280px;
+	margin: 0 auto;
+}
+
+.top-notice,
+.top-update {
+	width: 50%;
+	padding: 1.5rem;
+}
+
+.notice-ul,
+.update-ul {
+	margin: 0;
+	padding: 0.5rem;
+	height: 256px;
+	overflow-y: scroll;
+}
+
+.notice-li,
+.update-li {
+	margin: 0 0 4px 0;
+	padding: 4px;
+	border-bottom: 1px solid #ccc;
+}
+
+.notice-li a,
+.update-li a {
+	/*color: #333;*/
+}
+
+.notice-li a:hover,
+.update-li a:hover {
+	opacity: 0.8;
+}
+
+.notice-top,
+.update-top {
+	font-size: 0.8em;
+	font-weight: normal;
+}
+
+.notice-bottom,
+.update-bottom {
+	font-size: 0.9em;
+}
+
+@media (max-width: 768px) {
+	.top-menu-background {
+		height: 80vw;
+	}
+
+	.top-menu > ul {
+		flex-wrap: wrap;
+	}
+
+	.top-menu > ul > li {
+		width: 100%;
+		margin: 0 0 0.5rem 0;
+	}
+
+	.top-movie-list {
+		padding: 1rem;
+		width: 100%;
+		flex-wrap: wrap;
+	}
+
+	.movie-list-left,
+	.movie-list-right {
+		padding: 1rem 0;
+		width: 100%;
+	}
+
+	.movie-img {
+		width: 40vw;
+		height: calc(40vw / 16 * 9 - 2px);
+	}
+
+	.movie-info {
+		padding: 0 0 0 0.5rem;
+	}
+
+	.movie-published {
+		font-size: 0.7em;
+		margin: 0;
+	}
+
+	.movie-title {
+		margin: 0.25rem 0;
+		font-size: 0.75rem;
+		max-height: calc(0.8rem * 3);
+		-webkit-line-clamp: 2;
+	}
+
+	.movie-title span{
+		line-height: 1.0;
+	}
+
+	.movie-channel {
+		font-size: 0.7em;
+		margin: 0;
+	}
+
+	.movie-duration {
+		display: none;
+	}
+
+	.top-notice-container {
+		padding: 1rem;
+		width: 100%;
+		flex-wrap: wrap;
+	}
+
+	.top-notice,
+	.top-update {
+		padding: 1rem;
+		width: 100%;
+	}
+
+	.notice-ul,
+	.update-ul {
+		height: auto;
+		max-height: 256px;
+	}
+}

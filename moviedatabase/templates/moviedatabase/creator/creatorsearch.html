@@ -1,0 +1,84 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}作者一覧 - {{ kana }}{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
+<link rel="stylesheet" href="{% static 'moviedatabase/objectlist.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="detail-header">
+		<div class="detail-header-content">
+			<div class="detail-name">{% if word %}{{ word }}{% endif %}</div>
+			<div class="detail-name-sub">作者</div>
+			<div class="sub-name">
+				{% if word %}
+					キーワード：{{ word }}
+				{% endif %}
+			</div>
+			<div class="under-color creator-background">
+				{{ count }}件
+			</div>
+			<div class="line-bottom">
+				<form action="" method="get" class="search-form">
+					<input type="textbox" name="word" class="search-box" value="{% if word %}{{ word }}{% endif %}">
+					<button class="search-button" type="submit"><i class="fas fa-search"></i></button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="main-content">
+		<div class="main-content-inner">
+			<div class="object-list">
+				<div class="initial-list">
+					<div class="initial-col">
+					</div>
+					<div class="initial-row">
+					</div>
+				</div>
+				<ul class="object-list-ul">
+				{% for creator in creator_list %}
+					<li class="object-list-li">
+						<a href="{% url 'moviedatabase:movielistbycreator' creator.pk 'pub' 'n' %}" class="creator-color">{{ creator }}</a>
+					</li>
+				{% endfor %}
+				</ul>
+				{% include 'moviedatabase/includes/pagination.html' %}
+			</div>
+			<div class="detail-side">
+			</div>
+		</div>
+	</div>
+	<small>&copy; 2020 nignagIC</small>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+	$(function() {
+		rk = {
+			'a': ['ア', 'イ', 'ウ', 'エ', 'オ', ''],
+			'k': ['カ', 'キ', 'ク', 'ケ', 'コ', ''],
+			's': ['サ', 'シ', 'ス', 'セ', 'ソ', ''],
+			't': ['タ', 'チ', 'ツ', 'テ', 'ト', ''],
+			'n': ['ナ', 'ニ', 'ヌ', 'ネ', 'ノ', ''],
+			'h': ['ハ', 'ヒ', 'フ', 'ヘ', 'ホ', ''],
+			'm': ['マ', 'ミ', 'ム', 'メ', 'モ', ''],
+			'y': ['ヤ', '', 'ユ', '', 'ヨ', ''],
+			'r': ['ラ', 'リ', 'ル', 'レ', 'ロ', ''],
+			'w': ['ワ', '', '', '', 'ヲ', 'ン']
+		}
+		row_list = ['a', 'i', 'u', 'e', 'o', 'n']
+
+		kana = "{{ kana }}"
+		url = "{% url 'moviedatabase:creatortop' 'template' %}".replace("template\/", "")
+		object = "creator"
+			$('.initial-col').append("<a href='" + url + "all' class='initial-button " + object + "-background'>" + すべて + "</a>")
+			$.each(rk, function(i, v) {
+				$('.initial-col').append("<a href='" + url + i + "' class='initial-button " + object + "-background'>" + v[0] + "</a>")
+			})
+	})
+</script>
+{% endblock %}

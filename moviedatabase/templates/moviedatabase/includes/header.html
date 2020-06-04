@@ -1,0 +1,24 @@
+	<div class="header-container">
+		<div class="header">
+			<h1 class="header-title">
+				<a href="{% url 'moviedatabase:top' %}">駅名動画データベース</a>
+			</h1>
+			<ul class="header-menu">
+				<li class="header-menu-li">
+					<a href="{% url 'moviedatabase:railwaytop' %}" class="railway-background">
+						鉄道から探す
+					</a>
+				</li>
+				<li class="header-menu-li">
+					<a href="{% url 'moviedatabase:creatortop' 'all' %}" class="creator-background">
+						作者から探す
+					</a>
+				</li>
+				<li class="header-menu-li">
+					<a href="{% url 'moviedatabase:musictop' %}" class="music-background">
+						楽曲から探す
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>

@@ -1,0 +1,87 @@
+{% extends 'stationdata/base.html' %}
+
+{% block title %}駅登録{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'stationdata/register.css' %}">
+
+<h2>駅登録 - <small>{{ line }}</small></h2>
+<div class="main-container">
+	名称<br><textarea name="station-list" cols="10" rows="10" id="station-name-list"></textarea>
+	読み(かな)<br><textarea name="station-list" cols="10" rows="10" id="station-k-list"></textarea>
+	都道府県<br><textarea name="station-list" cols="10" rows="10" id="station-pref-list"></textarea>
+	状態<br><textarea name="station-list" cols="10" rows="10" id="station-status-list"></textarea>
+	<input type="button" class="station-append" value="駅追加">
+
+	<form action="" method="POST">
+		<div class="station-form-container">
+			{{ formset.management_form }}
+			{% for form in formset %}
+			<table class="station-form">
+				{{ form.as_table }}
+			</table>
+			{% endfor %}
+			{% csrf_token %}
+		</div>
+		<button type="submit" class="btn">送信</button>
+	</form>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+	$(function() {
+		var totalManageElement = $('input#id_station_set-TOTAL_FORMS');
+		var currentFileCount = parseInt(totalManageElement.val());
+
+		$('.station-append').on('click', function() {
+
+			n = $('#station-name-list').val().split('\n')
+			k = $('#station-k-list').val().split('\n')
+			p = $('#station-pref-list').val().split('\n')
+			s = $('#station-status-list').val().split('\n')
+			$.each(n, function(i, val) {
+				kana = ""
+				roma = ""
+				if (k[i]) kana = k[i]
+
+				category = "<tr><th><label for='id_station_set-"+ currentFileCount + "-category'>名称カテゴリー:</label></th><td><select name='station_set-"+ currentFileCount + "-category' id='id_station_set-"+ currentFileCount + "-category'>"
+				category += "<option value='' selected>---------</option>"
+				category += "</select></td></tr>"
+
+				name = "<tr><th><label for='id_station_set-"+ currentFileCount + "-name'>駅名:</label></th><td><input type='text' name='station_set-"+ currentFileCount + "-name' value='" + val + "' maxlength='200' id='id_station_set-"+ currentFileCount + "-name'></td></tr>"
+				name_kana = "<tr><th><label for='id_station_set-"+ currentFileCount + "-name_kana'>駅名読み:</label></th><td><input type='text' name='station_set-"+ currentFileCount + "-name_kana' value='" + kana + "' maxlength='200' id='id_station_set-"+ currentFileCount + "-name_kana'></td></tr>"
+				sort_by_line = "<tr><th><label for='id_station_set-"+ currentFileCount + "-sort_by_line'>路線ごとの並び順:</label></th><td><input type='number' name='station_set-"+ currentFileCount + "-sort_by_line' value='0' class='sort_by_line' id='id_station_set-"+ currentFileCount + "-sort_by_line'></td></tr>"
+
+				pref = "<tr><th><label for='id_station_set-"+ currentFileCount + "-pref'>所在地:</label></th><td><select name='station_set-"+ currentFileCount + "-pref' id='id_station_set-"+ currentFileCount + "-pref'>"
+				pref += "<option value='' selected>---------</option>"
+				pref += "</select></td></tr>"
+
+				status = "<tr><th><label for='id_station_set-"+ currentFileCount + "-status'>状態:</label></th><td><select name='station_set-"+ currentFileCount + "-status' id='id_station_set-"+ currentFileCount + "-status'>"
+				status += "<option value=''>---------</option><option value='0' selected>運用中</option><option value='1'>運用前</option><option value='2'>廃止</option>"
+				status += "</select></td></tr>"
+
+				line = "<input type='hidden' name='station_set-"+ currentFileCount + "-line' value='{{ line.pk }}' id='id_station_set-"+ currentFileCount + "-line'>"
+				id = "<input type='hidden' name='station_set-"+ currentFileCount + "-id' id='id_station_set-"+ currentFileCount + "-id'>"
+				
+				list = category + name + name_kana + sort_by_line + pref + status + line + id;
+				$('.station-form-container').append("<table class='station-form'>" + list + "</table>")
+
+				pref_codes = ["北海道","青森県","岩手県","宮城県","秋田県","山形県","福島県","茨城県","栃木県","群馬県","埼玉県","千葉県","東京都","神奈川県","新潟県","富山県","石川県","福井県","山梨県","長野県","岐阜県","静岡県","愛知県","三重県","滋賀県","京都府","大阪府","兵庫県","奈良県","和歌山県","鳥取県","島根県","岡山県","広島県","山口県","徳島県","香川県","愛媛県","高知県","福岡県","佐賀県","長崎県","熊本県","大分県","宮崎県","鹿児島県","沖縄県"]
+				pv = $.inArray(p[i], pref_codes)
+				// $("#id_station_line-" + currentFileCount + "-pref_code").val(pv+95)
+				$("#id_station_set-" + currentFileCount + "-status").val(s[i])
+
+
+				$('.station-form').each(function(i, form) {
+					$(form).find('.sort_by_line').val(i);
+				})
+
+				currentFileCount += 1;
+				totalManageElement.attr('value', currentFileCount);
+			})
+		})
+	})
+</script>
+{% endblock %}

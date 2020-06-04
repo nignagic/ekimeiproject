@@ -1,0 +1,24 @@
+{% extends 'moviedatabase/base.html' %}
+{% block content %}
+	<form action="" method="POST">
+		<table>
+			{{ form.as_table }}
+		</table>
+		{% csrf_token %}
+		<button type="submit">送信</button>
+	</form>
+	<a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_artist_create' %}', 'subwin2', 'width=500,height=500');">+Artist</a>
+{% endblock %}
+{% block extrajs %}
+	<script type="text/javascript">
+		function add_artist(name, pk) {
+			var select = document.getElementById('id_artist');
+			var option = document.createElement('option');
+			option.setAttribute('value', pk);
+			option.innerHTML = name;
+
+			select.add(option, 0);
+			select.options[0].selected = true;
+		}
+	</script>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}作者から探す - {{ kana }}{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
+<link rel="stylesheet" href="{% static 'moviedatabase/objectlist.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="detail-header">
+		<div class="detail-header-content">
+			<div class="detail-name">作者から探す</div>
+			<div class="detail-name-sub"></div>
+			<div class="sub-name">
+			</div>
+			<div class="under-color creator-background">{{ kana }}
+			</div>
+			<div class="line-bottom">
+			</div>
+		</div>
+	</div>
+
+	<div class="main-content">
+		<div class="main-content-inner">
+			<div class="object-list">
+				<div class="search-container">
+					<form action="{% url 'moviedatabase:creatorsearch' %}" method="get" class="search-form">
+						<input type="textbox" name="word" class="search-box" value="{{ word }}">
+						<button class="search-button" type="submit"><i class="fas fa-search"></i></button>
+					</form>
+				</div>
+				<div class="initial-list">
+					<div class="initial-col">
+					</div>
+					<div class="initial-row">
+					</div>
+				</div>
+				<ul class="object-list-ul">
+				{% for creator in creator_list %}
+					<li class="object-list-li">
+						<a href="{% url 'moviedatabase:movielistbycreator' creator.pk 'pub' 'n' %}" class="creator-color">{{ creator }}</a>
+					</li>
+				{% endfor %}
+				</ul>
+				{% include 'moviedatabase/includes/pagination.html' %}
+			</div>
+			<div class="detail-side">
+			</div>
+		</div>
+	</div>
+	<small>&copy; 2020 nignagIC</small>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+	$(function() {
+		rk = {
+			'a': ['ア', 'イ', 'ウ', 'エ', 'オ', ''],
+			'k': ['カ', 'キ', 'ク', 'ケ', 'コ', ''],
+			's': ['サ', 'シ', 'ス', 'セ', 'ソ', ''],
+			't': ['タ', 'チ', 'ツ', 'テ', 'ト', ''],
+			'n': ['ナ', 'ニ', 'ヌ', 'ネ', 'ノ', ''],
+			'h': ['ハ', 'ヒ', 'フ', 'ヘ', 'ホ', ''],
+			'm': ['マ', 'ミ', 'ム', 'メ', 'モ', ''],
+			'y': ['ヤ', '', 'ユ', '', 'ヨ', ''],
+			'r': ['ラ', 'リ', 'ル', 'レ', 'ロ', ''],
+			'w': ['ワ', '', '', '', 'ヲ', 'ン']
+		}
+		row_list = ['a', 'i', 'u', 'e', 'o', 'n']
+
+		kana = "{{ kana }}"
+		url = "{% url 'moviedatabase:creatortop' 'template' %}".replace("template\/", "")
+		object = "creator"
+		if (kana.length == 1) {
+			$.each(rk, function(index, value){
+				$.each(value, function(i, v) {
+					if (v == kana) {
+						col = index
+						row = i
+					}
+				})
+			})
+			$('.initial-col').append("<a href='" + url + "all" + "' class='initial-button " + object + "-background'>" + "すべて" + "</a>")
+			$.each(rk, function(i, v) {
+				$('.initial-col').append("<a href='" + url + i + "' class='initial-button " + object + "-background'>" + v[0] + "</a>")
+			})
+			$.each(row_list, function(i, v) {
+				if (!rk[col][i]) {
+					console.log(i, v)
+				} else if (i == row) {
+					$('.initial-row').append("<span class='initial-button'>" + rk[col][i] + "</span>")
+				} else {
+					$('.initial-row').append("<a href='" + url + col + v + "' class='initial-button " + object + "-background'>" + rk[col][i]  + "</a>")
+				}
+			})
+		} else if (kana == "すべて") {
+			$('.initial-col').append("<span class='initial-button " + object + "-background'>" + "すべて" + "</span>")
+			$.each(rk, function(i, v) {
+				$('.initial-col').append("<a href='" + url + i + "' class='initial-button " + object + "-background'>" + v[0] + "</a>")
+			})
+		} else {
+			kana = kana[0]
+			$.each(rk, function(index, value){
+				$.each(value, function(i, v) {
+					if (v == kana) {
+						col = index
+						row = i
+					}
+				})
+			})
+			$('.initial-col').append("<a href='" + url + "all" + "' class='initial-button " + object + "-background'>" + "すべて" + "</a>")
+			$.each(rk, function(i, v) {
+				if (i == col) {
+					$('.initial-col').append("<span class='initial-button'>" + v[0] + "</span>")
+				} else {
+					$('.initial-col').append("<a href='" + url + i + "' class='initial-button " + object + "-background'>" + v[0] + "</a>")
+				}
+			})
+			$.each(row_list, function(i, v) {
+				if (!rk[col][i]) {
+				} else {
+					$('.initial-row').append("<a href='" + url + col + v + "' class='initial-button " + object + "-background'>" + rk[col][i]  + "</a>")
+				}
+			})
+		}
+	})
+</script>
+{% endblock %}

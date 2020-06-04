@@ -1,0 +1,21 @@
+{% extends "moviedatabase/base.html" %}
+{% block content %}
+	{% include 'moviedatabase/includes/header.html' %}
+<form action="" method="POST">
+	<div class="col-md-6 offset-md-3">
+		<div class="card">
+			<div class="card-body">
+				{{ form.non_field_errors }}
+				{% for field in form %}
+					{{ field }}
+					{{ field.errors }}
+					<hr>
+				{% endfor %}
+				<button type="submit" class="btn btn-success btn-lg btn-block">ログイン</button>
+				<input type="hidden" name="text" value="{{ next }}" />
+				{% csrf_token %}
+			</div>
+		</div>
+	</div>
+</form>
+{% endblock %}

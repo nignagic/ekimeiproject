@@ -1,0 +1,310 @@
+body {
+	font-family: "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック体", YuGothic, "Noto Sans Japanese", Meiryo, メイリオ, "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", sans-serif;
+	margin: 0;
+	padding: 0;
+	color: #000;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: 1;
+	letter-spacing: calc(33em / 1000);
+}
+
+* {
+	box-sizing: border-box;
+	word-wrap: break-word;
+	line-height: 1.5em;
+	margin: 0;
+	/*padding: 0;*/
+}
+
+a {
+	text-decoration: none;
+	color: #cc5c00;
+	transition: all .3s
+}
+
+a:hover {
+	color: #ad896b;
+}
+
+a. button {
+	color: inherit;
+	font-weight: inherit;
+	cursor: pointer;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-size: 100%;
+	font-weight: inherit;
+	line-height: inherit;
+}
+
+ul, li {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.movie-background {
+	background-color: #cc5c00;
+	color: #fff;
+}
+
+.movie-color {
+	color: #cc5c00;
+}
+
+.movie-border {
+	border-color: #cc5c00;
+}
+
+.railway-background {
+	background: #007a7a;
+	color: #fff;
+}
+
+.railway-color {
+	color: #007a7a;
+}
+
+.railway-border {
+	border-color: #007a7a;
+}
+
+.line-background {
+	background: #0e3389;
+	color: #fff;
+}
+
+.line-color {
+	color: #0e3389;
+}
+
+.line-border {
+	border-color: #0e3389;
+}
+
+.station-background {
+	background: #00a300;
+	color: #fff;
+}
+
+.station-color {
+	color: #00a300;
+}
+
+.station-border {
+	border-color: #00a300;
+}
+
+.station-pastel-background {
+	background: #008500;
+	color: #fff;
+}
+
+.station-pastel-color {
+	color: #008500;
+}
+
+.station-pastel-border {
+	border-color: #008500;
+}
+
+.white-background {
+	background: #fff;
+	color: #06262b;
+}
+
+.white-color {
+	color: #fff;
+}
+
+.white-border {
+	border-color: #fff;
+}
+
+.black-background {
+	background: #06262b;
+	color: #fff;
+}
+
+.black-color {
+	color: #06262b;
+}
+
+.black-border {
+	border: solid 4px #06262b;
+}
+
+.gray-background {
+	background: #abbec1;
+	color: #fff;
+}
+
+.gray-color {
+	color: #abbec1;
+}
+
+.gray-border {
+	border-color: #abbec1;
+}
+
+.creator-background {
+	background: #a3005c;
+	color: #fff;
+}
+
+.creator-color {
+	color: #a3005c;
+}
+
+.creator-border {
+	border-color: #a3005c;
+}
+
+.name-background {
+	background: #a3005c;
+	color: #fff;
+}
+
+.name-color {
+	color: #a3005c;
+}
+
+.name-border {
+	border-color: #a3005c;
+}
+
+.channel-background {
+	background: #c00;
+	color: #fff;
+}
+
+.channel-color {
+	color: #c00;
+}
+
+.channel-border {
+	border-color: #c00;
+}
+
+.music-background {
+	background: #c80;
+	color: #fff;
+}
+
+.music-color {
+	color: #c80;
+}
+
+.music-border {
+	border-color: #c80;
+}
+
+.artist-background {
+	background: #cc0;
+	color: #fff;
+}
+
+.artist-color {
+	color: #cc0;
+}
+
+.artist-border {
+	border-color: #cc0;
+}
+
+.song-background {
+	background: #cca900;
+	color: #fff;
+}
+
+.song-color {
+	color: #cca900;
+}
+
+.song-border {
+	border-color: #cca900;
+}
+
+.vocal-background {
+	background: #5a0788;
+	color: #fff;
+}
+
+.vocal-color {
+	color: #5a0788;
+}
+
+.vocal-border {
+	border-color: #5a0788;
+}
+
+.header-container {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	box-shadow: 0 2px 4px rgba(0,0,0,.3);
+	background-color: #fff;
+	z-index: 10000;
+}
+
+.header {
+	margin: 0 auto;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	max-width: 1280px;
+	justify-content: space-between;
+}
+
+.header-title a {
+	display: block;
+	padding: 1rem;
+}
+
+.header-menu {
+	display: flex;
+}
+
+.header-menu-li a {
+	display: block;
+	padding: 1rem;
+	color: #fff;
+	transition: all .3s;
+}
+
+.header-menu-li a:hover {
+	color: #06262b;
+	background: #fff;
+}
+
+@media (max-width: 768px) {
+	.header {
+		flex-wrap: wrap;
+	}
+
+	.header-title {
+		text-align: center;
+		width: 100%;
+	}
+
+	.header-title a {
+		padding: 0.5rem;
+	}
+
+	.header-menu {
+		width: 100%;
+	}
+
+	.header-menu-li {
+		width: 100%;
+		text-align: center;
+	}
+
+	.header-menu-li a {
+		font-size: 0.8rem;
+		padding: 0.4rem;
+	}
+}

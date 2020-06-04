@@ -1,0 +1,277 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}{{ movie }} - 詳細{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/detail.css' %}">
+
+<!-- <div class="background" style="background: url(https://i.ytimg.com/vi/{{ movie.youtube_id }}/hqdefault.jpg) no-repeat center; background-size: cover; background-attachment: fixed;"> -->
+<div class="background" style="background: #ff9e4d;">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="main-container">
+		<div class="movie-detail">
+			<div class="youtube-container">
+				<div class="youtube">
+					<div id="player"></div>
+					<script>
+						var tag = document.createElement('script');
+
+						tag.src = "https://www.youtube.com/iframe_api";
+						var firstScriptTag = document.getElementsByTagName('script')[0];
+						firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+						var player;
+						function onYouTubeIframeAPIReady() {
+							player = new YT.Player('player', {
+								    videoId: '{{ movie.youtube_id }}',
+							})
+						}
+					</script>
+				</div>
+			</div>
+			<div class="detail-original">
+				<a href="https://www.youtube.com/watch?v={{ movie.youtube_id }}" target="_blank" class="movie-title-link"><h2 class="movie-title">{{ movie.title }}</h2></a>
+				<div class="movie-channel">
+					<a href="{% url 'moviedatabase:movielistbychannel' movie.channel.pk 'pub' 'n' %}">
+						<div class="movie-channel-img">
+							<img src="url">
+						</div>
+						<div class="movie-channel-name">{{ movie.channel }}</div>
+					</a>
+				</div>
+				<h3 class="detail-header">投稿日時</h3>
+				<div class="detail-content">
+					{% load tz %}
+					<p class="movie-published-jpn">{{ movie.published_at|timezone:'Asia/Tokyo'|date:"Y年n月d日 H:i:s" }} <small>(日本時間)</small></p>
+				</div>
+				<h3 class="detail-header">動画統計情報</h3>
+				<div class="detail-content">
+					<div class="movie-statistics">
+						<div class="movie-statistics-item">
+							<div class="movie-statistics-num">
+							{% if n_view == 0 %}
+								0
+							{% else %}
+								{{ movie.n_view }}
+							{% endif %}</div>
+							<div class="movie-statistics-name">再生回数</div>
+						</div>
+						<div class="movie-statistics-item">
+							<div class="movie-statistics-num">
+							{% if n_like == 0 %}
+								0
+							{% else %}
+								{{ movie.n_like }}
+							{% endif %}</div>
+							<div class="movie-statistics-name">高評価数</div>
+						</div>
+						<div class="movie-statistics-item">
+							<div class="movie-statistics-num">
+							{% if n_dislike == 0 %}
+								0
+							{% else %}
+								{{ movie.n_dislike }}
+							{% endif %}
+							</div>
+							<div class="movie-statistics-name">低評価数</div>
+						</div>
+						<div class="movie-statistics-item">
+							<div class="movie-statistics-num">
+							{% if n_comment == 0 %}
+								0
+							{% else %}
+								{{ movie.n_comment }}
+							{% endif %}</div>
+							<div class="movie-statistics-name">コメント数</div>
+						</div>
+					</div>
+				</div>
+				<h3 class="detail-header">説明文</h3>
+				<div class="detail-content">
+					<div class="movie-description">
+						{{ movie.description | urlize | linebreaksbr }}
+					</div>
+				</div>
+			</div>
+			<div class="detail-addition">
+				{% if movie.song.all %}
+				<h3 class="detail-header">使用楽曲(全体)</h3>
+				<div class="detail-content">
+					<table class="song-table">
+					{% for song in movie.song.all %}
+						<tr>
+							<td class="song-name"><a href="{% url 'moviedatabase:movielistbysong' song.id 'pub' 'n' %}">{{ song }}</a></td>
+							{% if song.artist %}
+								<td class="artist-name">
+								{% for artist in song.artist.all %}
+									<a href="">{{ artist }}</a><br>
+								{% endfor %}
+								</td>
+							{% endif %}
+						</tr>
+						{% endfor %}
+					</table>
+				</div>
+				{% endif %}
+				{% if song %}
+				<h3 class="detail-header">使用楽曲(パート単体)</h3>
+				<div class="detail-content">
+					<table class="song-table">
+					{% for song in songs %}
+						<tr>
+							<td class="song-name"><a href="{% url 'moviedatabase:movielistbysong' song.id 'pub' 'n' %}">{{ song }}</a></td>
+							{% if song.artist %}
+								<td class="artist-name">
+								{% for artist in song.artist.all %}
+									<a href="{% url 'moviedatabase:movielistbyartist' artist.pk 'pub' 'n' %}">{{ artist }}</a><br>
+								{% endfor %}
+								</td>
+							{% endif %}
+						</tr>
+					{% endfor %}
+					</table>
+				</div>
+				{% endif %}
+				{% if movie.vocal.all %}
+				<h3 class="detail-header">使用ボーカル</h3>
+				<div class="detail-content">
+					<table class="vocal-table">
+					{% for vocal in movie.vocal.all %}
+						<tr>
+							<td class="vocal-name">
+								<a href="{% url 'moviedatabase:movielistbyvocal' vocal.id 'pub' 'n' %}">{{ vocal }}</a>
+							</td>
+						</tr>
+					{% endfor %}
+					</table>
+				</div>
+				{% endif %}
+			</div>
+			<div class="related-movie">
+			</div>
+			{% if can_edit %}
+			<a href="{% url 'moviedatabase:updateinformation' movie.main_id %}">更新情報登録</a>
+			{% endif %}
+		</div>
+		<div class="movie-station-list">
+			<div>
+				<a class="all-open">すべて展開</a>
+				<a class="all-close">すべて閉じる</a>
+			</div>
+			{% for part in parts %}
+			<div class="part-container">
+				<div class="part-header" {% if onlyonepart %}style="display: none;"{% endif %}>
+					<div class="part-name-short"><span>{{ part.short_name }}</span></div>
+					<table class="part-table" data-part_id="{{ part.id }}" data-category="{{ part.category }}">
+						<tr>
+							<td class="part-header-up">
+								{{ part.part_name }}
+							</td>
+						</tr>
+						<tr class="row-2">
+							<td>
+								{% if part.participant.all %}
+								{% for participant in part.participant.all %}
+									{{ participant }}
+									{% if forloop.last %}
+									{% else %}
+										<span>/</span>
+									{% endif %}
+								{% endfor %}
+								 - 
+								{% endif %}
+								{% for song in part.song.all %}
+									{{ song }}
+									{% if forloop.last %}
+									{% else %}
+										<span>/</span>
+									{% endif %}
+								{% endfor %}
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="part-detail-container">
+					<table class="part-detail-table" {% if onlyonepart %}style="display: none;"{% endif %}>
+						{% if part.part_name %}
+						<tr class="part-detail-row">
+							<th class="part-detail-label">パート名</th>
+							<td class="part-detail-content">{{ part.name }}</td>
+						</tr>
+						{% endif %}
+						{% if part.participant.all %}
+						<tr class="part-detail-row">
+							<th class="part-detail-label">参加者(名義)</th>
+							<td class="part-detail-content">
+								{% for participant in part.participant.all %}
+									{{ participant }}
+									{% if forloop.last %}
+									{% else %}
+										/
+									{% endif %}
+								{% endfor %}
+							</td>
+						</tr>
+						{% endif %}
+						{% if part.song.all %}
+						<tr class="part-detail-row">
+							<th class="part-detail-label">使用楽曲</th>
+							<td class="part-detail-content">
+									{% for song in part.song.all %}
+										<a href="{% url 'moviedatabase:movielistbysong' song.id 'pub' 'n' %}">{{ song }}</a>
+										{% if forloop.last %}
+										{% else %}
+											<br>
+										{% endif %}
+									{% endfor %}
+							</td>
+						</tr>
+						{% endif %}
+						{% if part.vocal.all %}
+						<tr class="part-detail-row">
+							<th class="part-detail-label">使用ボーカル</th>
+							<td class="part-detail-content">
+								{% for vocal in part.vocal.all %}
+									<a href="{% url 'moviedatabase:movielistbyvocal' vocal.id 'pub' 'n' %}">{{ vocal }}</a>
+									{% if forloop.last %}
+									{% else %}
+										<br>
+									{% endif %}
+								{% endfor %}
+							</td>
+						</tr>
+						{% endif %}
+						{% if part.category %}
+						<tr class="part-detail-row">
+							<th class="part-detail-label">種類</th>
+							<td class="part-detail-content">{{ part.category }}</td>
+						</tr>
+						{% endif %}
+						{% if part.start_time %}
+						<tr class="part-detail-row">
+							<th class="part-detail-label">開始位置</th>
+							<td class="part-detail-content"><a class="start-time">{{ part.start_time }}</a></td>
+						</tr>
+						{% endif %}
+						{% if part.explanation %}
+						<tr class="part-detail-row">
+							<th class="part-detail-label">説明</th>
+							<td class="part-detail-content">{{ part.explanation }}</td>
+						</tr>
+						{% endif %}
+					</table>
+					<div class="station-list-{{ part.id }} station-list">
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+</div>
+<div id="detail-url" data-part="{% url 'moviedatabase:partstationapi' '0' %}" data-line="{% url 'moviedatabase:movielistbylineservice' '0' 'pub' 'n' %}" data-station="{% url 'moviedatabase:movielistbystationservice' '0' 'pub' 'n' %}">
+{% endblock %}
+
+{% block extrajs %}
+<script src="{% static 'moviedatabase/detail.js' %}"></script>
+{% endblock %}

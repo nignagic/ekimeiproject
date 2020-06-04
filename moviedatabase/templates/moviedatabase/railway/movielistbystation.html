@@ -1,0 +1,77 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}{{ station }} - {{ station.line }}{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
+<link rel="stylesheet" href="{% static 'moviedatabase/railway/movielistbyrailway.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="railway-header">
+		<div class="railway-header-content">
+			<span class="detail-category station-background">駅</span>
+			<span class="detail-category white-background">正式区間</span>
+			<div class="main-name">{{ station }}</div>
+			<div class="main-name-sub">{{ stationservice.station_name_k }} {{ stationservice.station_name_r }}
+			</div>
+			<div class="sub-name white-background sub-name-station">
+				<div class="sub-name-inner">
+					<div class="sub-link">
+						<a href="{% url 'moviedatabase:movielistbyline' station.line.pk sort order %}" class="black-color">{{ station.line }}</a>
+					</div>
+					<div class="station-before">
+						{% if station.prev_station %}
+							<a href="{% url 'moviedatabase:movielistbystation' station.prev_station.pk sort order %}" class="black-color">＜ {{ station.prev_station }}</a>
+						{% endif %}
+					</div>
+					<div class="station-after">
+						{% if station.next_station %}
+							<a href="{% url 'moviedatabase:movielistbystation' station.next_station.pk sort order %}" class="black-color">{{ station.next_station }} ＞</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			<div class="under-color black-background"></div>
+			<div class="line-bottom">
+				{% for stationservice in stationservices %}
+				<div>
+					<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.pk sort order %}">{{ stationservice }}</a> - <a href="{% url 'moviedatabase:movielistbylineservice' stationservice.line_service.pk sort order %}">{{ stationservice.line_service }}</a>
+				</div>
+				{% endfor %}
+				</div>
+			<div class="pref-list">
+				<a href="{% url 'moviedatabase:lineservicelistbyprefecture' station.pref.pk %}">{{ station.pref_code }}</a>
+			</div>
+		</div>
+	</div>
+
+	<a href="{% url 'moviedatabase:railwaytop' %}">路線一覧へ戻る</a>
+	<div class="main-content">
+		<div class="main-content-inner">
+			<div class="railway-movie-list">
+				<h4 class="movie-list-header station-border">動画一覧</h4>
+				{% include 'moviedatabase/includes/movielist.html' %}
+				{% include 'moviedatabase/includes/pagination.html' %}
+			</div>
+			<div class="railway-side">
+				<h4 class="side-header">乗換路線</h4>
+				<ul class="station-lines-ul">
+				{% if transfers %}
+				{% for station in transfers %}
+					<li class="station-li">
+						<div class="transfer-line-formal">
+							<a href="{% url 'moviedatabase:movielistbyline' station.line.pk sort order %}">{{ station.line }}</a>
+						</div>
+					</li>
+				{% endfor %}
+				{% else %}
+					<p>乗換路線はありません</p>
+				{% endif %}
+				</ul>
+			</div>
+		</div>
+	</div>
+	<small>&copy; 2020 nignagIC</small>
+</div>
+{% endblock %}

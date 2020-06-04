@@ -1,0 +1,5 @@
+__pycache__
+local.py
+guideline
+db.sqlite3
+*.py[co]

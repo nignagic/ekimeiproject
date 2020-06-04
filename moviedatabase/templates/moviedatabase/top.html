@@ -1,0 +1,73 @@
+{% extends 'moviedatabase/base.html' %}
+{% load tz %}
+
+{% block title %}トップ{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/top.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<section class="top-menu-container">
+		<div class="top-menu-background">
+			<img src="">
+		</div>
+		<div class="top-search-container" style="display: none;">
+			フリーワード検索
+			<form action="" method="get" class="search-form">
+				<input type="textbox" name="word" class="search-box" value="{% if word %}{{ word }}{% endif %}">
+				<button class="search-button" type="submit"><i class="fas fa-search"></i></button>
+			</form>
+		</div>
+		<nav class="top-menu">
+			<ul>
+				<li>
+					<a href="{% url 'moviedatabase:railwaytop' %}" class="railway-background">鉄道などから探す</a>
+				</li>
+				<li>
+					<a href="{% url 'moviedatabase:creatortop' 'all' %}" class="creator-background">作者から探す</a>
+				</li>
+				<li>
+					<a href="{% url 'moviedatabase:musictop' %}" class="music-background">楽曲から探す</a>
+				</li>
+			</ul>
+		</nav>
+	</section>
+	<section class="top-movie-list">
+		<div class="movie-list-left">
+			<h4 class="content-header movie-border">新着動画</h4>
+			{% if movie_list %}
+				{% include 'moviedatabase/includes/movielist.html' %}
+			{% else %}
+				<p>該当する動画が見つかりませんでした。</p>
+			{% endif %}
+			<a href="{% url 'moviedatabase:movielist' %}">もっと見る</a>
+		</div>
+		<div class="movie-list-right">
+			<div class="movie-list-right-inner">ここに何かを置く(未定)</div>
+		</div>
+	</section>
+	<section class="top-notice-container">
+		<div class="top-notice">
+			<h5 class="content-header movie-border">お知らせ</h5>
+			<ul class="notice-ul">
+				<li class="notice-li">
+					<p class="notice-top">2020/6/1　<span>全体</span></p>
+					<div class="notice-bottom"><a>サイトの試作を公開しました</a></div>
+				</li>
+			</ul>
+		</div>
+		<div class="top-update">
+			<h5 class="content-header movie-border">更新情報</h5>
+			<ul class="update-ul">
+				{% for info in info_list %}
+				<li class="update-li">
+					<p class="update-top">{{ info.reg_date|timezone:'Asia/Tokyo'|date:"Y/n/d" }}　<span>動画{{ info.get_is_create_display }}</span></p>
+					<div class="update-bottom">「<a href="{% url 'moviedatabase:detail' info.movie.main_id %}">{{ info.movie }}</a>」を{{ info.get_is_create_display }}しました</div>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</section>
+</div>
+{% endblock %}

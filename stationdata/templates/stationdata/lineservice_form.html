@@ -1,0 +1,43 @@
+{% extends 'stationdata/base.html' %}
+
+{% block title %}路線 簡易登録{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'stationdata/register.css' %}">
+
+<h2>路線 簡易登録</h2>
+<div class="main-container">
+	<form action="" method="POST">
+		<table>
+			{{ form.as_table }}
+			{% csrf_token %}
+		</table>
+		<button type="submit" class="btn">送信</button>
+	</form>
+	<a href="javascript:void(0);" onclick="window.open('{% url 'stationdata:popupcompanysimpleregister' %}', 'subwin2', 'width=500,height=500');">+Company</a>
+	<a href="javascript:void(0);" onclick="window.open('{% url 'stationdata:popupbelongscategorysimpleregister' %}', 'subwin3', 'width=500,height=500');">+Category</a>
+</div>
+{% endblock %}
+{% block extrajs %}
+	<script type="text/javascript">
+		function add_company(name, pk) {
+			var select = document.getElementById('id_company');
+			var option = document.createElement('option');
+			option.setAttribute('value', pk);
+			option.innerHTML = name;
+
+			select.add(option, 0);
+			select.options[0].selected = true;
+		}
+		function add_belongscategory(name, pk) {
+			var select = document.getElementById('id_category');
+			var option = document.createElement('option');
+			option.setAttribute('value', pk);
+			option.innerHTML = name;
+
+			select.add(option, 0);
+			select.options[0].selected = true;
+		}
+	</script>
+{% endblock %}

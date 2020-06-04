@@ -1,0 +1,75 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}{{ region }}{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
+<link rel="stylesheet" href="{% static 'moviedatabase/objectlist.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="detail-header">
+		<div class="detail-header-content">
+			<div class="detail-name">{{ region }}</div>
+			<div class="detail-name-sub"></div>
+			<div class="sub-name">
+			</div>
+			<div class="under-color railway-background">カテゴリー：{{ category }}
+			</div>
+			<div class="line-bottom">
+			</div>
+		</div>
+	</div>
+
+	<div class="main-content">
+		<div class="main-content-inner">
+			<div class="object-list">
+				<h4 class="object-list-header railway-border">都道府県</h4>
+				<ul class="object-list-ul-block">
+				{% for pref in prefs %}
+					<li class="object-list-li-block">
+						{% if category == "すべて" %}
+						<a href="{% url 'moviedatabase:lineservicelistbyprefecture' pref.pk  %}" class="railway-background white-color">{{ pref }}</a>
+						{% else %}
+						<a href="{% url 'moviedatabase:lineservicelistbycategoryandprefecture' category.pk pref.pk  %}" class="railway-background white-color">{{ pref }}</a>
+						{% endif %}
+					</li>
+				{% endfor %}
+				</ul>
+				<h4 class="object-list-header railway-border">事業者</h4>
+				<ul class="object-list-ul">
+				{% for company in company_list %}
+					<li class="object-list-li">
+						<a href="{% url 'moviedatabase:lineservicelistbycompany' company.pk %}" class="railway-color">{{ company }}</a>
+					</li>
+				{% endfor %}
+				</ul>
+				{% include 'moviedatabase/includes/pagination.html' %}
+			</div>
+			<div class="detail-side">
+				<h4 class="side-header railway-border">カテゴリー</h4>
+				<ul class="side-list-ul">
+						{% if category != "すべて" %}
+						<li class="side-list-li">
+							<a href="{% url 'moviedatabase:companylistbyregion' region.pk 'all' %}" class="railway-color">すべてのカテゴリー</a>
+						</li>
+						{% endif %}
+					{% for c in categories %}
+						{% if c == category %}
+						<li class="side-list-li">
+							<a class="gray-color">{{ c }}</a>
+						</li>
+						{% else %}
+						<li class="side-list-li">
+							<a href="{% url 'moviedatabase:companylistbyregion' region.pk c.pk %}" class="railway-color">{{ c }}</a>
+						</li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+				<div style="text-align: right;"><a href="{% url 'moviedatabase:categorylist' %}" class="side-right-a railway-background railway-color railway-border">＞ すべて見る</a></div>
+			</div>
+		</div>
+	</div>
+	<small>&copy; 2020 nignagIC</small>
+</div>
+{% endblock %}

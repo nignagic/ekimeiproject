@@ -1,0 +1,26 @@
+<ul class="movie-ul">
+	{% if movie_list %}
+	{% for movie in movie_list %}
+	<li class="movie-card">
+		<a href="{% url 'moviedatabase:detail' movie.main_id %}">
+			<img class="movie-img" src="https://i.ytimg.com/vi/{{ movie.youtube_id }}/hqdefault.jpg">
+			<div class="movie-info">
+	{% load tz %}
+				<p class="movie-published">{{ movie.published_at|timezone:'Asia/Tokyo'|date:"Y/n/d" }}</p>
+				<p class="movie-title"><span>{{ movie.title }}</span></p>
+				<p><span class="movie-channel">{{ movie.channel }}</span><span class="movie-duration"> - {{ movie.duration }}</span></p>
+				<p class="movie-category">
+					{% if movie.part_category %}
+					{% for category in movie.part_category %}
+						<span>{{ category }}</span>
+					{% endfor %}
+					{% endif %}
+				</p>
+			</div>
+		</a>
+	</li>
+	{% endfor %}
+	{% else %}
+	<p>該当する動画が見つかりませんでした。</p>
+	{% endif %}
+</ul>

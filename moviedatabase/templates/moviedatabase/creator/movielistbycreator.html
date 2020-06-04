@@ -1,0 +1,47 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}{{ creator }}{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="detail-header">
+		<div class="detail-header-content">
+			<span class="detail-category creator-background">作者</span>
+			<div class="detail-name">{{ creator }}</div>
+			<div class="detail-name-sub">{{ creator.name_kana }}</div>
+			<div class="sub-name">
+			</div>
+			<div class="under-color creator-background">
+			</div>
+			<div class="line-bottom">
+			</div>
+		</div>
+	</div>
+
+	<div class="main-content">
+		<div class="main-content-inner">
+			<div class="detail-movie-list">
+				<h4 class="movie-list-header creator-border">動画一覧</h4>
+				{% include 'moviedatabase/includes/movielist.html' %}
+				{% include 'moviedatabase/includes/pagination.html' %}
+			</div>
+			<div class="detail-side">
+				{% if channels %}
+				<h4 class="side-header song-border">YouTubeチャンネル</h4>
+				<ul class="side-list-ul">
+					{% for c in channels %}
+					<li class="side-list-li">
+						<a href="{% url 'moviedatabase:movielistbychannel' c.pk sort order %}" class="channel-color">{{ c }}</a>
+					</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<small>&copy; 2020 nignagIC</small>
+</div>
+{% endblock %}

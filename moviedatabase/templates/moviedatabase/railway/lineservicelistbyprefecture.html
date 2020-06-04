@@ -1,0 +1,48 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}路線 - {{ pref }}{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
+<link rel="stylesheet" href="{% static 'moviedatabase/objectlist.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="detail-header">
+		<div class="detail-header-content">
+			<div class="detail-name">{{ pref }}</div>
+			<div class="detail-name-sub">路線一覧</div>
+			<div class="sub-name">
+			</div>
+			<div class="under-color line-background">カテゴリー：すべて　　事業者：すべて
+			</div>
+			<div class="line-bottom">
+			</div>
+		</div>
+	</div>
+
+	<div class="main-content">
+		<div class="main-content-inner">
+			<div class="object-list">
+				<ul class="object-list-ul">
+				{% for l in lineservice_list %}
+					<li class="object-list-li">
+						<a href="{% url 'moviedatabase:movielistbylineservice' l.pk 'pub' 'n' %}" class="line-color">{{ l }}</a>
+					</li>
+				{% endfor %}
+				{% include 'moviedatabase/includes/pagination.html' %}
+				</ul>
+			</div>
+			<div class="detail-side">
+				<h4 class="side-header">事業者</h4>
+				<li class="side-list-li">
+					{% for company in companies %}
+						<a href="{% url 'moviedatabase:lineservicelistbycompanyandprefecture' company.pk pref.pk %}" class="line-color">{{ company }}</a>
+					{% endfor %}
+				</li>
+			</div>
+		</div>
+	</div>
+	<small>&copy; 2020 nignagIC</small>
+</div>
+{% endblock %}

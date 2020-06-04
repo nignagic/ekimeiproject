@@ -1,0 +1,126 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}{{ stationservice }} - {{ stationservice.line_service }}{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
+<link rel="stylesheet" href="{% static 'moviedatabase/railway/movielistbyrailway.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="railway-header">
+		<div class="railway-header-content">
+			<span class="detail-category station-background">駅</span>
+			<!-- <span class="service-category">運行系統</span> -->
+			<div class="main-name">{{ stationservice }}</div>
+			<div class="main-name-sub">{{ stationservice.name_kana }}
+			{% if stationservice.prev_group.get_numbering != " " and stationservice.next_group.get_numbering != " " %}
+				{% if stationservice.prev_group.get_numbering != stationservice.next_group.get_numbering %}
+					[ {{ stationservice.prev_group.get_numbering }}/ {{stationservice.next_group.get_numbering }}]
+				{% else %}
+					[ {{ stationservice.prev_group.get_numbering }}]
+				{% endif %}
+			{% endif %}
+			</div>
+			<div class="sub-name black-background sub-name-station">
+				<div class="sub-name-inner">
+					<div class="sub-link">
+						<a href="{% url 'moviedatabase:movielistbylineservice' stationservice.line_service.pk sort order %}" class="white-color">{{ stationservice.line_service }}</a>
+					</div>
+					<div class="station-before">
+						{% if stationservice.prev_station %}
+							<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.prev_station.pk sort order %}" class="white-color">＜ {{ stationservice.prev_station }}</a>
+						{% endif %}
+					</div>
+					<div class="station-after">
+						{% if stationservice.next_station %}
+							<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.next_station.pk sort order %}" class="white-color">{{ stationservice.next_station }} ＞</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			<div class="under-color gray-background">
+				<div class="under-color-before" style="background: {{ stationservice.prev_group.get_color }};"></div>
+				<div class="under-color-after" style="background: {{ stationservice.next_group.get_color }};"></div>
+			</div>
+			<div class="line-bottom">
+				<div>
+					▶ <a href="{% url 'moviedatabase:movielistbystation' stationservice.station.pk sort order %}">{{ stationservice.station }}</a> - <a href="{% url 'moviedatabase:movielistbyline' stationservice.station.line.pk sort order %}">{{ stationservice.station.line }}</a>
+				</div>
+			{% if stationservicegroup %}
+				{% if different_line == True %}
+					<div>
+						<a href="{% url 'moviedatabase:movielistbystationservice' stationservicegroup.pk sort order %}">{{ stationservicegroup }}</a> [<a href="{% url 'moviedatabase:movielistbystation' stationservicegroup.station.pk sort order %}">{{ stationservicegroup.station }}</a> - <a href="{% url 'moviedatabase:movielistbyline' stationservice.station.line.pk sort order %}">{{ stationservicegroup.station.line }}</a>]
+					</div>
+				{% endif %}
+			{% endif %}
+			</div>
+			<div class="pref-list">
+				<a href="{% url 'moviedatabase:lineservicelistbyprefecture' stationservice.station.pref.pk %}">{{ stationservice.station.pref_code }}</a>
+			</div>
+		</div>
+	</div>
+
+	<a href="{% url 'moviedatabase:railwaytop' %}">路線一覧へ戻る</a>
+	<div class="main-content">
+		<div class="main-content-inner">
+			<div class="railway-movie-list">
+				<h4 class="movie-list-header station-border">動画一覧</h4>
+				{% include 'moviedatabase/includes/movielist.html' %}
+				{% include 'moviedatabase/includes/pagination.html' %}
+			</div>
+			<div class="railway-side">
+				<h4 class="side-header">乗換路線</h4>
+				<ul class="station-lines-ul">
+				{% if transfers %}
+				{% for station, transferstations in transfers.items %}
+					<li class="station-li">
+						<div class="transfer-line-formal">
+							<a href="{% url 'moviedatabase:movielistbyline' station.line.pk sort order %}">{{ station.line }}</a>
+						</div>
+						<ul class="service-ul">
+						{% for transferstation in transferstations %}
+							{% if stationservicegroup == transferstation and transferstation.prev_group.station.line == transferstation.next_group.station.line %}
+							{% elif transferstation == stationservice %}
+								<li class="service-li service-li-same">
+									<div class="transfer-station-name">{{ transferstation }}</div>
+									<div class="transfer-line-name">
+										<div class="line-service-name">{{ transferstation.line_service.with_company }}</div>
+										<div class="line-service-name-sub">{{ transferstation.line_service.line_service_name_sub }} {{ transferstation.line_service.f_or_s }}</div>
+									</div>
+								</li>
+							{% elif transferstation.prev_group != transferstation.next_group and stationservice.line_service != transferstation.line_service %}
+								{% if transferstation.prev_group == transferstation or transferstation.prev_group.station.line != transferstation.next_group.station.line %}
+								<li class="service-li" style="border-color: transparent;">
+									<div class="transfer-station-prev-color" style="background: {{ transferstation.prev_group.get_color }}"></div>
+									<div class="transfer-station-next-color" style="background: {{ transferstation.next_group.get_color }}"></div>
+									<a class="transfer-station-name" href="{% url 'moviedatabase:movielistbystationservice' transferstation.pk sort order %}">{{ transferstation }}</a>
+									<a class="transfer-line-name" href="{% url 'moviedatabase:movielistbylineservice' transferstation.line_service.pk sort order %}">
+										<div class="line-service-name">{{ transferstation.line_service.with_company }}</div>
+										<div class="line-service-name-sub">{{ transferstation.line_service.line_service_name_sub }} {{ transferstation.line_service.f_or_s }}</div>
+									</a>
+								</li>
+								{% endif %}
+							{% else %}
+								<li class="service-li" style="border-color: {{ transferstation.get_color }};">
+									<a class="transfer-station-name" href="{% url 'moviedatabase:movielistbystationservice' transferstation.pk sort order %}">{{ transferstation }}</a>
+									<a class="transfer-line-name" href="{% url 'moviedatabase:movielistbylineservice' transferstation.line_service.pk sort order %}">
+										<div class="line-service-name">{{ transferstation.line_service.with_company }}</div>
+										<div class="line-service-name-sub">{{ transferstation.line_service.line_service_name_sub }} {{ transferstation.line_service.f_or_s }}</div>
+									</a>
+								</li>
+							{% endif %}
+						{% endfor %}
+						</ul>
+					</li>
+				{% endfor %}
+				{% else %}
+					<p>乗換路線はありません</p>
+				{% endif %}
+				</ul>
+			</div>
+		</div>
+	</div>
+	<small>&copy; 2020 nignagIC</small>
+</div>
+{% endblock %}

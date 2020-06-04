@@ -1,0 +1,266 @@
+body {
+	font-family: "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック体", YuGothic, "Noto Sans Japanese", Meiryo, メイリオ, "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", sans-serif;
+	margin: 0;
+	padding: 0;
+	color: #000;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: 1;
+	letter-spacing: calc(33em / 1000);
+}
+
+* {
+	box-sizing: border-box;
+	word-wrap: break-word;
+	line-height: 1.5em;
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	text-decoration: none;
+	color: #333;
+}
+
+a:hover {
+	color: #1cb1c4;
+}
+
+a. button {
+	color: inherit;
+	font-weight: inherit;
+	cursor: pointer;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-size: 100%;
+	font-weight: inherit;
+	line-height: inherit;
+}
+
+ul, li {
+	list-style: none;
+}
+
+.background {
+	background: url();
+	background-position: center center;
+	position: relative;
+	z-index: 0;
+	/*overflow: hidden;*/
+	padding: 0 32px;
+}
+
+.background:before {
+	content: '';
+	background: inherit;
+	-webkit-filter: blur(5px);
+	-moz-filter: blur(5px);
+	-o-filter: blur(5px);
+	-ms-filter: blur(5px);
+	filter: blur(5px);
+	position: absolute;
+	top: -5px;
+	left: -5px;
+	right: -5px;
+	bottom: -5px;
+	z-index: -1;
+}
+
+.main-container {
+	max-width: 1080px;
+	padding: 32px;
+	margin: 0 auto;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: justify;
+	-ms-flex-pack: justify;
+	background: white;
+}
+
+.movie-detail {
+	width: 50%;
+	padding: 8px;
+}
+
+.youtube-container {
+	position: sticky;
+	top: 32px;
+}
+
+.youtube {
+	position: relative;
+	width: 100%;
+}
+
+.youtube:before {
+	content: "";
+	display: block;
+	padding-top: calc(9/16*100%);
+}
+
+.youtube iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.movie-title {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    padding: 16px 0;
+}
+
+.movie-channel {
+	display: flex;
+	margin: 8px 0;
+	padding: 8px 16px;
+	border: 1px solid #333;
+	border-radius: 4px;
+	align-items: center;
+}
+
+.movie-channel-img {
+	width: 36px;
+	height: 36px;
+	margin-right: 16px;
+}
+
+.movie-channel-img img {
+	width: 100%;
+	border-radius: 50%;
+}
+
+.movie-published-name {
+	padding-right: 16px;
+}
+
+.detail-header {
+	color: #fff;
+	margin: 16px 0 4px 0;
+	padding: 4px 8px 4px 16px;
+	background-color: #1cb1c4;
+	border-radius: 16px;
+}
+
+.detail-content {
+	padding: 0 0 0 16px;
+}
+
+.detail-content > select {
+	width: 100%;
+}
+
+.movie-part-list {
+	width: 50%;
+}
+
+.part-header {
+	width: 100%;
+	/*height: 54px;*/
+	/*position: sticky;*/
+	/*top: 32px;*/
+	display: flex;
+	flex-direction: row;
+	align-items: stretch;
+	background: #fff;
+	box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+	margin: 0 0 8px 0;
+	border-radius: 8px;
+	z-index: 1000;
+}
+
+.part-name {
+	font-size: 0.8em;
+}
+
+.part-name-short,
+.part-start-time {
+	text-overflow: clip;
+	text-align: center;
+	background: #333;
+	color: #fff;
+	padding: 4px;
+}
+
+.part_name_short {
+	width: 3em;
+}
+
+.start_time {
+	width: 6em;
+}
+
+.part-handle{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	cursor: move;
+}
+
+.part-start-time {
+	background: #fff;
+	color: #333;
+}
+
+.name-short-error {
+	font-size: 0.8em;
+	color: #f66;
+}
+
+.participant-list,
+.part-song-list {
+	padding: 4px;
+	font-size: 0.8em;
+	font-weight: normal;
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.participant-list {
+	text-align: right;
+}
+
+.part-song-list {
+	text-align: left;
+}
+
+.detail-link {
+	width: 108px;
+	padding: 8px;
+}
+
+.station-button,
+.delete-button {
+	border: 1px #ccc solid;
+	border-radius: 4px;
+	font-weight: normal;
+}
+
+.station-button a {
+	display: block;
+	padding: 8px;
+}
+
+.delete-button {
+	background: #d51111;
+	text-align: center;
+}
+
+.delete-button a {
+	color: #fff;
+	display: block;
+	padding: 8px;
+}
+
+.submit-button {
+	position: fixed;
+	bottom: 0;
+	background: #fff;
+}
