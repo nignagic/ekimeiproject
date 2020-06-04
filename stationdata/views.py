@@ -411,24 +411,24 @@ def stationgroupset(request):
 			if i == 0:
 				i += 1
 				continue
-			tmp = Station.objects.filter(name__iexact=line[5]).filter(line__company__name__iexact=line[6]).filter(line__name__iexact=line[7]).filter(line__name_sub__iexact=line[8])
+			tmp = Station.objects.filter(name__iexact=line[4]).filter(line__company__name__iexact=line[5]).filter(line__name__iexact=line[6]).filter(line__name_sub__iexact=line[7])
 			if tmp.count() == 1:
 				item = tmp.first()
 			else:
 				item = None
 				fail_category = 'Station-get'
-				text = line[5] + "'s " + " station get " + " failure."
+				text = line[4] + "'s " + " station get " + " failure."
 				ErrorList.objects.create(category=fail_category, text=text)
 				continue
 
-			if line[1]:
-				tmp = Station.objects.filter(name__iexact=line[1]).filter(line__company__name__iexact=line[2]).filter(line__name__iexact=line[3]).filter(line__name_sub__iexact=line[4])
+			if line[0]:
+				tmp = Station.objects.filter(name__iexact=line[0]).filter(line__company__name__iexact=line[1]).filter(line__name__iexact=line[2]).filter(line__name_sub__iexact=line[3])
 				if tmp.count() == 1:
 					item.group_station_new = tmp.first()
 				else:
 					item.group_station_new = item
 					fail_category = 'Station-get'
-					text = line[5] + "'s " + " group station " + " failure."
+					text = line[4] + "'s " + " group station " + " failure."
 					ErrorList.objects.create(category=fail_category, text=text)
 			else:
 				item.group_station_new = item
@@ -454,24 +454,24 @@ def stationservicegroupset(request):
 			if i == 0:
 				i += 1
 				continue
-			tmp = StationService.objects.filter(name__iexact=line[8]).filter(station__name__iexact=line[9]).filter(station__line__company__name__iexact=line[10]).filter(station__line__name__iexact=line[11]).filter(station__line__name_sub__iexact=line[12]).filter(line_service__company__name__iexact=line[13]).filter(line_service__name__iexact=line[14]).filter(line_service__name_sub__iexact=line[15]).filter(line_service__is_formal__iexact=line[16]).filter(line_service__is_service__iexact=line[17]).filter(sort_by_line_service__iexact=line[22])
+			tmp = StationService.objects.filter(name__iexact=line[7]).filter(station__name__iexact=line[8]).filter(station__line__company__name__iexact=line[9]).filter(station__line__name__iexact=line[10]).filter(station__line__name_sub__iexact=line[11]).filter(line_service__company__name__iexact=line[12]).filter(line_service__name__iexact=line[13]).filter(line_service__name_sub__iexact=line[14]).filter(line_service__is_formal__iexact=line[15]).filter(line_service__is_service__iexact=line[16]).filter(sort_by_line_service__iexact=line[21])
 			if tmp.count() == 1:
 				item = tmp.first()
 			else:
 				item = None
 				fail_category = 'StationService-get'
-				text = line[9] + line[10] + line[11] + line[12] + line[8] + "'s " + " stationservice get " + " failure."
+				text = line[8] + line[9] + line[10] + line[11] + line[7] + "'s " + " stationservice get " + " failure."
 				ErrorList.objects.create(category=fail_category, text=text)
 				continue
 
-			if line[1]:
-				tmp = StationService.objects.filter(name__iexact=line[1]).filter(line_service__company__name__iexact=line[2]).filter(line_service__name__iexact=line[3]).filter(line_service__name_sub__iexact=line[4]).filter(line_service__is_formal__iexact=line[5]).filter(line_service__is_service__iexact=line[6]).filter(sort_by_line_service__iexact=line[7])
+			if line[0]:
+				tmp = StationService.objects.filter(name__iexact=line[0]).filter(line_service__company__name__iexact=line[1]).filter(line_service__name__iexact=line[2]).filter(line_service__name_sub__iexact=line[3]).filter(line_service__is_formal__iexact=line[4]).filter(line_service__is_service__iexact=line[5]).filter(sort_by_line_service__iexact=line[6])
 				if tmp.count() == 1:
 					item.group_station_service = tmp.first()
 				else:
 					item.group_station_service = item
 					fail_category = 'StationService-get'
-					text = line[9] + line[10] + line[11] + line[12] + line[8]  + "'s " + " group stationservice " + " failure."
+					text = line[8] + line[9] + line[10] + line[11] + line[7]  + "'s " + " group stationservice " + " failure."
 					ErrorList.objects.create(category=fail_category, text=text)
 			else:
 				item.group_station_service = item
