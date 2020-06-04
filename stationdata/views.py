@@ -232,52 +232,43 @@ def uploadStation(request):
 			if i == 0:
 				i += 1
 				continue
-			tmp = ObjectCategory.objects.filter(name__iexact=line[0])
-			if tmp.count() == 1:
-				category = tmp.first()
-			else:
-				category = None
-				fail_category = 'Station-Category'
-				text = line[5] + "'s " + line[0] + " failure."
-				ErrorList.objects.create(category=fail_category, text=text)			
 
-			name = line[5]
+			name = line[4]
 
-			tmp = Line.objects.filter(company__name__iexact=line[6]).filter(name__iexact=line[7]).filter(name_sub__iexact=line[8])
+			tmp = Line.objects.filter(company__name__iexact=line[5]).filter(name__iexact=line[6]).filter(name_sub__iexact=line[7])
 			if tmp.count() == 1:
 				line_line = tmp.first()
 			else:
 				line_line = None
 				fail_category = 'Station-Line'
-				text = line[5] + "'s " + line[6] + "-" + line[7] + "-" + line[8] + " failure."
+				text = line[4] + "'s " + line[5] + "-" + line[6] + "-" + line[7] + " failure."
 				ErrorList.objects.create(category=fail_category, text=text)			
 
-			sort_by_line = line[9]
-			name_kana = line[10]
+			sort_by_line = line[8]
+			name_kana = line[9]
 
-			tmp = Prefecture.objects.filter(name__iexact=line[11])
+			tmp = Prefecture.objects.filter(name__iexact=line[10])
 			if tmp.count() == 1:
 				pref = tmp.first()
 			else:
 				pref = None
 				fail_category = 'Station-Prefecture'
-				text = line[5] + "'s " + line[11] + " failure."
+				text = line[4] + "'s " + line[10] + " failure."
 				ErrorList.objects.create(category=fail_category, text=text)			
 
-			if line[12] == "":
+			if line[11] == "":
 				open_ymd = None
 			else:
-				open_ymd = line[12]
-			if line[13] == "":
+				open_ymd = line[11]
+			if line[12] == "":
 				close_ymd = None
 			else:
-				close_ymd = line[13]
-			lon = line[14]
-			lat = line[15]
-			status = line[16]
+				close_ymd = line[12]
+			lon = line[13]
+			lat = line[14]
+			status = line[15]
 
 			item = Station(
-				category=category,
 				name=name,
 				line=line_line,
 				sort_by_line=sort_by_line,
@@ -363,44 +354,35 @@ def uploadStationService(request):
 			if i == 0:
 				i += 1
 				continue
-			tmp = ObjectCategory.objects.filter(name__iexact=line[0])
-			if tmp.count() == 1:
-				category = tmp.first()
-			else:
-				category = None
-				fail_category = 'StationService-Category'
-				text = line[1] + "'s " + line[0] + " failure."
-				ErrorList.objects.create(category=fail_category, text=text)			
 
-			name = line[1]
+			name = line[0]
 
-			tmp = Station.objects.filter(name__iexact=line[2]).filter(line__company__name__iexact=line[3]).filter(line__name__iexact=line[4]).filter(line__name_sub__iexact=line[5])
+			tmp = Station.objects.filter(name__iexact=line[1]).filter(line__company__name__iexact=line[2]).filter(line__name__iexact=line[3]).filter(line__name_sub__iexact=line[4])
 			if tmp.count() == 1:
 				station = tmp.first()
 			else:
 				station = None
 				fail_category = 'StationService-Station'
-				text = line[1] + "'s " + line[2] + line[3] + line[4] + line[5] + " failure."
+				text = line[0] + "'s " + line[1] + line[2] + line[3] + line[4] + " failure."
 				ErrorList.objects.create(category=fail_category, text=text)			
 
-			tmp = LineService.objects.filter(company__name__iexact=line[6]).filter(name__iexact=line[7]).filter(name_sub__iexact=line[8]).filter(is_formal=line[9]).filter(is_service=line[10])
+			tmp = LineService.objects.filter(company__name__iexact=line[5]).filter(name__iexact=line[6]).filter(name_sub__iexact=line[7]).filter(is_formal=line[8]).filter(is_service=line[9])
 			if tmp.count() == 1:
 				line_service = tmp.first()
 			else:
 				line_service = None
 				fail_category = 'StationService-LineService'
-				text = line[1] + "'s " + line[6] + line[7] + line[8] + line[9] + line[10] + " failure."
+				text = line[0] + "'s " + line[5] + line[6] + line[7] + line[8] + line[9] + " failure."
 				ErrorList.objects.create(category=fail_category, text=text)			
 
-			numbering_head = line[11]
-			numbering_symbol = line[12]
-			numbering_middle = line[13]
-			numbering_number = line[14]
-			sort_by_line_service = line[15]
-			color = line[16]
+			numbering_head = line[10]
+			numbering_symbol = line[11]
+			numbering_middle = line[12]
+			numbering_number = line[13]
+			sort_by_line_service = line[14]
+			color = line[15]
 
 			item = StationService(
-				category=category,
 				name=name,
 				station=station,
 				line_service=line_service,
