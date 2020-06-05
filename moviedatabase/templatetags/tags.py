@@ -10,3 +10,11 @@ def get_station_service(value):
 def get_line_service(value):
 	s = StationService.objects.get(pk=value)
 	return LineService.objects.get(pk=s.line_service.pk)
+
+@register.simple_tag
+def url_replace(request, field, value):
+	"""GETパラメータを一部置き換える"""
+
+	url_dict = request.GET.copy()
+	url_dict[field] = str(value)
+	return url_dict.urlencode()

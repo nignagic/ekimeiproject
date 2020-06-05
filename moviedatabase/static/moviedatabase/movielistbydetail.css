@@ -81,7 +81,7 @@
 	display: flex;
 	align-items: flex-start;
 	justify-content: flex-start;
-	padding: 0.25rem 0;
+	padding: 0.25em 0;
 	color: #333;
 }
 
@@ -92,7 +92,7 @@
 }
 
 .movie-info {
-	padding: 0.25rem 0 0 1rem;
+	padding: 0.25em 0 0 1em;
 	overflow: hidden;
 }
 
@@ -106,9 +106,17 @@
 	white-space: nowrap;
 }
 
+.movie-category {
+	margin-left: 0.5rem;
+	background: #cc5c00;
+	padding: 4px;
+	color: #fff;
+	border-radius: 8px;
+}
+
 .movie-title {
-	max-height: 2.2rem;
-	margin: 0.25rem 0;
+	max-height: 2.2em;
+	margin: 0.25em 0;
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 2;
@@ -117,18 +125,12 @@
 }
 
 .movie-title span {
-	line-height: 1.1rem;
+	line-height: 1.1em;
 }
 
 .movie-channel {
 	font-size: 0.9em;
 	color: #666;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.movie-category {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;

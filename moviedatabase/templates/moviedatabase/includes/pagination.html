@@ -1,7 +1,8 @@
+{% load tags %}
 <div class="pagination">
 	<!-- 前へ の部分 -->
 	{% if page_obj.has_previous %}
-		<a href="?page={{ page_obj.previous_page_number }}" class="page-button black-background page-pn">前へ</a>
+		<a href="?{% url_replace request 'page' page_obj.previous_page_number %}" class="page-button black-background page-pn">前へ</a>
 	{% else %}
 		<span class="page-button gray-background page-pn">前へ</span>
 	{% endif %}
@@ -11,13 +12,13 @@
 		{% if page_obj.number == num %}
 			<span class="page-button gray-background">{{ num }}</span>
 		{% else %}
-			<a href="?page={{ num }}" class="page-button black-background">{{ num }}</a>
+			<a href="?{% url_replace request 'page' num %}" class="page-button black-background">{{ num }}</a>
 		{% endif %}
 	{% endfor %}
 
 	<!-- 次へ の部分 -->
 	{% if page_obj.has_next %}
-		<a href="?page={{ page_obj.next_page_number }}" class="page-button black-background page-pn">次へ</a>
+		<a href="?{% url_replace request 'page' page_obj.next_page_number %}" class="page-button black-background page-pn">次へ</a>
 	{% else %}
 		<span class="page-button gray-background page-pn">次へ</span>
 	{% endif %}

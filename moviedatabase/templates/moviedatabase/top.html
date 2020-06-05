@@ -51,18 +51,20 @@
 		<div class="top-notice">
 			<h5 class="content-header movie-border">お知らせ</h5>
 			<ul class="notice-ul">
-				<li class="notice-li">
-					<p class="notice-top">2020/6/1　<span>全体</span></p>
-					<div class="notice-bottom"><a>サイトの試作を公開しました</a></div>
+				{% for info in notice_list %}
+				<li class="update-li">
+					<p class="update-top">{{ info.reg_date|timezone:'Asia/Tokyo'|date:"Y/n/j" }}　<span>{{ info.category }}</span></p>
+					<div class="update-bottom">{{ info.head }}</div>
 				</li>
+				{% endfor %}
 			</ul>
 		</div>
 		<div class="top-update">
 			<h5 class="content-header movie-border">更新情報</h5>
 			<ul class="update-ul">
-				{% for info in info_list %}
+				{% for info in update_list %}
 				<li class="update-li">
-					<p class="update-top">{{ info.reg_date|timezone:'Asia/Tokyo'|date:"Y/n/d" }}　<span>動画{{ info.get_is_create_display }}</span></p>
+					<p class="update-top">{{ info.reg_date|timezone:'Asia/Tokyo'|date:"Y/n/j" }}　<span>動画{{ info.get_is_create_display }}</span></p>
 					<div class="update-bottom">「<a href="{% url 'moviedatabase:detail' info.movie.main_id %}">{{ info.movie }}</a>」を{{ info.get_is_create_display }}しました</div>
 				</li>
 				{% endfor %}

@@ -153,6 +153,15 @@
 	white-space: nowrap;
 }
 
+.movie-category {
+	margin-left: 0.5rem;
+	background: #cc5c00;
+	padding: 4px;
+	color: #fff;
+	border-radius: 8px;
+	font-size: 0.6rem;
+}
+
 .movie-title {
 	margin: 0.25rem 0;
 	display: -webkit-box;

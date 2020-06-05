@@ -4,48 +4,32 @@
 
 {% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
 <link rel="stylesheet" href="{% static 'moviedatabase/detail.css' %}">
 
 <!-- <div class="background" style="background: url(https://i.ytimg.com/vi/{{ movie.youtube_id }}/hqdefault.jpg) no-repeat center; background-size: cover; background-attachment: fixed;"> -->
 <div class="background" style="background: #ff9e4d;">
 	{% include 'moviedatabase/includes/header.html' %}
 	<div class="main-container">
+		<div class="youtube-container youtube-mobile">{% include 'moviedatabase/includes/detail_youtube.html' %}</div>
 		<div class="movie-detail">
-			<div class="youtube-container">
-				<div class="youtube">
-					<div id="player"></div>
-					<script>
-						var tag = document.createElement('script');
-
-						tag.src = "https://www.youtube.com/iframe_api";
-						var firstScriptTag = document.getElementsByTagName('script')[0];
-						firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-						var player;
-						function onYouTubeIframeAPIReady() {
-							player = new YT.Player('player', {
-								    videoId: '{{ movie.youtube_id }}',
-							})
-						}
-					</script>
-				</div>
-			</div>
+			<div class="youtube-container youtube-pc">{% include 'moviedatabase/includes/detail_youtube.html' %}</div>
 			<div class="detail-original">
-				<a href="https://www.youtube.com/watch?v={{ movie.youtube_id }}" target="_blank" class="movie-title-link"><h2 class="movie-title">{{ movie.title }}</h2></a>
-				<div class="movie-channel">
+				<a href="https://www.youtube.com/watch?v={{ movie.youtube_id }}" target="_blank" class="movie-title-link"><h2 class="main-movie-title">{{ movie.title }}</h2></a>
+				<div class="main-movie-channel">
 					<a href="{% url 'moviedatabase:movielistbychannel' movie.channel.pk 'pub' 'n' %}">
-						<div class="movie-channel-img">
+						<div class="main-movie-channel-img">
 							<img src="url">
 						</div>
-						<div class="movie-channel-name">{{ movie.channel }}</div>
+						<div class="main-movie-channel-name">{{ movie.channel }}</div>
 					</a>
 				</div>
-				<h3 class="detail-header">投稿日時</h3>
+				<h3 class="movie-detail-header">投稿日時</h3>
 				<div class="detail-content">
 					{% load tz %}
-					<p class="movie-published-jpn">{{ movie.published_at|timezone:'Asia/Tokyo'|date:"Y年n月d日 H:i:s" }} <small>(日本時間)</small></p>
+					<p class="main-movie-published-jpn">{{ movie.published_at|timezone:'Asia/Tokyo'|date:"Y年n月j日 H:i:s" }} <small>(日本時間)</small></p>
 				</div>
-				<h3 class="detail-header">動画統計情報</h3>
+				<h3 class="movie-detail-header">動画統計情報</h3>
 				<div class="detail-content">
 					<div class="movie-statistics">
 						<div class="movie-statistics-item">
@@ -87,16 +71,17 @@
 						</div>
 					</div>
 				</div>
-				<h3 class="detail-header">説明文</h3>
+				<h3 class="movie-detail-header">説明文</h3>
 				<div class="detail-content">
 					<div class="movie-description">
 						{{ movie.description | urlize | linebreaksbr }}
 					</div>
+					<!-- <a class="movie-description-button">すべて見る</a> -->
 				</div>
 			</div>
 			<div class="detail-addition">
 				{% if movie.song.all %}
-				<h3 class="detail-header">使用楽曲(全体)</h3>
+				<h3 class="movie-detail-header">使用楽曲(全体)</h3>
 				<div class="detail-content">
 					<table class="song-table">
 					{% for song in movie.song.all %}
@@ -115,7 +100,7 @@
 				</div>
 				{% endif %}
 				{% if song %}
-				<h3 class="detail-header">使用楽曲(パート単体)</h3>
+				<h3 class="movie-detail-header">使用楽曲(パート単体)</h3>
 				<div class="detail-content">
 					<table class="song-table">
 					{% for song in songs %}
@@ -134,7 +119,7 @@
 				</div>
 				{% endif %}
 				{% if movie.vocal.all %}
-				<h3 class="detail-header">使用ボーカル</h3>
+				<h3 class="movie-detail-header">使用ボーカル</h3>
 				<div class="detail-content">
 					<table class="vocal-table">
 					{% for vocal in movie.vocal.all %}
@@ -149,16 +134,81 @@
 				{% endif %}
 			</div>
 			<div class="related-movie">
+				<h3 class="movie-detail-header">関連動画</h3>
+				<ul class="movie-ul">
+					{% if movie.related.all %}
+					{% for movie in movie.related.all %}
+					<li class="movie-card">
+						<a href="{% url 'moviedatabase:detail' movie.main_id %}">
+							<img class="movie-img" src="https://i.ytimg.com/vi/{{ movie.youtube_id }}/hqdefault.jpg">
+							<div class="movie-info">
+					{% load tz %}
+								<p class="movie-published">{{ movie.published_at|timezone:'Asia/Tokyo'|date:"Y/n/j" }}</p>
+								<p class="movie-title"><span>{{ movie.title }}</span></p>
+								<p><span class="movie-channel">{{ movie.channel }}</span><span class="movie-duration"> - {{ movie.duration }}</span></p>
+								<p class="movie-category">
+									{% if movie.part_category %}
+									{% for category in movie.part_category %}
+										<span>{{ category }}</span>
+									{% endfor %}
+									{% endif %}
+								</p>
+							</div>
+						</a>
+					</li>
+					{% endfor %}
+					{% else %}
+					<p>該当する動画が見つかりませんでした。</p>
+					{% endif %}
+				</ul>
+			</div>
+			<div class="parent-movie">
+				<h3 class="movie-detail-header">親作品</h3>
+				<ul class="movie-ul">
+					{% if movie.parent.all %}
+					{% for movie in movie.parent.all %}
+					<li class="movie-card">
+						<a href="{% url 'moviedatabase:detail' movie.main_id %}">
+							<img class="movie-img" src="https://i.ytimg.com/vi/{{ movie.youtube_id }}/hqdefault.jpg">
+							<div class="movie-info">
+					{% load tz %}
+								<p class="movie-published">{{ movie.published_at|timezone:'Asia/Tokyo'|date:"Y/n/j" }}</p>
+								<p class="movie-title"><span>{{ movie.title }}</span></p>
+								<p><span class="movie-channel">{{ movie.channel }}</span><span class="movie-duration"> - {{ movie.duration }}</span></p>
+								<p class="movie-category">
+									{% if movie.part_category %}
+									{% for category in movie.part_category %}
+										<span>{{ category }}</span>
+									{% endfor %}
+									{% endif %}
+								</p>
+							</div>
+						</a>
+					</li>
+					{% endfor %}
+					{% else %}
+					<p>該当する動画が見つかりませんでした。</p>
+					{% endif %}
+				</ul>
+			</div>
+			<div class="update-date">
+				<p>最終更新日時：{{ movie.update_date|timezone:'Asia/Tokyo'|date:"Y年n月j日 H:i:s" }}</p>
 			</div>
 			{% if can_edit %}
-			<a href="{% url 'moviedatabase:updateinformation' movie.main_id %}">更新情報登録</a>
+			<div class="update-container">
+				<p>※編集権限を持つユーザーでログインしている場合のみ表示されています。この動画の情報を更新した際は下のボタンを押してください。トップページなどの更新情報に反映されます。</p>
+				<a href="{% url 'moviedatabase:updateinformation' movie.main_id %}">更新情報登録</a>
+			</div>
 			{% endif %}
 		</div>
 		<div class="movie-station-list">
-			<div>
-				<a class="all-open">すべて展開</a>
-				<a class="all-close">すべて閉じる</a>
-			</div>
+			<h3 class="movie-detail-header movie-detail-header-part">
+				<p>パート・駅詳細</p>
+				<div class="all-container">
+					<a class="all-open">すべて展開</a>
+					<a class="all-close">すべて閉じる</a>
+				</div>
+			</h3>
 			{% for part in parts %}
 			<div class="part-container">
 				<div class="part-header" {% if onlyonepart %}style="display: none;"{% endif %}>
@@ -193,7 +243,7 @@
 					</table>
 				</div>
 				<div class="part-detail-container">
-					<table class="part-detail-table" {% if onlyonepart %}style="display: none;"{% endif %}>
+					<table class="part-detail-table">
 						{% if part.part_name %}
 						<tr class="part-detail-row">
 							<th class="part-detail-label">パート名</th>

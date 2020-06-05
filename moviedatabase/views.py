@@ -25,10 +25,12 @@ class Top(generic.ListView):
 
 	def get_context_data(self):
 		movies = Movie.objects.all().order_by('-published_at')[:6]
-		info_list = MovieUpdateInformation.objects.all()
+		update_list = MovieUpdateInformation.objects.all()
+		notice_list = NoticeInformation.objects.all()
 		context = {
 			'movie_list': movies,
-			'info_list': info_list
+			'update_list': update_list,
+			'notice_list': notice_list
 		}
 
 		return context
@@ -946,11 +948,14 @@ def detail_movie(request, main_id):
 		for partsong in partsongs:
 			songs |= Song.objects.filter(pk=partsong.pk)
 
+	can_edit = request.user.groups.filter(name='can_edit').exists()
+
 	context = {
 		'movie': movie,
 		'parts': parts,
 		'songs': songs,
-		'onlyonepart': onlyonepart
+		'onlyonepart': onlyonepart,
+		'can_edit': can_edit
 	}
 
 	return render(request, 'moviedatabase/detail.html', context)
@@ -1050,6 +1055,10 @@ def UpdateInformation(request, main_id):
 		t = 'C'
 	i = MovieUpdateInformation(movie=movie, is_create=t, reg_date=timezone.now())
 	i.save()
+	movie.update_date = timezone.now()
+	movie.save()
+
+	return redirect('moviedatabase:detail', main_id=main_id)
 
 class StationServicebyLineServiceViewSet(generics.ListAPIView):
 	serializer_class = serializer.StationServiceSerializer

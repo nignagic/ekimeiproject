@@ -12,8 +12,9 @@
 		<div class="railway-header-content">
 			<span class="detail-category line-background">路線</span>
 			<span class="detail-category white-background">正式区間</span>
-			<div class="main-name">{{ line }}</div>
-			<div class="main-name-sub">読み方</div>
+			<a href="{% url 'moviedatabase:lineservicelistbycompany' line.company.pk %}" class="company-link">{{ line.company.short_name_2 }}</a>
+			<div class="main-name">{{ line.name }}{% if line.name_sub %}<small> - {{ line.name_sub }}</small>{% endif %}</div>
+			<div class="main-name-sub"></div>
 			<div class="sub-name white-background">
 				{{ line.start_station }} ～ {{ line.end_station }}
 			</div>
@@ -26,7 +27,7 @@
 				{% endfor %}
 			</div>
 			<div class="pref-list">
-				{% for pref in line.pref_codes.all %}
+				{% for pref in line.prefs.all %}
 					<a href="{% url 'moviedatabase:lineservicelistbyprefecture' pref.pk %}">{{ pref }}</a>
 					{% if forloop.last %}
 					{% else %}

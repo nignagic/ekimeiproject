@@ -27,6 +27,12 @@
 .youtube-container {
 	position: sticky;
 	top: 2.0rem;
+	z-index: 1300;
+}
+
+.youtube-mobile {
+	top: 0.5rem;
+	padding: 0 0.5rem;
 }
 
 .youtube {
@@ -48,31 +54,31 @@
 	height: 100%;
 }
 
-.movie-title {
+.main-movie-title {
     font-size: 1.2rem;
     line-height: 1.6;
     padding: 1.0rem 0;
 }
 
-.movie-channel {
+.main-movie-channel {
 	margin: 0.5rem 0;
 	border: 1px solid #333;
 	border-radius: 4px;
 }
 
-.movie-channel a {
+.main-movie-channel a {
 	display: flex;
 	padding: 0.5rem 1.0rem;
 	align-items: center;
 }
 
-.movie-channel-img {
+.main-movie-channel-img {
 	width: 2.0rem;
 	height: 2.0rem;
 	margin-right: 1.0rem;
 }
 
-.movie-channel-img img {
+.main-movie-channel-img img {
 	width: 100%;
 	border-radius: 50%;
 }
@@ -116,20 +122,11 @@
 	background-color: #f0f0f0;
 }
 
-/*.detail-header {
-	color: #1cb1c4;
-	line-height: 1.44444;
-	margin: 1.0rem 0 4px 0;
-	padding: 0 0 4px 4px;
-	border-bottom: 1px solid #1cb1c4;
-	border-left: 2px solid #1cb1c4;
-}*/
-
-.detail-header {
+.movie-detail-header {
 	color: #fff;
 	margin: 1.0rem 0 4px 0;
 	padding: 4px 0.5rem 4px 1.0rem;
-	background-color: #1cb1c4;
+	background-color: #cc5c00;
 	border-radius: 1.0rem;
 }
 
@@ -140,6 +137,13 @@
 .movie-description {
 	font-weight: normal;
 	font-size: 0.8em;
+	transition: all .3s;
+}
+
+.movie-description-close {
+	height: auto;
+	max-height: calc(1.5em * 5);
+	overflow: hidden;
 }
 
 .song-table,
@@ -162,6 +166,47 @@
 .artist-name {
 	font-weight: normal;
 	border-bottom: 1px solid #ddd;
+}
+
+.movie-ul {
+	padding-left: 2.0rem;
+	font-size: 0.9rem;
+}
+
+.movie-img {
+	width: 150px;
+	height: calc(150px / 16 * 9 - 2px);
+}
+
+.movie-detail-header-part {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.update-date {
+	margin-top: 2rem;
+	font-weight: normal;
+	font-size: 0.8rem;
+	text-align: right;
+}
+
+.update-container {
+	margin-top: 2rem;
+	font-weight: normal;
+	font-size: 0.8rem;
+	padding: 0.2rem;
+	border: 1px #ccc solid;
+}
+
+.all-container {
+	font-size: 0.8rem;
+	text-align: right;
+}
+
+.all-container a {
+	color: #fff;
+	text-decoration: underline;
 }
 
 .part-header {
@@ -225,7 +270,6 @@
 
 .part-detail-container {
 	padding: 0.5rem;
-	/*display: none;*/
 }
 
 .part-detail-table {
@@ -338,9 +382,10 @@
 	top: 0;
 	background: #fff;
 	z-index: 900;
-	padding: 0 2.0em 0 3.0em;
+	padding: 0 0 0 3.0em;
 	font-weight: bold;
 	font-size: 0.9em;
+	display: flex;
 }
 
 .line-box a {
@@ -354,18 +399,22 @@
 	opacity: 0.8;
 }
 
+.line-button-container {
+	padding: 0 0.5rem 0 2rem;
+	display: flex;
+	align-items: center;
+}
+
 .line-button {
-	position: absolute;
 	z-index: 300;
-	top: 50%;
-	right: 1.0em;
-	width: 0;
-	height: 0;
-	border-left: 6px solid transparent;
-	border-right: 6px solid transparent;
-	border-top: 10.4px solid #333;
-	transform: translate(0, -50%);
-	/*filter: drop-shadow(0px 0px 2px rgba(0,0,0,0.9));*/
+	font-size: 0.7rem;
+	transition: all .3s;
+	transform-origin: 50% 50%;
+	transform: rotate(180deg);
+}
+
+.open-button {
+	transform: rotate(90deg);
 }
 
 .line-icon {
@@ -384,6 +433,10 @@
 	font-size: 1.2em;
 	line-height: 1.2em;
 	vertical-align: middle;
+}
+
+.station-ul {
+	display: none;
 }
 
 .station-name {
@@ -488,36 +541,6 @@
 	max-width: 30%;
 }
 
-/*↓ design2*/
-.point-station {
-	background-color: #1cb1c4;
-	color: #fff;
-	padding: 4px 0.5em;
-	margin: 0;
-	position: sticky;
-	top: 96px;
-	cursor: pointer;
-}
-
-.line-list-container {
-	display: flex;
-}
-
-.open-button {
-	padding: 0.5em;
-}
-
-.line-list {
-	width: 100%;
-	border-left: 4px solid #1cb1c4;
-	margin: 0 auto;
-	padding: 0 1.0em;
-}
-
-.movie-line-name-new {
-	padding: 0.5em 0;
-}
-
 @media (max-width: 768px) {
 	body {
 		font-size: 0.9rem;
@@ -529,6 +552,7 @@
 	}
 
 	.movie-detail {
+		padding-top: 0;
 		width: 100%;
 	}
 

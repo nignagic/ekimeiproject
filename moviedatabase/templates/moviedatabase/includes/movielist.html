@@ -6,16 +6,9 @@
 			<img class="movie-img" src="https://i.ytimg.com/vi/{{ movie.youtube_id }}/hqdefault.jpg">
 			<div class="movie-info">
 	{% load tz %}
-				<p class="movie-published">{{ movie.published_at|timezone:'Asia/Tokyo'|date:"Y/n/d" }}</p>
+				<p class="movie-published">{{ movie.published_at|timezone:'Asia/Tokyo'|date:"Y/n/j" }}{% for c in movie.category %}<span class="movie-category">{{ c }}</span>{% endfor %}</p>
 				<p class="movie-title"><span>{{ movie.title }}</span></p>
-				<p><span class="movie-channel">{{ movie.channel }}</span><span class="movie-duration"> - {{ movie.duration }}</span></p>
-				<p class="movie-category">
-					{% if movie.part_category %}
-					{% for category in movie.part_category %}
-						<span>{{ category }}</span>
-					{% endfor %}
-					{% endif %}
-				</p>
+				<p><span class="movie-channel">{{ movie.channel }}</span><span class="movie-duration"> - {{ movie.get_duration }}</span></p>
 			</div>
 		</a>
 	</li>

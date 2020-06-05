@@ -10,15 +10,16 @@
 	{% include 'moviedatabase/includes/header.html' %}
 	<div class="railway-header">
 		<div class="railway-header-content">
-			<span class="detail-category station-background">駅</span>
+			<span class="detail-category station-background">{{ stationservice.line_service.category.object_name }}</span>
 			<!-- <span class="service-category">運行系統</span> -->
+			<a href="{% url 'moviedatabase:lineservicelistbycompany' stationservice.line_service.company.pk %}" class="company-link">{{ stationservice.line_service.company.short_name_2 }}</a>
 			<div class="main-name">{{ stationservice }}</div>
 			<div class="main-name-sub">{{ stationservice.name_kana }}
 			{% if stationservice.prev_group.get_numbering != " " and stationservice.next_group.get_numbering != " " %}
 				{% if stationservice.prev_group.get_numbering != stationservice.next_group.get_numbering %}
-					[ {{ stationservice.prev_group.get_numbering }}/ {{stationservice.next_group.get_numbering }}]
-				{% else %}
-					[ {{ stationservice.prev_group.get_numbering }}]
+					[ {{ stationservice.prev_group.get_numbering }} / {{stationservice.next_group.get_numbering }} ]
+				{% elif stationservice.get_numbering %}
+					[ {{ stationservice.prev_group.get_numbering }} ]
 				{% endif %}
 			{% endif %}
 			</div>
@@ -50,13 +51,13 @@
 			{% if stationservicegroup %}
 				{% if different_line == True %}
 					<div>
-						<a href="{% url 'moviedatabase:movielistbystationservice' stationservicegroup.pk sort order %}">{{ stationservicegroup }}</a> [<a href="{% url 'moviedatabase:movielistbystation' stationservicegroup.station.pk sort order %}">{{ stationservicegroup.station }}</a> - <a href="{% url 'moviedatabase:movielistbyline' stationservice.station.line.pk sort order %}">{{ stationservicegroup.station.line }}</a>]
+						<a href="{% url 'moviedatabase:movielistbystationservice' stationservicegroup.pk sort order %}">{{ stationservicegroup }}</a> [<a href="{% url 'moviedatabase:movielistbystation' stationservicegroup.station.pk sort order %}">{{ stationservicegroup.station }}</a> - <a href="{% url 'moviedatabase:movielistbyline' stationservicegroup.station.line.pk sort order %}">{{ stationservicegroup.station.line }}</a>]
 					</div>
 				{% endif %}
 			{% endif %}
 			</div>
 			<div class="pref-list">
-				<a href="{% url 'moviedatabase:lineservicelistbyprefecture' stationservice.station.pref.pk %}">{{ stationservice.station.pref_code }}</a>
+				<a href="{% url 'moviedatabase:lineservicelistbyprefecture' stationservice.station.pref.pk %}">{{ stationservice.station.pref }}</a>
 			</div>
 		</div>
 	</div>

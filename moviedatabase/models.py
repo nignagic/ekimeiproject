@@ -68,6 +68,18 @@ class Movie(models.Model):
 				categories |= MovieCategory.objects.filter(pk=part.category.id)
 		return categories
 
+	def get_duration(self):
+		d = self.duration
+		d = str(d).split(':')
+		if d[0] != "0":
+			if d[0][0] == "0":
+				d[0] = d[0][1]
+			return d[0] + ":" + d[1] + ":" + d[2]
+		else:
+			if d[1][0] == "0":
+				d[1] = d[1][1]
+			return d[1] + ":" + d[2]
+
 	def __str__(self):
 		return self.title
 
@@ -114,9 +126,22 @@ class MovieUpdateInformation(models.Model):
 	)
 	is_create = models.CharField('新規登録か更新か', max_length=1, choices=INFO_TYPE, default='C')
 	reg_date = models.DateTimeField('登録・更新日時', blank=True)
+	class Meta:
+		ordering = ['-reg_date']
 
 	def __str__(self):
 		return self.movie.title + " - " + self.get_is_create_display()
 
 	def text(self):
 		return "「" + self.movie.title + "」を" + self.get_is_create_display() + "しました。"
+
+class NoticeInformation(models.Model):
+	reg_date = models.DateTimeField('日時', blank=True)
+	category = models.CharField('種類', null=True, blank=True, max_length=100)
+	head = models.CharField('概要', null=True, blank=True, max_length=100)
+	text = models.TextField('説明', null=True, blank=True)
+	class Meta:
+		ordering = ['-reg_date']
+
+	def __str__(self):
+		return self.head

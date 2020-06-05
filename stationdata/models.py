@@ -37,6 +37,7 @@ class Company(models.Model):
 class BelongsCategory(models.Model):
 	name = models.CharField('所属カテゴリー', max_length=100)
 	object_name = models.CharField('名称カテゴリー', null=True, blank=True, max_length=100)
+	icon = models.CharField('FontAweSomeアイコン名称', null=True, blank=True, max_length=100)
 	def __str__(self):
 		return self.name
 
@@ -111,7 +112,7 @@ class LineService(models.Model):
 	line = models.ManyToManyField(Line, blank=True, verbose_name='正式路線')
 	head_company_name = models.CharField('接頭会社名', max_length=200, null=True, blank=True, default="")
 	company = models.ForeignKey(Company, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='事業者')
-	sort_by_company = models.IntegerField('事業者ごとの並び順', default=0)
+	sort_by_company = models.IntegerField('事業者ごとの並び順', default=999)
 	is_formal = models.CharField('正式区間', max_length=200, null=True, blank=True)
 	is_service = models.CharField('運行系統', max_length=200, null=True, blank=True)
 	color = models.CharField('路線カラー', max_length=100, null=True, blank=True)

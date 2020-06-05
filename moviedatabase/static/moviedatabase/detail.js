@@ -2,16 +2,30 @@ $(function() {
 	$('.part-header').on('click', function() {
 		$(this).next('.part-detail-container').slideToggle();
 	})
-	$(document).on('click', '.line-button', function() {
-		$(this).parent().next('.station-ul').slideToggle();
+	$(document).on('click', '.line-button-container', function() {
+		$(this).parent().next('.station-ul').slideToggle(400, buttonFunc);
 	})
+
+	function buttonFunc() {
+		if($(this).css('display') == 'none') {
+			$(this).prev('.line-box').find('.line-button').removeClass("open-button")
+		} else {
+			$(this).prev('.line-box').find('.line-button').addClass("open-button")
+		}
+	}
+
 	$(document).on('click', '.all-open', function() {
 		$('.part-detail-container').slideDown();
-		$('.station-ul').slideDown();
+		$('.station-ul').slideDown(400, buttonFunc);
 	})
 	$(document).on('click', '.all-close', function() {
-		$('.part-detail-container').slideUp();
-		$('.station-ul').slideUp();
+		if ($('.part-detail-container').length != 1)
+			$('.part-detail-container').slideUp();
+		$('.station-ul').slideUp(400, buttonFunc);
+	})
+
+	$(document).on('click', '.movie-description-button', function() {
+		$('.movie-description').removeClass('movie-description-close')
 	})
 })
 
@@ -27,6 +41,15 @@ $(function() {
 $(function() {
 	d = $('.movie-description').text().replace(/<br>/g, '<br>');
 	$('.movie-description').html(d)
+
+	var ua = navigator.userAgent;
+	if ((ua.indexOf('iPhone') > 0 || ua.indexOf('Android') > 0) && ua.indexOf('Mobile') > 0) {
+		$('.youtube-pc').remove()
+	} else if (ua.indexOf('iPad') > 0 || ua.indexOf('Android') > 0) {
+		$('.youtube-pc').remove()
+	} else {
+		$('.youtube-mobile').remove()
+	}
 })
 
 function TimetoSecond(time) {
@@ -38,10 +61,6 @@ function TimetoSecond(time) {
 }
 
 $(function() {
-	img = "<i class='fas fa-bus'></i>";
-	img = "<i class='fas fa-store-alt'></i>";
-	img = "<i class='fas fa-road'></i>";
-	img = "<i class='fas fa-subway'></i>";
 	function key_station_text(beforecolor, aftercolor, stationid, stationname, end) {
 		if (end) {
 			return "<div class='key-station key-station-end'><div class='key-station-icon'></div><div class='station-before' style='background: " + beforecolor + "'></div><div class='station-after' style='background: " + aftercolor + "'></div><a href='" + stationurl[0] + stationid + stationurl[1] + "'>" + stationname + "</a></div>";
@@ -50,11 +69,11 @@ $(function() {
 		}
 	}
 
-	function line_box_text(lineid, beforecolor, aftercolor, linename, icon) {
-		if (icon) {
-			return "<div><div class='line-box'><div class='line-button'></div><a href='" + lineurl[0] + line + lineurl[1] + "'><div class='line-before' style='background: " + beforecolor + "'></div><div class='line-after' style='background: " + aftercolor + "'></div><div class='line-icon'>" + img + "</div><div class='line-name'>" + linename + "</div></a></div>";
+	function line_box_text(lineid, beforecolor, aftercolor, linename, icon, button) {
+		if (button) {
+			return "<div><div class='line-box'><a href='" + lineurl[0] + lineid + lineurl[1] + "'><div class='line-before' style='background: " + beforecolor + "'></div><div class='line-after' style='background: " + aftercolor + "'></div><div class='line-icon'><i class='fas fa-" + icon + "'></i></div><div class='line-name'>" + linename + "</div></a><div class='line-button-container'><i class='fas fa-play line-button'></i></div></div>";
 		} else {
-			return "<div><div class='line-box'><a href='" + lineurl[0] + line + lineurl[1] + "'><div class='line-before' style='background: " + beforecolor + "'></div><div class='line-after' style='background: " + aftercolor + "'></div><div class='line-icon'>" + img + "</div><div class='line-name'>" + linename + "</div></a></div>";
+			return "<div><div class='line-box'><a href='" + lineurl[0] + lineid + lineurl[1] + "'><div class='line-before' style='background: " + beforecolor + "'></div><div class='line-after' style='background: " + aftercolor + "'></div><div class='line-icon'><i class='fas fa-subway'></i></div><div class='line-name'>" + linename + "</div></a><div class='line-button-container'></div></div>";
 		}
 	}
 
@@ -97,8 +116,8 @@ $(function() {
 					if (category == "駅名替え歌") {
 						if (beforeline == 0) {
 							ul++;
-							parody_station_head = "<div class='parody-edge'></div><div><div class='line-box'><div class='line-button'></div><a><div class='line-before' style='background: #333;'></div><div class='line-after' style='background: #333;'></div><div class='line-icon'><img src='/static/ekimeimysql1/channel.jpg'></div><div class='line-name'>駅名替え歌</div></a></div>"
-							$('.station-list-' + id).append(parody_station_head + "<ul class='station-ul station-ul-" + id + "-" + ul + "'></ul></div>")
+							parody_station_head = line_box_text(undefined, "#333", "#333", "駅名替え歌", data[i].category, true)
+							$('.station-list-' + id).append("<div class='parody-edge'></div>" + parody_station_head + "<ul class='station-ul station-ul-" + id + "-" + ul + "' style='display: block;'></ul></div>")
 						}
 						parody_station = "<div class='parody-station'><a href='" + stationurl[0] + data[i].station_service_pk + stationurl[1] + "' style='border-color: " + data[i].get_color + "'><div class='parody-station-name'>" + station_text + "</div><div class='parody-line-name'>" + data[i].line_service_name + "</div><div class='parody-pref-name'>" + data[i].pref + "</div></a></div>";
 					 	$('.station-ul-' + id + "-" + ul).append(parody_station)
@@ -108,7 +127,7 @@ $(function() {
 							$('.station-list-' + id).append(parody_station_tail);
 						}
 					} else if (data[i].is_representative) {
-						rep_line = line_box_text(data[i].line_service_pk, data[i].get_color, data[i].get_color, data[i].line_service_name, category)
+						rep_line = line_box_text(data[i].line_service_pk, data[i].get_color, data[i].get_color, data[i].line_service_name, data[i].category, false)
 						$('.station-list-' + id).append("<div class='parody-edge'></div>" + rep_line + "<div class='parody-edge parody-edge-end'></div>")
 					} else if (line != afterline && afterback == "0") {
 					// console.log(afterback);
@@ -120,8 +139,8 @@ $(function() {
 						ul++;
 						// $('.station-list-' + id).append("<h4 class='movie-line-name'>" + data[i].line_service_name + "</h4><ul class='station-ul station-ul-" + forloop + "'></ul>")
 						key_station = key_station_text(color, data[i].get_color, data[i].station_service_pk, station_text, false)
-						line_box_before = line_box_text(line, data[i].get_color, data[i].get_color, data[i].line_service_name, false)
-						line_box_after = line_box_text(data[j].line_service_pk, data[j].get_color, data[j].get_color, data[j].line_service_name, false)
+						line_box_before = line_box_text(line, data[i].get_color, data[i].get_color, data[i].line_service_name, data[i].category, false)
+						line_box_after = line_box_text(data[j].line_service_pk, data[j].get_color, data[j].get_color, data[j].line_service_name, data[i].category, false)
 						station_ul = station_ul_text(id, ul);
 						$('.station-list-' + id).append(key_station + line_box_before + line_box_after + station_ul);
 					} else if (line != beforeline && data[i].get_group_station == beforestationgroup) {
@@ -129,7 +148,7 @@ $(function() {
 						$('.station-list-' + id + ' .key-station:last').remove();
 						// $('.station-list-' + id).append("<h4 class='movie-line-name'>" + data[i].line_service_name + "</h4><ul class='station-ul station-ul-" + forloop + "'></ul>")
 						key_station = key_station_text(beforecolor, data[i].get_color, data[i].station_service_pk, station_text, false)
-						line_box = line_box_text(line, data[i].get_color, data[i].get_color, data[i].line_service_name, true)
+						line_box = line_box_text(line, data[i].get_color, data[i].get_color, data[i].line_service_name, data[i].category, true)
 						station_ul = station_ul_text(id, ul);
 						$('.station-list-' + id).append(key_station + line_box + station_ul);
 					} else if (line != beforeline || data[i].back_rel == "2") {
@@ -141,7 +160,7 @@ $(function() {
 						if (line == afterline) {
 							ul++;
 							key_station = key_station_text(color, data[i].get_color, data[i].station_service_pk, station_text, false)
-							line_box = line_box_text(line, data[i].get_color, data[i].get_color, data[i].line_service_name, true)
+							line_box = line_box_text(line, data[i].get_color, data[i].get_color, data[i].line_service_name, data[i].category, true)
 							station_ul = station_ul_text(id, ul);
 						} else {
 							key_station = key_station_text(color, "none", data[i].station_service_pk, station_text, false)
@@ -150,7 +169,7 @@ $(function() {
 						}
 						$('.station-list-' + id).append(key_station + line_box + station_ul);
 					} else if (afterline != line || afterline == undefined || data[j].back_rel == "2") {
-						key_station = key_station_text(data[i].get_color, "none", data[i].station_service_pk, station_text, true)
+						key_station = key_station_text(data[i].get_color, "none", data[i].station_service_pk, station_text, data[i].category)
 						$('.station-list-' + id).append(key_station);
 					} else if ((data[i].station_service_pk != data[j].station_service_pk) && (data[i].get_group_station == data[j].get_group_station)) {
 					 	station = station_text_f(data[i].get_color, data[j].get_color, data[i].station_service_pk, station_text)

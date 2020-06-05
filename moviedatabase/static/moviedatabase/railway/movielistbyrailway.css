@@ -14,8 +14,14 @@
 	width: 100%;
 }
 
-.main-name {
+.company-link {
+	display: block;
 	margin-top: 1.0rem;
+	font-size: 1.2rem;
+}
+
+.main-name {
+	margin-top: 0.5rem;
 	font-size: 2.0em;
 }
 
@@ -58,7 +64,6 @@
 
 .under-color {
 	width: 100%;
-	height: 8px;
 	padding: 0;
 	margin: 0 0 1.0em 0;
 	display: flex;
@@ -66,12 +71,12 @@
 
 .under-color-before,
 .under-color-after {
-	height: 100%;
+	height: 8px;
 	width: 50%;
 }
 
 .under-color-inner {
-	height: 100%;
+	height: 8px;
 	width: 100%;
 }
 
