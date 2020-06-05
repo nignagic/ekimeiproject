@@ -169,7 +169,7 @@ $(function() {
 						}
 						$('.station-list-' + id).append(key_station + line_box + station_ul);
 					} else if (afterline != line || afterline == undefined || data[j].back_rel == "2") {
-						key_station = key_station_text(data[i].get_color, "none", data[i].station_service_pk, station_text, data[i].category)
+						key_station = key_station_text(data[i].get_color, "none", data[i].station_service_pk, station_text, true)
 						$('.station-list-' + id).append(key_station);
 					} else if ((data[i].station_service_pk != data[j].station_service_pk) && (data[i].get_group_station == data[j].get_group_station)) {
 					 	station = station_text_f(data[i].get_color, data[j].get_color, data[i].station_service_pk, station_text)
