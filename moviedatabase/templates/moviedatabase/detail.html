@@ -278,11 +278,11 @@
 							</td>
 						</tr>
 						{% endif %}
-						{% if part.vocal.all %}
+						{% if part.vocalnew.all %}
 						<tr class="part-detail-row">
 							<th class="part-detail-label">使用ボーカル</th>
 							<td class="part-detail-content">
-								{% for vocal in part.vocal.all %}
+								{% for vocal in part.vocalnew.all %}
 									<a href="{% url 'moviedatabase:movielistbyvocal' vocal.id 'pub' 'n' %}">{{ vocal }}</a>
 									{% if forloop.last %}
 									{% else %}

@@ -73,7 +73,7 @@ $(function() {
 		if (button) {
 			return "<div><div class='line-box'><a href='" + lineurl[0] + lineid + lineurl[1] + "'><div class='line-before' style='background: " + beforecolor + "'></div><div class='line-after' style='background: " + aftercolor + "'></div><div class='line-icon'><i class='fas fa-" + icon + "'></i></div><div class='line-name'>" + linename + "</div></a><div class='line-button-container'><i class='fas fa-play line-button'></i></div></div>";
 		} else {
-			return "<div><div class='line-box'><a href='" + lineurl[0] + lineid + lineurl[1] + "'><div class='line-before' style='background: " + beforecolor + "'></div><div class='line-after' style='background: " + aftercolor + "'></div><div class='line-icon'><i class='fas fa-subway'></i></div><div class='line-name'>" + linename + "</div></a><div class='line-button-container'></div></div>";
+			return "<div><div class='line-box'><a href='" + lineurl[0] + lineid + lineurl[1] + "'><div class='line-before' style='background: " + beforecolor + "'></div><div class='line-after' style='background: " + aftercolor + "'></div><div class='line-icon'><i class='fas fa-" + icon + "'></i></div><div class='line-name'>" + linename + "</div></a><div class='line-button-container'></div></div>";
 		}
 	}
 
