@@ -36,12 +36,22 @@
 			<div class="detail-side">
 				<h4 class="side-header line-border">地域から探す</h4>
 				<ul class="side-list-ul">
-					{% for region in regions %}
+					{% for region in japan_regions %}
 					<li class="side-list-li">
 						<a href="{% url 'moviedatabase:companylistbyregion' region.pk category.pk %}" class="line-color">{{ region }} <small>{{ region.country }}</small></a>
 					</li>
 					{% endfor %}
 				</ul>
+				{% if foreign_regions %}
+				<h4 class="side-header line-border">日本以外から探す</h4>
+				<ul class="side-list-ul">
+					{% for region in foreign_regions %}
+					<li class="side-list-li">
+						<a href="{% url 'moviedatabase:companylistbyregion' region.pk category.pk %}" class="line-color">{{ region }}{% if region.name != region.country.name %} <small>{{ region.country }}</small>{% endif %}</a>
+					</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
 			</div>
 		</div>
 	</div>
