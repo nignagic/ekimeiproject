@@ -545,16 +545,49 @@ def r2k(kana):
 	else:
 		return rk[kana[0]]
 
+def get_dh(kana):
+	dh = {
+		'ウ': ['ヴ'],
+		'カ': ['ガ'],
+		'キ': ['ギ'],
+		'ク': ['グ'],
+		'ケ': ['ゲ'],
+		'コ': ['ゴ'],
+		'サ': ['ザ'],
+		'シ': ['ジ'],
+		'ス': ['ズ'],
+		'セ': ['ゼ'],
+		'ソ': ['ゾ'],
+		'タ': ['ダ'],
+		'チ': ['ヂ'],
+		'ツ': ['ヅ'],
+		'テ': ['デ'],
+		'ト': ['ド'],
+		'ハ': ['バ', 'パ'],
+		'ヒ': ['ビ', 'ピ'],
+		'フ': ['ブ', 'プ'],
+		'ヘ': ['ベ', 'ペ'],
+		'ホ': ['ボ', 'ポ'],
+	}
+	if kana in dh:
+		return dh[kana[0]]
+	else:
+		return []
+
 def initial_query(q, kana):
 	kana = r2k(kana)
 	if len(kana) == 1:
 		q = q.filter(name_kana__istartswith=kana)
+		for d in get_dh(kana):
+			q |= q.filter(name_kana__istartswith=d)
 		return q
 	else:
 		q2 = q.none()
 		for k in kana:
 			if k:
 				q2 |= q.filter(name_kana__istartswith=k)
+				for d in get_dh(k):
+					q2 |= q.filter(name_kana__istartswith=d)
 		return q2.order_by('name_kana')
 
 class ArtistListView(generic.ListView):
