@@ -577,10 +577,11 @@ def get_dh(kana):
 def initial_query(q, kana):
 	kana = r2k(kana)
 	if len(kana) == 1:
-		q = q.filter(name_kana__istartswith=kana)
+		q2 = q.none()
+		q2 |= q.filter(name_kana__istartswith=kana)
 		for d in get_dh(kana):
-			q |= q.filter(name_kana__istartswith=d)
-		return q
+			q2 |= q.filter(name_kana__istartswith=d)
+		return q2.order_by('name_kana')
 	else:
 		q2 = q.none()
 		for k in kana:
