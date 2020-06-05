@@ -4,4 +4,4 @@ guideline
 db.sqlite3
 *.py[co]
 backup_db_local.py
-.env
+*.env
