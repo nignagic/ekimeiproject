@@ -125,7 +125,10 @@ class LineService(models.Model):
 
 	def with_company(self):
 		if self.company:
-			return self.company.short_name_2 + " " + self.name
+			if self.company.short_name_2:
+				return self.company.short_name_2 + " " + self.name
+			else:
+				return self.name
 		else:
 			return self.name
 
