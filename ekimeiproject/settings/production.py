@@ -1,14 +1,18 @@
 # settings/local.py
 
 from .base import *
+import environ
+
+env = environ.Env()
+env.read_env('.env')
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = env.bool('DEBUG',default=False)
 
-ALLOWED_HOSTS = ['118.27.28.57']
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 
 # Database
@@ -16,9 +20,9 @@ ALLOWED_HOSTS = ['118.27.28.57']
 
 DATABASES = {
     'default': {
-        'ENGINE': '',
-        'NAME': 'ekimeiproject',
-        'USER': '',
-        'PASSWORD': '',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': env('DATABASE_NAME'),
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASS'),
     }
 }
