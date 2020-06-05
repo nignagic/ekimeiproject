@@ -283,7 +283,7 @@
 							<th class="part-detail-label">使用ボーカル</th>
 							<td class="part-detail-content">
 								{% for vocal in part.vocalnew.all %}
-									<a href="{% url 'moviedatabase:movielistbyvocal' vocal.id 'pub' 'n' %}">{{ vocal }}</a>
+									{{ vocal }}
 									{% if forloop.last %}
 									{% else %}
 										<br>
