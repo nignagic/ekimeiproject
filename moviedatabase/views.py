@@ -261,7 +261,8 @@ class LineServiceListbyCategoryView(generic.ListView):
 		category = BelongsCategory.objects.get(pk=self.kwargs['category'])
 
 		context['category'] = category
-		context['regions'] = Region.objects.all()
+		context['japan_regions'] = Region.objects.filter(country__name__contains="日本")
+		context['foreign_regions'] = Region.objects.exclude(country__name__contains="日本")
 
 		return context
 
