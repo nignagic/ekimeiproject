@@ -10,7 +10,7 @@ def initial_ex(s):
 	elif re.compile(r'[\u30A0-\u30FA]').search(s[0]):
 		s = jaconv.z2h(s)
 	s = jaconv.h2z(s[0])
-	return s
+	return sk
 
 class Artist(models.Model):
 	name = models.CharField('アーティスト名', max_length=200)
