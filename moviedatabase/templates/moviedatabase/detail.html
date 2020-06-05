@@ -90,7 +90,7 @@
 							{% if song.artist %}
 								<td class="artist-name">
 								{% for artist in song.artist.all %}
-									<a href="">{{ artist }}</a><br>
+									{{ artist }}<br>
 								{% endfor %}
 								</td>
 							{% endif %}
@@ -109,24 +109,10 @@
 							{% if song.artist %}
 								<td class="artist-name">
 								{% for artist in song.artist.all %}
-									<a href="{% url 'moviedatabase:movielistbyartist' artist.pk 'pub' 'n' %}">{{ artist }}</a><br>
+									{{ artist }}<br>
 								{% endfor %}
 								</td>
 							{% endif %}
-						</tr>
-					{% endfor %}
-					</table>
-				</div>
-				{% endif %}
-				{% if movie.vocal.all %}
-				<h3 class="movie-detail-header">使用ボーカル</h3>
-				<div class="detail-content">
-					<table class="vocal-table">
-					{% for vocal in movie.vocal.all %}
-						<tr>
-							<td class="vocal-name">
-								<a href="{% url 'moviedatabase:movielistbyvocal' vocal.id 'pub' 'n' %}">{{ vocal }}</a>
-							</td>
 						</tr>
 					{% endfor %}
 					</table>
