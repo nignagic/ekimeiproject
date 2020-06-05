@@ -100,7 +100,11 @@ class Part(models.Model):
 			n = self.name
 		else:
 			n = self.short_name
-		return "【" + n + "】" + self.movie.title
+
+		if self.movie:
+			return "【" + n + "】" + self.movie.title
+		else:
+			return n
 
 class StationInMovie(models.Model):
 	sort_by_part = models.IntegerField()
@@ -115,7 +119,10 @@ class LineInMovie(models.Model):
 	part = models.ForeignKey(Part, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='動画パート')
 	line_service = models.ForeignKey(LineService, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='路線')
 	def __str__(self):
-		return self.line_service.name
+		if self.line_service:
+			return self.line_service.name
+		else:
+			return "object"
 
 class MovieUpdateInformation(models.Model):
 	movie = models.ForeignKey(Movie, to_field='main_id', null=True, blank=True, on_delete=models.SET_NULL, verbose_name='動画')
