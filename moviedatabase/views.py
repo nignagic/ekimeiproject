@@ -1094,7 +1094,7 @@ class LineServiceTransferViewSet(generics.ListAPIView):
 	serializer_class = serializer.LineServiceSerializer
 	def get_queryset(self):
 		stationservice = StationService.objects.get(pk=self.kwargs['station_service'])
-		stations = stationservice.station.get_group_station
+		stations = stationservice.station.get_group_station()
 		lineservices = LineService.objects.none()
 		for station in stations:
 			stationservices = StationService.objects.filter(station=station)

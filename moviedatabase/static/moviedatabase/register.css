@@ -1,0 +1,456 @@
+body {
+	font-family: "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック体", YuGothic, "Noto Sans Japanese", Meiryo, メイリオ, "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", sans-serif;
+	margin: 0;
+	padding: 0;
+	color: #000;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: 1;
+	letter-spacing: calc(33em / 1000);
+}
+
+* {
+	box-sizing: border-box;
+	word-wrap: break-word;
+	line-height: 1.5em;
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	text-decoration: none;
+	color: #333;
+}
+
+a:hover {
+	color: #1cb1c4;
+}
+
+a. button {
+	color: inherit;
+	font-weight: inherit;
+	cursor: pointer;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-size: 100%;
+	font-weight: inherit;
+	line-height: inherit;
+}
+
+ul, li {
+	list-style: none;
+}
+
+.background {
+	background: url();
+	background-position: center center;
+	position: relative;
+	z-index: 0;
+	/*overflow: hidden;*/
+	padding: 0 32px;
+}
+
+.background:before {
+	content: '';
+	background: inherit;
+	-webkit-filter: blur(5px);
+	-moz-filter: blur(5px);
+	-o-filter: blur(5px);
+	-ms-filter: blur(5px);
+	filter: blur(5px);
+	position: absolute;
+	top: -5px;
+	left: -5px;
+	right: -5px;
+	bottom: -5px;
+	z-index: -1;
+}
+
+.main-container {
+	max-width: 1080px;
+	padding: 32px;
+	margin: 0 auto;
+	background: white;
+}
+
+.container {
+	width: 100%;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+#list-area {
+	width: 100%;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.video-item-section {
+	padding: 8px 0;
+	transition: all .3s;
+	display: block;
+	box-shadow: 1px 0px 8px -4px #333;
+}
+
+.video-item-section:hover {
+	box-shadow: 4px 0px 8px -3px #333;
+}
+
+.videoTile {
+	display: block;
+	position: relative;
+	padding: 16px;
+	transition: all .3s ease-in;
+	flex-wrap: wrap;
+	display: flex;
+}
+
+.videoTile:hover:before {
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: #f4f6f8;
+}
+
+/*.videoTile:before {
+	content: "";
+	position: absolute;
+	top: 16px;
+	right: 16px;
+	bottom: 16px;
+	left: 16px;
+	border-radius: 1px;
+	transition: all .3s ease-in;
+}
+*/
+
+.video-link:hover {
+}
+
+.video-number {
+	font-size: 20px;
+	width: 32px;
+	color: #aaa;
+}
+
+.videoTile-inner {
+	flex: 1;
+}
+
+.videoTile-head {
+}
+
+.video-link {
+	display: block;
+	position: relative;
+	transition: all .3s ease-in;
+	text-decoration: none;
+	flex-wrap: nowrap;
+	display: flex;
+	align-items: center;
+	color: #333;
+}
+
+.videoTile-img-box {
+	width: 120px;
+	flex-grow: 0;
+	flex-shrink: 0;
+	position: relative;
+}
+
+.videoTile-img-box:before {
+	content: "";
+	display: block;
+	padding-top: calc(90 / 120 * 100%);
+}
+
+.videoTile-img {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	transition: all .3s ease-in;
+}
+
+.videoTile-content {
+	padding: 0 16px;
+}
+
+.video-title {
+	font-size: 18px;
+	overflow-y: hidden;
+	font-weight: 600;
+	line-height: 1.6;
+	margin: 0 0 8px 0;
+	word-break: break-all;
+}
+
+.video-channel {
+	margin-top: 8px;
+	font-size: 14px;
+	word-wrap: normal;
+	white-space: nowrap;
+}
+
+.video-duration {
+	font-size: 14px;
+	word-wrap: normal;
+	white-space: nowrap;
+}
+
+.video-middle {
+	padding: 8px 0;
+	border-top: solid 1px #e5e7ee;
+	align-items: center;
+}
+
+@media (min-width: 1200px) {
+	.video-middle {
+		flex-wrap: wrap;
+		display: flex;
+	}
+}
+
+@media (min-width: 768px) {
+	.video-middle-1 {
+		flex-wrap: wrap;
+		display: flex;
+	}
+}
+
+.video-statistics {
+	flex-wrap: wrap;
+	display: flex;
+	align-items: center;
+	padding: 8px 0;
+}
+
+.video-statistics-item {
+	padding: 0 8px;
+}
+
+.video-statistics-num {
+	text-align: center;
+	padding-bottom: 2px;
+	font-size: 24px;
+	font-weight: 600;
+	line-height: 1;
+}
+
+.font-20 {
+	font-size: 20px;
+}
+
+.video-statistics-name {
+	margin-top: 4px;
+	padding: 4px;
+	border-radius: 4px;
+	font-size: 14px;
+	text-align: center;
+	color: #577381;
+	background-color: #f0f0f0;
+}
+
+.video-time {
+	padding: 8px 0 8px 32px;
+	flex: 1;
+	min-width: 320px;
+}
+
+@media (max-width: 768px) {
+	.video-time {
+		padding: 8px 0;
+	}
+}
+
+.video-time-head {
+	border-bottom: 1px #ccc solid;
+	margin: 0 0 8px 0;
+}
+
+.video-time-iso,
+.video-time-jpn {
+	padding-left: 16px;
+}
+
+.video-description {
+	padding-left: 32px;
+	flex: 1;
+}
+
+@media (max-width: 1199px) {
+	.video-description {
+		width: 100%;
+		padding: 8px 0 0 0;
+	}
+}
+
+.video-description > p {
+	padding: 8px;
+	border-radius: 4px;
+	background-color: #e5e7ee;
+	height: 128px;
+	overflow-y: scroll;
+	word-break: break-all;
+	font-size: 12px;
+	margin: 0;
+}
+
+.video-description > p::-webkit-scrollbar {
+	width: 8px;
+}
+
+.video-description > p::-webkit-scrollbar-track{
+	background: rgba(255, 255, 255, 0.8);
+	border: none;
+	border-radius: 4px; 
+}
+
+.video-description > p::-webkit-scrollbar-thumb{
+	background: #aaa;
+	border-radius: 10px;
+}
+
+
+/*ここから動画再生ボックス*/
+.youtube-frame {
+	width: 32%;
+	min-width: 400px;
+}
+
+@media screen and (min-width: 768px) {
+	.youtube-inner {
+		width: 80%;
+		margin: 0 auto;
+	}
+}
+
+.youtube {
+	position: relative;
+	padding-top: 64%;
+}
+
+.youtube iframe {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+}
+
+
+/*ここから編集画面*/
+
+.station-editing-area {
+	display: flex;
+}
+
+.station_select_wrap {
+	width: 50%;
+}
+
+#pref_select {
+	width: 96px;
+}
+
+.line_select {
+	width: 256px;
+}
+
+.station_select {
+	width: 192px;
+}
+
+.selected-list-wrap {
+	width: 50%;
+}
+
+.selected-list {
+	height: 512px;
+	overflow: auto;
+}
+
+.stations {
+	display: flex;
+	align-items: stretch;
+}
+
+.stations-content {
+	width: 100%;
+	padding-left: 16px;
+}
+
+.stations-relation {
+	width: auto;
+	height: 24px;
+	margin: 0 auto;
+	display: flex;
+}
+
+.stations-relation-line {
+	width: 24px;
+	height: 100%;
+	margin: 0 16px 0 auto;
+	background-color: #000;
+}
+
+.stations-relation-select {
+	margin-right: auto;
+}
+
+.stations-box {
+	display: flex;
+	border: 1px solid #ccc;
+	padding: 4px;
+}
+
+.station_checkbox {
+	display: none;
+}
+
+.stations-handle {
+	display: flex;
+	align-items: center;
+	cursor: move;
+	background-color: #ccc;
+}
+
+.sortable-handle {
+}
+
+.stations-info {
+	flex-grow: 1;
+}
+
+.station-name {
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.line-name {
+	font-size: 12px;
+}
+
+.nonline-select {
+	font-family: 游ゴシック体, 'Yu Gothic', YuGothic, 'ヒラギノ角ゴシック Pro', 'Hiragino Kaku Gothic Pro', メイリオ, Meiryo, Osaka, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
+}
+
+.stations-delete {
+	width: 64px;
+}
+
+.sortable-delete{
+	text-align: center;
+	display: block;
+	padding: 4px;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	cursor: pointer;
+}

@@ -50,7 +50,7 @@ ul, li {
 }
 
 .part-edit {
-	height: 24%;
+	height: 36%;
 	max-height: 512px;
 	display: flex;
 }
@@ -61,7 +61,7 @@ ul, li {
 
 .youtube-frame iframe {
 	height: 100%;
-	width: calc(100vh * 0.24 * 16 / 9);
+	width: calc(100vh * 0.36 * 16 / 9);
 }
 
 .part-detail {
@@ -78,7 +78,7 @@ ul, li {
 
 .station-editing-area {
 	display: flex;
-	height: 76%;
+	height: 64%;
 	padding-top: 8px;
 }
 
