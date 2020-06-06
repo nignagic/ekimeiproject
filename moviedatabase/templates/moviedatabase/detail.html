@@ -237,7 +237,7 @@
 							<th class="part-detail-label">参加者(名義)</th>
 							<td class="part-detail-content">
 								{% for participant in part.participant.all %}
-									{{ participant }}
+									<a href="{% url 'moviedatabase:movielistbycreator' participant.creator.pk 'pub' 'n' %}">{{ participant }}</a>
 									{% if forloop.last %}
 									{% else %}
 										/
