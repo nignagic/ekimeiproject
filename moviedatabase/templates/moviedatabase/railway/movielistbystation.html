@@ -12,7 +12,7 @@
 		<div class="railway-header-content">
 			<span class="detail-category station-background">駅</span>
 			<span class="detail-category white-background">正式区間</span>
-			<a href="{% url 'moviedatabase:lineservicelistbycompany' station.line.company.pk %}" class="company-link">{{ station.line.company.short_name_2 }}</a>
+			{% if station.line.company.short_name_2 %}<a href="{% url 'moviedatabase:lineservicelistbycompany' station.line.company.pk %}" class="company-link">{{ station.line.company.short_name_2 }}</a>{% endif %}
 			<div class="main-name">{{ station }}</div>
 			<div class="main-name-sub">{{ stationservice.station_name_k }} {{ stationservice.station_name_r }}
 			</div>

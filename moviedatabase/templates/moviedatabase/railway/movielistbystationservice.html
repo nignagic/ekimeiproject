@@ -12,7 +12,7 @@
 		<div class="railway-header-content">
 			<span class="detail-category station-background">{{ stationservice.line_service.category.object_name }}</span>
 			<!-- <span class="service-category">運行系統</span> -->
-			<a href="{% url 'moviedatabase:lineservicelistbycompany' stationservice.line_service.company.pk %}" class="company-link">{{ stationservice.line_service.company.short_name_2 }}</a>
+			{% if stationservice.line_service.company.short_name_2 %}<a href="{% url 'moviedatabase:lineservicelistbycompany' stationservice.line_service.company.pk %}" class="company-link">{{ stationservice.line_service.company.short_name_2 }}</a>{% endif %}
 			<div class="main-name">{{ stationservice }}</div>
 			<div class="main-name-sub">{{ stationservice.name_kana }}
 			{% if stationservice.prev_group.get_numbering != " " and stationservice.next_group.get_numbering != " " %}
