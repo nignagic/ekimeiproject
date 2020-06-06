@@ -12,7 +12,7 @@
 		<div class="railway-header-content">
 			<span class="detail-category line-background">路線</span>
 			<!-- <span class="service-category">運行系統</span> -->
-			<a href="{% url 'moviedatabase:lineservicelistbycompany' lineservice.company.pk %}" class="company-link">{{ lineservice.company.short_name_2 }}</a>
+			{% if lineservice.company.short_name_2 %}<a href="{% url 'moviedatabase:lineservicelistbycompany' lineservice.company.pk %}" class="company-link">{{ lineservice.company.short_name_2 }}</a>{% endif %}
 			<div class="main-name">
 				{{ lineservice.name }}
 				{% if lineservice.name_sub %}

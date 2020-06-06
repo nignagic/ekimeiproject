@@ -119,10 +119,10 @@
 				</div>
 				{% endif %}
 			</div>
+			{% if movie.related.all %}
 			<div class="related-movie">
 				<h3 class="movie-detail-header">関連動画</h3>
 				<ul class="movie-ul">
-					{% if movie.related.all %}
 					{% for movie in movie.related.all %}
 					<li class="movie-card">
 						<a href="{% url 'moviedatabase:detail' movie.main_id %}">
@@ -143,15 +143,13 @@
 						</a>
 					</li>
 					{% endfor %}
-					{% else %}
-					<p>該当する動画が見つかりませんでした。</p>
-					{% endif %}
 				</ul>
 			</div>
+			{% endif %}
+			{% if movie.parent.all %}
 			<div class="parent-movie">
 				<h3 class="movie-detail-header">親作品</h3>
 				<ul class="movie-ul">
-					{% if movie.parent.all %}
 					{% for movie in movie.parent.all %}
 					<li class="movie-card">
 						<a href="{% url 'moviedatabase:detail' movie.main_id %}">
@@ -172,11 +170,9 @@
 						</a>
 					</li>
 					{% endfor %}
-					{% else %}
-					<p>該当する動画が見つかりませんでした。</p>
-					{% endif %}
 				</ul>
 			</div>
+			{% endif %}
 			<div class="update-date">
 				<p>最終更新日時：{{ movie.update_date|timezone:'Asia/Tokyo'|date:"Y年n月j日 H:i:s" }}</p>
 			</div>
