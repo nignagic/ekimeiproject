@@ -13,7 +13,6 @@ class StationServiceSerializer(serializers.ModelSerializer):
 
 class StationSerializer(serializers.ModelSerializer):
 	line_pk = serializers.IntegerField(source='line.id')
-	line_name = serializers.CharField(source='line.name')
 	station_pk = serializers.IntegerField(source='id')
 	class Meta:
 		model = StationService
