@@ -153,6 +153,7 @@ class LineInMovie(models.Model):
 
 class MovieUpdateInformation(models.Model):
 	movie = models.ForeignKey(Movie, to_field='main_id', null=True, blank=True, on_delete=models.SET_NULL, verbose_name='動画')
+	creator = models.ForeignKey(Creator, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='作者')
 
 	INFO_TYPE = (
 		('C', '新規登録'),
@@ -164,10 +165,20 @@ class MovieUpdateInformation(models.Model):
 		ordering = ['-reg_date']
 
 	def __str__(self):
-		return self.movie.title + " - " + self.get_is_create_display()
+		if self.movie:
+			return self.movie.title + " - " + self.get_is_create_display()
+		elif self.creator:
+			return self.creator.name + " - " + self.get_is_create_display()
+		else:
+			return "info"
 
 	def text(self):
-		return "「" + self.movie.title + "」を" + self.get_is_create_display() + "しました。"
+		if self.movie:
+			return "「" + self.movie.title + "」を" + self.get_is_create_display() + "しました。"
+		elif self.creator:
+			return "「" + self.creator.name + "」を" + self.get_is_create_display() + "しました。"
+		else:
+			return "Information"
 
 class NoticeInformation(models.Model):
 	reg_date = models.DateTimeField('日時', blank=True)
