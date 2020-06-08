@@ -927,6 +927,10 @@ class MovieListbyCreatorView(generic.ListView):
 		context['sort'] = self.kwargs['sort']
 		context['order'] = self.kwargs['order']
 
+		can_edit = self.request.user.groups.filter(name='can_edit').exists()
+
+		context['can_edit'] = can_edit
+
 		return context
 
 class MovieListbyNameView(generic.ListView):
@@ -1123,12 +1127,25 @@ def UpdateInformation(request, main_id):
 		t = 'U'
 	else:
 		t = 'C'
-	i = MovieUpdateInformation(movie=movie, is_create=t, reg_date=timezone.now())
+	i = MovieUpdateInformation(movie=movie, creator=None, is_create=t, reg_date=timezone.now())
 	i.save()
 	movie.update_date = timezone.now()
 	movie.save()
 
 	return redirect('moviedatabase:detail', main_id=main_id)
+
+@permission_required('moviedatabase.add_movieupdateinformation')
+def UpdateInformationforCreator(request, creator):
+	creator = get_object_or_404(Creator, id=creator)
+	info = MovieUpdateInformation.objects.filter(creator=creator)
+	if info:
+		t = 'U'
+	else:
+		t = 'C'
+		i = MovieUpdateInformation(movie=None, creator=creator, is_create='C', reg_date=timezone.now())
+		i.save()
+
+	return redirect('moviedatabase:movielistbycreator', creator=creator.pk, sort='pub', order='n')
 
 class StationServicebyLineServiceViewSet(generics.ListAPIView):
 	serializer_class = serializer.StationServiceSerializer

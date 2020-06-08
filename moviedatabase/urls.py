@@ -55,6 +55,7 @@ urlpatterns = [
 	path('movie/edit/<slug:main_id>/part/<int:sort_by_movie>', views.movie_part_station_edit, name='station_edit'),
 
 	path('updateinformation/<slug:main_id>/', views.UpdateInformation, name='updateinformation'),
+	path('updateinformationforuser/<int:creator>/', views.UpdateInformationforCreator, name='updateinformationforcreator'),
 
 	url('^api/lineservice/(?P<line_service>.+)/stationservice/', views.StationServicebyLineServiceViewSet.as_view(), name='stationservicebylineserviceapi'),
 	url('^api/pref/(?P<pref>.+)/lineservice/', views.LineServicebyPrefectureViewSet.as_view(), name='lineservicebyprefectureapi'),
