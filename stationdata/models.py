@@ -213,8 +213,10 @@ class StationService(models.Model):
 	def get_numbering(self):
 		if self.numbering_middle == "space":
 			mid = " "
-		else:
+		elif self.numbering_middle:
 			mid = self.numbering_middle
+		else:
+			mid = ""
 		if self.numbering_head:
 			h = self.numbering_head
 		else:
