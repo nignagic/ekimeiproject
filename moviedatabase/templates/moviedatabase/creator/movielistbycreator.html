@@ -29,12 +29,72 @@
 				{% include 'moviedatabase/includes/pagination.html' %}
 			</div>
 			<div class="detail-side">
-				{% if channels %}
-				<h4 class="side-header song-border">YouTubeチャンネル</h4>
+				{% if mainchannel %}
+				<h4 class="side-header creator-border">YouTubeメインチャンネル</h4>
 				<ul class="side-list-ul">
-					{% for c in channels %}
+					{% for c in mainchannel %}
 					<li class="side-list-li">
 						<a href="{% url 'moviedatabase:movielistbychannel' c.pk sort order %}" class="channel-color">{{ c }}</a>
+					</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+				{% if subchannel %}
+				<h4 class="side-header creator-border">YouTubeサブチャンネル</h4>
+				<ul class="side-list-ul">
+					{% for c in subchannel %}
+					<li class="side-list-li">
+						<a href="{% url 'moviedatabase:movielistbychannel' c.pk sort order %}" class="channel-color">{{ c }}</a>
+					</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+				{% if mainniconico %}
+				<h4 class="side-header black-border">niconicoメインアカウント</h4>
+				<ul class="side-list-ul">
+					{% for c in mainniconico %}
+					<li class="side-list-li">
+						<a href="{% url 'moviedatabase:movielistbyniconico' c.pk sort order %}" class="black-color">{{ c }}</a>
+					</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+				{% if subniconico %}
+				<h4 class="side-header black-border">niconicoサブアカウント</h4>
+				<ul class="side-list-ul">
+					{% for c in subniconico %}
+					<li class="side-list-li">
+						<a href="{% url 'moviedatabase:movielistbyniconico' c.pk sort order %}" class="black-color">{{ c }}</a>
+					</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+				{% if maintwitter %}
+				<h4 class="side-header twitter-border">Twitterメインアカウント</h4>
+				<ul class="side-list-ul">
+					{% for c in maintwitter %}
+					<li class="side-list-li">
+						<a href="https://twitter.com/{{ c.user_id }}" class="twitter-color">{{ c }}</a>
+					</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+				{% if subtwitter %}
+				<h4 class="side-header twitter-border">Twitterサブアカウント</h4>
+				<ul class="side-list-ul">
+					{% for c in subtwitter %}
+					<li class="side-list-li">
+						<a href="https://twitter.com/{{ c.user_id }}" class="twitter-color" target="_blank">{{ c }}</a>
+					</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+				{% if pagelink %}
+				<h4 class="side-header creator-border">その他リンク</h4>
+				<ul class="side-list-ul">
+					{% for c in pagelink %}
+					<li class="side-list-li">
+						<a href="{{ c.url }}" class="creator-color" target="_blank">{{ c }}</a>
 					</li>
 					{% endfor %}
 				</ul>

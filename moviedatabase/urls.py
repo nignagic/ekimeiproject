@@ -44,6 +44,7 @@ urlpatterns = [
 	path('creator/<int:creator>/<slug:sort>/<slug:order>/', views.MovieListbyCreatorView.as_view(), name='movielistbycreator'),
 	# path('creator/name/<int:name>/<slug:sort>/<slug:order>/', views.MovieListbyNameView.as_view(), name='movielistbyname'),
 	path('creator/channel/<slug:channel_id>/<slug:sort>/<slug:order>/', views.MovieListbyChannelView.as_view(), name='movielistbychannel'),
+	path('creator/niconico/<slug:niconico_account>/<slug:sort>/<slug:order>/', views.MovieListbyNiconicoView.as_view(), name='movielistbyniconico'),
 	path('creator/search/', views.CreatorSearchView.as_view(), name='creatorsearch'),
 
 	path('movie/', views.MovieListView.as_view(), name='movielist'),

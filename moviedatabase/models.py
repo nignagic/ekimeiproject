@@ -20,8 +20,32 @@ class YoutubeChannel(models.Model):
 	channel_id = models.CharField(max_length=200, primary_key=True)
 	creator = models.ForeignKey(Creator, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='作者')
 	main_name = models.ForeignKey(Name, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='チャンネル名義')
+	is_main = models.BooleanField('メインチャンネル', default=True)
 	def __str__(self):
 		return self.name
+
+class NiconicoAccount(models.Model):
+	name = models.CharField('niconicoアカウント名', max_length=200)
+	user_id = models.CharField(max_length=200, primary_key=True)
+	creator = models.ForeignKey(Creator, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='作者')
+	is_main = models.BooleanField('メインアカウント', default=True)
+	def __str__(self):
+		return self.name
+
+class TwitterAccount(models.Model):
+	name = models.CharField('名前', null=True, blank=True, max_length=200)
+	user_id = models.CharField(max_length=200, primary_key=True)
+	creator = models.ForeignKey(Creator, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='作者')
+	is_main = models.BooleanField('メインアカウント', default=True)
+	def __str__(self):
+		return "@" + self.user_id
+
+class PageLink(models.Model):
+	name = models.CharField('リンク名', null=True, blank=True, max_length=200)
+	url = models.CharField('URL', null=True, blank=True, max_length=200)
+	creator = models.ForeignKey(Creator, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='作者')
+	def __str__(self):
+		return self.url
 
 class MovieCategory(models.Model):
 	name = models.CharField('動画カテゴリー', max_length=200)
@@ -32,6 +56,9 @@ class Movie(models.Model):
 	title = models.CharField('動画タイトル', max_length=400)
 	channel = models.ForeignKey(
 		YoutubeChannel, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='投稿チャンネル'
+	)
+	niconico_account = models.ForeignKey(
+		NiconicoAccount, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='投稿ニコニコアカウント'
 	)
 	main_id = models.CharField('動画ID', max_length=200, unique=True)
 	youtube_id = models.CharField('YouTube 動画ID', max_length=200, null=True, blank=True)
