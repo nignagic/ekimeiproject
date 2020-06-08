@@ -58,7 +58,10 @@ LineServiceEditFormSet = forms.inlineformset_factory(
 class StationServiceRegisterForm(forms.ModelForm):
 	class Meta:
 		model = StationService
-		fields = '__all__'
+		fields = ('name', 'line_service', 'numbering_head', 'numbering_symbol', 'numbering_middle', 'numbering_number', 'sort_by_line_service', 'color')
+		widgets = {
+			'line_service': forms.HiddenInput()
+		}
 
 StationServiceRegisterFormset = forms.inlineformset_factory(
 	parent_model = LineService,

@@ -215,7 +215,19 @@ class StationService(models.Model):
 			mid = " "
 		else:
 			mid = self.numbering_middle
-		return self.numbering_head + self.numbering_symbol + mid + self.numbering_number
+		if self.numbering_head:
+			h = self.numbering_head
+		else:
+			h = ""
+		if self.numbering_symbol:
+			s = self.numbering_symbol
+		else:
+			s = ""
+		if self.numbering_number:
+			n = self.numbering_number
+		else:
+			n = ""
+		return h + s + mid + n
 
 	def get_color(self):
 		s = self.color

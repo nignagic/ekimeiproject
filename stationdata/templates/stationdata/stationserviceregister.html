@@ -44,7 +44,7 @@
 		//路線を選択した時の挙動
 		$(document).on('click', '.line-option', function() {
 			line = $(this).attr("value");
-			var s = "http://localhost:8000/ekimeimysql1/api/station/" + line + "/?format=json";
+			var s = "http://localhost:8000/moviedatabase/api/line/" + line + "/station?format=json";
 			$('.station-select').empty();
 			$.getJSON(s, function(data) {
 				for (var i in data) {
