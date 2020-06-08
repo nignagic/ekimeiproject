@@ -906,11 +906,23 @@ class MovieListbyCreatorView(generic.ListView):
 
 		creator = Creator.objects.get(pk=self.kwargs['creator'])
 		names = Name.objects.filter(creator=creator)
-		channels = YoutubeChannel.objects.filter(creator=creator)
+		mainchannel = YoutubeChannel.objects.filter(creator=creator).filter(is_main=True)
+		subchannel = YoutubeChannel.objects.filter(creator=creator).exclude(is_main=True)
+		mainniconico = NiconicoAccount.objects.filter(creator=creator).filter(is_main=True)
+		subniconico = NiconicoAccount.objects.filter(creator=creator).exclude(is_main=True)
+		maintwitter = TwitterAccount.objects.filter(creator=creator).filter(is_main=True)
+		subtwitter = TwitterAccount.objects.filter(creator=creator).exclude(is_main=True)
+		pagelink = PageLink.objects.filter(creator=creator)
 
 		context['creator'] = creator
 		context['names'] = names
-		context['channels'] = channels
+		context['mainchannel'] = mainchannel
+		context['subchannel'] = subchannel
+		context['mainniconico'] = mainniconico
+		context['subniconico'] = subniconico
+		context['maintwitter'] = maintwitter
+		context['subtwitter'] = subtwitter
+		context['pagelink'] = pagelink
 
 		context['sort'] = self.kwargs['sort']
 		context['order'] = self.kwargs['order']
@@ -964,6 +976,29 @@ class MovieListbyChannelView(generic.ListView):
 		channel = YoutubeChannel.objects.get(pk=self.kwargs['channel_id'])
 		
 		context['channel'] = channel
+
+		context['sort'] = self.kwargs['sort']
+		context['order'] = self.kwargs['order']
+
+		return context
+
+class MovieListbyNiconicoView(generic.ListView):
+	model = Movie
+	paginate_by = 15
+	template_name = 'moviedatabase/creator/movielistbyniconico.html'
+
+	def get_queryset(self):
+		queryset = Movie.objects.filter(niconico_account=self.kwargs['niconico_account']).exclude(is_active=False).order_by('-published_at')
+		sort = self.kwargs['sort']
+		order = self.kwargs['order']
+		return moviequery(queryset, sort, order)
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+
+		niconico = NiconicoAccount.objects.get(pk=self.kwargs['niconico_account'])
+		
+		context['niconico'] = niconico
 
 		context['sort'] = self.kwargs['sort']
 		context['order'] = self.kwargs['order']

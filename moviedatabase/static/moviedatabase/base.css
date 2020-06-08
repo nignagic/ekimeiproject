@@ -134,7 +134,11 @@ ul, li {
 }
 
 .black-border {
-	border: solid 4px #06262b;
+	border-color: #06262b;
+}
+
+.black-border-all {
+	border: 4px solid #06262b;
 }
 
 .gray-background {
@@ -187,6 +191,19 @@ ul, li {
 
 .channel-border {
 	border-color: #c00;
+}
+
+.twitter-background {
+	background: #00acee;
+	color: #fff;
+}
+
+.twitter-color {
+	color: #00acee;
+}
+
+.twitter-border {
+	border-color: #00acee;
 }
 
 .music-background {
