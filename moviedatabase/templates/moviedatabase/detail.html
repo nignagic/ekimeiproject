@@ -198,35 +198,37 @@
 					<table class="part-table" data-part_id="{{ part.id }}" data-category="{{ part.category }}">
 						<tr>
 							<td class="part-header-up">
-								{{ part.part_name }}
+								{{ part.name }}
 							</td>
 						</tr>
 						<tr class="row-2">
 							<td>
 								{% if part.participant.all %}
-								{% for participant in part.participant.all %}
-									{{ participant }}
-									{% if forloop.last %}
-									{% else %}
-										<span>/</span>
+									{% for participant in part.participant.all %}
+										{{ participant }}
+										{% if forloop.last %}
+										{% else %}
+											<span>/</span>
+										{% endif %}
+									{% endfor %}
 									{% endif %}
-								{% endfor %}
+								{% if part.song.all %}
 								 - 
+									{% for song in part.song.all %}
+										{{ song }}
+										{% if forloop.last %}
+										{% else %}
+											<span>/</span>
+										{% endif %}
+									{% endfor %}
 								{% endif %}
-								{% for song in part.song.all %}
-									{{ song }}
-									{% if forloop.last %}
-									{% else %}
-										<span>/</span>
-									{% endif %}
-								{% endfor %}
 							</td>
 						</tr>
 					</table>
 				</div>
 				<div class="part-detail-container">
 					<table class="part-detail-table">
-						{% if part.part_name %}
+						{% if part.name %}
 						<tr class="part-detail-row">
 							<th class="part-detail-label">パート名</th>
 							<td class="part-detail-content">{{ part.name }}</td>
@@ -254,7 +256,7 @@
 										<a href="{% url 'moviedatabase:movielistbysong' song.id 'pub' 'n' %}">{{ song }}</a>
 										{% if forloop.last %}
 										{% else %}
-											<br>
+											<span>/</span>
 										{% endif %}
 									{% endfor %}
 							</td>
@@ -268,7 +270,7 @@
 									{{ vocal }}
 									{% if forloop.last %}
 									{% else %}
-										<br>
+										<span>/</span>
 									{% endif %}
 								{% endfor %}
 							</td>
