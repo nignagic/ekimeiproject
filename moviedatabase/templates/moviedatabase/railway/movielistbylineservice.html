@@ -18,6 +18,7 @@
 				{% if lineservice.name_sub %}
 				<small> - {{ lineservice.name_sub }}</small>
 				{% endif %}
+				{% if lineservice.status == 2 %}<small> - [廃]</small>{% endif %}
 			</div>
 			<div class="main-name-sub"></div>
 			<div class="sub-name black-background">

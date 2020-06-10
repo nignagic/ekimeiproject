@@ -13,7 +13,7 @@
 			<span class="detail-category line-background">路線</span>
 			<span class="detail-category white-background">正式区間</span>
 			{% if line.company.short_name_2 %}<a href="{% url 'moviedatabase:lineservicelistbycompany' line.company.pk %}" class="company-link">{{ line.company.short_name_2 }}</a>{% endif %}
-			<div class="main-name">{{ line.name }}{% if line.name_sub %}<small> - {{ line.name_sub }}</small>{% endif %}</div>
+			<div class="main-name">{{ line.name }}{% if line.name_sub %}<small> - {{ line.name_sub }}</small>{% endif %}{% if line.status == 2 %}<small> - 廃止</small>{% endif %}</div>
 			<div class="main-name-sub"></div>
 			<div class="sub-name white-background">
 				{{ line.start_station }} ～ {{ line.end_station }}
