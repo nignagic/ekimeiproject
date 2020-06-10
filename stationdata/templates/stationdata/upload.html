@@ -60,6 +60,12 @@
 	<button type="submit" class="btn" name="button">駅(運行系統)アップロード</button>
 </form>
 
+<form action="{% url 'stationdata:stationkanaset' %}" method="post" enctype="multipart/form-data">
+	{% csrf_token %}
+	<input type='file' class="dropify" data-default-file="ファイル選択" name="csv">
+	<button type="submit" class="btn" name="button">駅(正式区間)読みアップロード</button>
+</form>
+
 <form action="{% url 'stationdata:stationgroupset' %}" method="post" enctype="multipart/form-data">
 	{% csrf_token %}
 	<input type='file' class="dropify" data-default-file="ファイル選択" name="csv">
