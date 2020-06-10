@@ -401,6 +401,42 @@ def uploadStationService(request):
 		return render(request, 'stationdata/upload.html')
 
 @permission_required('stationdata.change_station')
+def stationkanaset(request):
+	if 'csv' in request.FILES:
+		items = []
+		form_data = TextIOWrapper(request.FILES['csv'].file, encoding='utf-8')
+		csv_file = csv.reader(form_data)
+		i = 0
+		for line in csv_file:
+			if i == 0:
+				i += 1
+				continue
+			tmp = Station.objects.filter(name__iexact=line[4]).filter(line__company__name__iexact=line[5]).filter(line__name__iexact=line[6]).filter(line__name_sub__iexact=line[7])
+			if tmp.count() == 1:
+				item = tmp.first()
+			else:
+				item = None
+				fail_category = 'Station-get'
+				text = line[4] + "'s " + " station get " + " failure."
+				ErrorList.objects.create(category=fail_category, text=text)
+				continue
+
+			if line[9]:
+				item.name_kana = line[9]
+			else:
+				item.name_kana = ""
+
+			items.append(item)
+		Station.objects.bulk_update(items, fields=[
+			'name_kana'
+		])
+
+		return render(request, 'stationdata/upload.html')
+
+	else:
+		return render(request, 'stationdata/upload.html')
+
+@permission_required('stationdata.change_station')
 def stationgroupset(request):
 	if 'csv' in request.FILES:
 		items = []

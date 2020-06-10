@@ -35,6 +35,7 @@ urlpatterns = [
 	path('edit/lineservice/<int:company>', views.LineServiceEditbyCompanyView, name='lineserviceeditbycompany'),
 	path('register/stationservice/<int:line_service>', views.StationServiceRegisterView, name='stationserviceregister'),
 
+	path('stationkanaset/', views.stationkanaset, name='stationkanaset'),
 	path('stationgroupset/', views.stationgroupset, name='stationgroupset'),
 	path('stationservicegroupset/', views.stationservicegroupset, name='stationservicegroupset'),
 	path('lineprefset/', views.lineprefset, name='lineprefset'),
