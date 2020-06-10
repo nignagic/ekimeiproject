@@ -204,6 +204,7 @@ def uploadLine(request):
 
 			sort_by_company = line[5]
 			is_freight = line[6]
+			status = line[7]
 
 			item = Line(
 				category=category,
@@ -212,7 +213,8 @@ def uploadLine(request):
 				name_sub=name_sub,
 				company=company,
 				sort_by_company=sort_by_company,
-				is_freight=is_freight)
+				is_freight=is_freight,
+				status=status)
 			items.append(item)
 		Line.objects.bulk_create(items)
 
@@ -324,6 +326,7 @@ def uploadLineService(request):
 			is_formal = line[7]
 			is_service = line[8]
 			color = line[9]
+			status = line[10]
 
 			item = LineService(
 				category=category,
@@ -334,7 +337,8 @@ def uploadLineService(request):
 				sort_by_company=sort_by_company,
 				is_formal=is_formal,
 				is_service=is_service,
-				color=color)
+				color=color,
+				status=status)
 			items.append(item)
 		LineService.objects.bulk_create(items)
 

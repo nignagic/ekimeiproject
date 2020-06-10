@@ -50,6 +50,12 @@ class Line(models.Model):
 	sort_by_company = models.IntegerField('事業者ごとの並び順', default=0)
 	is_freight = models.CharField('貨物輸送', max_length=200, null=True, blank=True)
 	prefs = models.ManyToManyField(Prefecture, blank=True)
+	STATUS_CHOICES = (
+		(0, '運用中'),
+		(1, '運用前'),
+		(2, '廃止')
+	)
+	status = models.IntegerField('状態', null=True, blank=True, choices=STATUS_CHOICES, default=0)
 	def start_station(self):
 		return Station.objects.filter(line=self.pk).order_by('sort_by_line').first()
 
@@ -57,14 +63,20 @@ class Line(models.Model):
 		return Station.objects.filter(line=self.pk).order_by('sort_by_line').last()
 
 	def __str__(self):
+		n = ""
 		if self.company and self.name_sub:
-			return self.company.name + " " + self.name + "(" + self.name_sub + ")"
+			n += self.company.name + " " + self.name + "(" + self.name_sub + ")"
 		elif self.name_sub:
-			return self.name + "(" + self.name_sub + ")"
+			n += self.name + "(" + self.name_sub + ")"
 		elif self.company:
-			return self.company.name + " " + self.name
+			n += self.company.name + " " + self.name
 		else:
-			return self.name
+			n += self.name
+
+		if self.status == 2:
+			return n + "[廃]"
+		else:
+			return n
 
 class Station(models.Model):
 	# category = models.ForeignKey(ObjectCategory, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='名称カテゴリー')
@@ -117,6 +129,12 @@ class LineService(models.Model):
 	is_service = models.CharField('運行系統', max_length=200, null=True, blank=True)
 	color = models.CharField('路線カラー', max_length=100, null=True, blank=True)
 	prefs = models.ManyToManyField(Prefecture, blank=True)
+	STATUS_CHOICES = (
+		(0, '運用中'),
+		(1, '運用前'),
+		(2, '廃止')
+	)
+	status = models.IntegerField('状態', null=True, blank=True, choices=STATUS_CHOICES, default=0)
 	def start_station(self):
 		return StationService.objects.filter(line_service=self.pk).order_by('sort_by_line_service').exclude(is_representative=True).first()
 
@@ -124,13 +142,19 @@ class LineService(models.Model):
 		return StationService.objects.filter(line_service=self.pk).order_by('sort_by_line_service').exclude(is_representative=True).last()
 
 	def with_company(self):
+		n = ""
 		if self.company:
 			if self.company.short_name_2:
-				return self.company.short_name_2 + " " + self.name
+				n = self.company.short_name_2 + " " + self.name
 			else:
-				return self.name
+				n = self.name
 		else:
-			return self.name
+			n = self.name
+
+		if self.status == 2:
+			return n + "[廃]"
+		else:
+			return n
 
 	def f_or_s(self):
 		if self.is_formal and (self.is_service==""):
@@ -141,10 +165,13 @@ class LineService(models.Model):
 			return ""
 
 	def __str__(self):
+		n = ""
 		if self.name_sub:
-			return self.with_company() + "(" + self.name_sub + ") " + self.f_or_s()
+			n += self.with_company() + "(" + self.name_sub + ") " + self.f_or_s()
 		else:
-			return self.with_company() + " " + self.f_or_s()
+			n += self.with_company() + " " + self.f_or_s()
+
+		return n
 
 class StationService(models.Model):
 	# category = models.ForeignKey(ObjectCategory, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='名称カテゴリー')
