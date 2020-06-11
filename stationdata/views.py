@@ -749,7 +749,7 @@ def lineserviceprefset(request):
 def lineservicelineset(request):
 	stationservices = StationService.objects.all()
 	for stationservice in stationservices:
-		lineservice = stationsrvice.line_service
+		lineservice = stationservice.line_service
 		line = stationservice.station.line
 		lineservice.line.add(line)
 	return render(request, 'stationdata/upload.html')
