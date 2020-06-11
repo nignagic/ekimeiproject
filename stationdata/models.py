@@ -260,8 +260,15 @@ class StationService(models.Model):
 
 	def get_color(self):
 		s = self.color
-		l = self.line_service.color
-		c = self.line_service.company.color
+		if self.line_service:
+			l = self.line_service.color
+		else:
+			l = ""
+		if self.line_service.company:
+			c = self.line_service.company.color
+		else:
+			c = ""
+			
 		if s != "" and s != None:
 			return s
 		elif l != "" and l != None:
