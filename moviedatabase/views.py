@@ -67,8 +67,17 @@ class MovieListView(generic.ListView):
 		
 		word = self.request.GET.get('word')
 		context['word'] = word
+
+		queryset = Movie.objects.none()
+		if word:
+			parts = Part.objects.filter(Q(name__icontains=word) | Q(explanation__icontains=word))
+			for part in parts:
+				queryset |= Movie.objects.filter(pk=part.movie.pk)
+			queryset |= Movie.objects.filter(Q(title__icontains=word) | Q(main_id__icontains=word) | Q(description__icontains=word) | Q(explanation__icontains=word))
+		else:
+			queryset = Movie.objects.all()
 		
-		context['count'] = context['movie_list'].count()
+		context['count'] = queryset.count()
 
 		return context
 
