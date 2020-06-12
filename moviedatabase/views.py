@@ -1119,6 +1119,22 @@ def movie_part_station_edit(request, main_id, sort_by_movie):
 
 	return render(request, 'moviedatabase/station_edit.html', context)
 
+class NameCreate(PermissionRequiredMixin, generic.CreateView):
+	model = Name
+	fields = '__all__'
+	permission_required = ('moviedatabase.add_name')
+	success_url = reverse_lazy('moviedatabase:top')
+
+class PopupNameCreate(NameCreate):
+	def form_valid(self, form):
+		name = form.save()
+		context = {
+			'object_name': str(name),
+			'object_pk': name.pk,
+			'function_name': 'add_name'
+		}
+		return render(self.request, 'songdata/close.html', context)
+
 @permission_required('moviedatabase.add_movieupdateinformation')
 def UpdateInformation(request, main_id):
 	movie = get_object_or_404(Movie, main_id=main_id)

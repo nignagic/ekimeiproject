@@ -108,7 +108,7 @@
 					</div>
 					<div class="part-name">
 						路線説明またはパート名{{ form.name }}<br>
-						開始位置{{ form.start_time }}<input type="button" class="time-set" value="現在位置に指定"><br>種類{{ form.category }}
+						開始位置{{ form.start_time }}<input type="button" class="time-set" value="現在位置に指定">
 						<div class="name-error">{{ form.name.errors }}</div>
 						<div class="part-start-time">
 							<p><span class="participant-list"></span>
@@ -262,9 +262,7 @@
 		p += "<div class='part-name-short'>番号<br><input type='text' name='part_set-" + currentFileCount + "-short_name' value='" + v + "' class='short_name' maxlength='10' id='id_part_set-" + currentFileCount + "-short_name'><div class='name-short-error'></div></div>"
 		p += "<div class='part-name'>路線説明またはパート名<input type='text' name='part_set-" + currentFileCount + "-name' class='name' maxlength='200' id='id_part_set-" + currentFileCount + "-name'><br>"
 		p += "開始位置<input type='text' name='part_set-" + currentFileCount + "-start_time' value='" + t + "' class='start_time' id='id_part_set-" + currentFileCount + "-start_time'><input type='button' class='time-set' value='現在位置に指定'><br>"
-		p += "種類<select name='part_set-" + currentFileCount + "-category' class='category' id='id_part_set-" + currentFileCount + "-category'>"
-		p += "<option value=''>---------</option><option value='1'>駅名記憶</option>"
-		p += "</select><div class='name-error'></div>"
+		p += "<div class='name-error'></div>"
 		p += "<div class='part-start-time'><p><span class='participant-list'></span><span class='part-song-list'> - </span></p></div></div>"
 		p += "<div class='detail-link'><div class='delete-button'><a class='delete-text'>削除</a></div></div></div>"
 

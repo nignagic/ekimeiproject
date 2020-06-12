@@ -556,7 +556,7 @@
 		width: 100%;
 	}
 
-	.movie-title {
+	.main-movie-title {
 		font-size: 1.0rem;
 	}
 
@@ -565,6 +565,10 @@
 	}
 
 	.movie-statistics-name {
+		font-size: 0.7rem;
+	}
+
+	.movie-title {
 		font-size: 0.7rem;
 	}
 
