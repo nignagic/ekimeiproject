@@ -15,6 +15,16 @@ function TimetoSecond(time) {
 }
 
 //曲・ボーカル追加
+function add_name(name, pk) {
+	var select = $('select.participant')[0];
+	var option = document.createElement('option');
+	option.setAttribute('value', pk);
+	option.innerHTML = name;
+
+	select.add(option, 0);
+	select.options[0].selected = true;
+}
+
 function add_song(name, pk) {
 	var select = $('select.song')[0];
 	var option = document.createElement('option');

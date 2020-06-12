@@ -32,7 +32,7 @@
 			<div class="part-detail">
 				{{ part_form.non_field_errors }}
 				<div class="part-detail-top">
-					路線説明またはパート名{{ part_form.part_name }}
+					路線説明またはパート名{{ part_form.name }}
 					開始時間{{ part_form.start_time }}<input type="button" class="youtube-jump" value="この位置にジャンプ">
 					補足説明{{ part_form.explanation }}
 					{{ part_form.movie }}
@@ -42,7 +42,7 @@
 						種類<br>{{ part_form.category }}
 					</div>
 					<div>
-						参加者<br>{{ part_form.participant }}
+						参加者<br>{{ part_form.participant }}<br><a href="javascript:void(0);" onclick="window.open('{% url 'moviedatabase:popup_name_create' %}', 'subwin', 'width=500,height=500');">+Name</a>
 					</div>
 					<div>
 						使用楽曲(パート単体)<br>{{ part_form.song }}<br><a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_song_create' %}', 'subwin', 'width=500,height=500');">+Song</a>

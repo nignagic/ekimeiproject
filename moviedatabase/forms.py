@@ -124,7 +124,7 @@ class MovieUpdateForm(forms.ModelForm):
 class PartEditFormforinline(forms.ModelForm):
 	class Meta:
 		model = Part
-		fields = ('sort_by_movie', 'short_name', 'name', 'movie', 'participant', 'category', 'start_time', 'song', 'explanation')
+		fields = ('sort_by_movie', 'short_name', 'name', 'movie', 'participant', 'start_time', 'song', 'explanation')
 		widgets = {
 			'sort_by_movie': forms.HiddenInput(attrs={
 				'class': 'sort_by_movie',
@@ -140,9 +140,6 @@ class PartEditFormforinline(forms.ModelForm):
 			}),
 			'participant': forms.MultipleHiddenInput(attrs={
 				'class': 'participant',
-			}),
-			'category': forms.Select(attrs={
-				'class': 'category',
 			}),
 			'start_time': forms.TextInput(attrs={
 				'class': 'start_time',

@@ -53,6 +53,7 @@ urlpatterns = [
 	path('movie/register/', views.MovieRegisterView.as_view(), name='register'),
 	path('movie/edit/<slug:main_id>/', views.movie_part_edit, name='part_edit'),
 	path('movie/edit/<slug:main_id>/part/<int:sort_by_movie>', views.movie_part_station_edit, name='station_edit'),
+	path('popup/name_create/', views.PopupNameCreate.as_view(), name='popup_name_create'),
 
 	path('updateinformation/<slug:main_id>/', views.UpdateInformation, name='updateinformation'),
 	path('updateinformationforuser/<int:creator>/', views.UpdateInformationforCreator, name='updateinformationforcreator'),
