@@ -14,6 +14,11 @@ function TimetoSecond(time) {
 	return hour + minute + second;
 }
 
+$(function() {
+	d = $('.movie-description').text().replace(/<br>/g, '<br>');
+	$('.movie-description').html(d)
+}
+
 //曲・ボーカル追加
 function add_name(name, pk) {
 	var select = $('select.participant')[0];

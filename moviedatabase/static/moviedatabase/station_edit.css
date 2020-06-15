@@ -66,6 +66,8 @@ ul, li {
 
 .part-detail {
 	padding: 8px;
+	height: 100%;
+	overflow-y: scroll;
 }
 
 .part-detail-bottom {
@@ -74,6 +76,11 @@ ul, li {
 
 .part-detail-bottom div {
 	padding: 8px;
+}
+
+.movie-description {
+	font-weight: normal;
+	height: auto;
 }
 
 .station-editing-area {
