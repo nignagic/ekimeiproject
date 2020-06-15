@@ -51,6 +51,9 @@
 						使用ボーカル<br>{{ part_form.vocalnew }}<br><a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_vocal_create' %}', 'subwin', 'width=500,height=500');">+Vocal</a>
 					</div>
 				</div>
+				<div>
+					<p class="movie-description">{{ part.movie.description | linebreaksbr }}</p>
+				</div>
 			</div>
 		</div>
 		<div class="station-editing-area">
