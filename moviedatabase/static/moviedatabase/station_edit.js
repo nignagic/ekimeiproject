@@ -17,7 +17,7 @@ function TimetoSecond(time) {
 $(function() {
 	d = $('.movie-description').text().replace(/<br>/g, '<br>');
 	$('.movie-description').html(d)
-}
+})
 
 //曲・ボーカル追加
 function add_name(name, pk) {
