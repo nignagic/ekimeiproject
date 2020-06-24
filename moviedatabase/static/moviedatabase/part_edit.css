@@ -155,6 +155,11 @@ ul, li {
 	width: 100%;
 }
 
+.movie-description {
+	font-weight: normal;
+	font-size: 0.9rem;
+}
+
 .movie-part-list {
 	width: 50%;
 }

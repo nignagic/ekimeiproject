@@ -88,7 +88,7 @@ class Movie(models.Model):
 	explanation = models.TextField('補足説明', blank=True)
 	is_active = models.BooleanField('active', default=True)
 	class Meta:
-		ordering = ['is_collab']
+		ordering = ('is_collab', '-id')
 
 	def category(self):
 		parts = Part.objects.filter(movie=self.main_id)
