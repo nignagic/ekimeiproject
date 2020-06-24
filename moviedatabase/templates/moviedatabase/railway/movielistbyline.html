@@ -47,6 +47,9 @@
 			</div>
 			<div class="railway-side">
 				<h4 class="side-header">駅一覧</h4>
+				{% if can_edit %}
+				<a href="{% url 'stationdata:stationregister' line.pk %}">駅情報編集</a>
+				{% endif %}
 				<ul class="station-list-ul">
 					{% for station in stations %}
 						<li class="station-list-li black-border-all">

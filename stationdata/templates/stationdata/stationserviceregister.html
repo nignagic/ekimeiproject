@@ -24,9 +24,14 @@
 		{{ formset.management_form }}
 		<div class="station-service-form-container">
 			{% for form in formset %}
-			<table class="station-service-form">
-				{{ form.as_table }}
-			</table>
+			<div class="station-service-each-form">
+				<div class="station-service-sortable">
+					<span class="sortable-handle">■</span>
+				</div>
+				<table class="station-service-form">
+					{{ form.as_table }}
+				</table>
+			</div>
 			{% endfor %}
 		</div>
 		{% csrf_token %}
@@ -44,7 +49,7 @@
 		//路線を選択した時の挙動
 		$(document).on('click', '.line-option', function() {
 			line = $(this).attr("value");
-			var s = "http://localhost:8000/moviedatabase/api/line/" + line + "/station?format=json";
+			var s = "/moviedatabase/api/line/" + line + "/station?format=json";
 			$('.station-select').empty();
 			$.getJSON(s, function(data) {
 				for (var i in data) {
@@ -54,30 +59,28 @@
 			})
 		})
 
+		//駅登録リスト
 		$(function() {
-			var totalManageElement = $('input#id_station_service_line_service-TOTAL_FORMS');
+			$('.station-service-form-container').html(
+				$('.station-service-each-form').sort(function(a,b) {
+					return parseInt($(a).find('.sort_by_line_service').val(), 10) - parseInt($(b).find('.sort_by_line_service').val(), 10)
+				})
+			)
+			var totalManageElement = $('input#id_stationservice_set-TOTAL_FORMS');
 			var currentFileCount = parseInt(totalManageElement.val());
 
 			$('.station-service-append').on('click', function() {
-				station_service_code = {{ last_code }}
-
-				$('.station-service-form').each(function(i, form) {
-					c = $(form).find('.station_service_code').val();
-					if (c > station_service_code) station_service_code = c;
-				})
-				$('.station-service-form-container').empty();
 				$('.station-select option:selected').each(function(i, station) {
 					// console.log($(val).val() + $(val).data('name'))
 					val = $(station).attr("value")
 					name = $(station).data('name')
 
-					station_service_code = parseInt(station_service_code) + 1;
+					list = text(val, name, currentFileCount)
 
-					list = "<tr><th><label for='id_station_service_line_service-" + currentFileCount + "-category'>名称カテゴリー:</label></th><td><select name='station_service_line_service-" + currentFileCount + "-category' id='id_station_service_line_service-" + currentFileCount + "-category'>  <option value='' selected>---------</option></select></td></tr><tr><th><label for='id_station_service_line_service-" + currentFileCount + "-station_service_code'>駅コード(運行系統):</label></th><td><input type='text' name='station_service_line_service-" + currentFileCount + "-station_service_code' value='" + station_service_code + "' class='station_service_code' id='id_station_service_line_service-" + currentFileCount + "-station_service_code'></td></tr><tr><th><label for='id_station_service_line_service-" + currentFileCount + "-station_service_group_code'>駅グループコード(運行系統):</label></th><td><input type='text' name='station_service_line_service-" + currentFileCount + "-station_service_group_code' value='" + station_service_code + "' class='station_service_group_code' id='id_station_service_line_service-" + currentFileCount + "-station_service_group_code'></td></tr><tr><th><label for='id_station_service_line_service-" + currentFileCount + "-station_name'>駅名:</label></th><td><input type='text' name='station_service_line_service-" + currentFileCount + "-station_name' value=" + name + " maxlength='200' id='id_station_service_line_service-" + currentFileCount + "-station_name'></td></tr><tr><th><label for='id_station_service_line_service-" + currentFileCount + "-numbering_head'>ナンバリング接頭辞:</label></th><td><input type='text' name='station_service_line_service-" + currentFileCount + "-numbering_head' maxlength='200' id='id_station_service_line_service-" + currentFileCount + "-numbering_head'></td></tr><tr><th><label for='id_station_service_line_service-" + currentFileCount + "-numbering_symbol'>路線記号:</label></th><td><input type='text' name='station_service_line_service-" + currentFileCount + "-numbering_symbol' maxlength='200' id='id_station_service_line_service-" + currentFileCount + "-numbering_symbol'></td></tr><tr><th><label for='id_station_service_line_service-" + currentFileCount + "-numbering_middle'>ナンバリングハイフン:</label></th><td><input type='text' name='station_service_line_service-" + currentFileCount + "-numbering_middle' maxlength='200' id='id_station_service_line_service-" + currentFileCount + "-numbering_middle'></td></tr><tr><th><label for='id_station_service_line_service-" + currentFileCount + "-numbering_number'>駅番号:</label></th><td><input type='text' name='station_service_line_service-" + currentFileCount + "-numbering_number' maxlength='200' id='id_station_service_line_service-" + currentFileCount + "-numbering_number'></td></tr><tr><th><label for='id_station_service_line_service-" + currentFileCount + "-sort_by_line_service'>路線(運行系統)ごとの並び順:</label></th><td><input type='number' name='station_service_line_service-" + currentFileCount + "-sort_by_line_service' value='0' id='id_station_service_line_service-" + currentFileCount + "-sort_by_line_service' class='sort_by_line_service'></td></tr><tr><th><label for='id_station_service_line_service-" + currentFileCount + "-station_color'>駅カラー:</label></th><td><input type='text' name='station_service_line_service-" + currentFileCount + "-station_color' maxlength='100' id='id_station_service_line_service-" + currentFileCount + "-station_color'><input type='hidden' name='station_service_line_service-" + currentFileCount + "-station' value='" + val + "' class='station' id='id_station_service_line_service-" + currentFileCount + "-station'><input type='hidden' name='station_service_line_service-" + currentFileCount + "-line_service' value='{{ lineservice.pk }}' id='id_station_service_line_service-" + currentFileCount + "-line_service'><input type='hidden' name='station_service_line_service-" + currentFileCount + "-id' id='id_station_service_line_service-" + currentFileCount + "-id'></td></tr>"
-					$('.station-service-form-container').append("<table class='station-service-form'>" + list + "</table>")
+					$('.station-service-form-container').append(list)
 
 					$('.station-service-form').each(function(i, form) {
-						$(form).find('.sort_by_line_service').val(i);
+						$(form).find('.sort_by_line_service').val(i+1);
 					})
 
 					currentFileCount += 1;
@@ -85,17 +88,31 @@
 				})
 			})
 
-			$('.station-service-first-remove').on('click', function() {
-				$('.station-service-form:first').remove();
-
-				$('.station-service-form').each(function(i, form) {
-					$(form).find('.sort_by_line_service').val(i);
-				})
-
-				currentFileCount -= 1;
-				totalManageElement.attr('value', currentFileCount);
-				$('input#id_station_service_line_service-INITIAL_FORMS').val(1);
+			$('div.station-service-form-container').sortable({
+				handle: ".sortable-handle",
+				update: function() {
+					$('.station-service-each-form').each(function(i, form) {
+						$(form).find('.sort_by_line_service').val(i+1);
+					})
+				}
 			})
+
+			function text(val, name, currentFileCount) {
+				list = "<div class='station-service-each-form'>"
+				list += "<div class='station-service-sortable'><span class='sortable-handle'>■</span></div>"
+				list += "<table class='station-service-form'>"
+				list += "<tr><th><label for='id_stationservice_set-" + currentFileCount + "-name'>駅名(運行系統):</label></th><td><input type='text' name='stationservice_set-" + currentFileCount + "-name' value='" + name + "' maxlength='200' id='id_stationservice_set-" + currentFileCount + "-name'></td></tr>"
+				list += "<tr><th><label for='id_stationservice_set-" + currentFileCount + "-numbering_head'>ナンバリング接頭辞:</label></th><td><input type='text' name='stationservice_set-" + currentFileCount + "-numbering_head' maxlength='200' id='id_stationservice_set-" + currentFileCount + "-numbering_head'></td></tr>"
+				list += "<tr><th><label for='id_stationservice_set-" + currentFileCount + "-numbering_symbol'>路線記号:</label></th><td><input type='text' name='stationservice_set-" + currentFileCount + "-numbering_symbol' maxlength='200' id='id_stationservice_set-" + currentFileCount + "-numbering_symbol'></td></tr>"
+				list += "<tr><th><label for='id_stationservice_set-" + currentFileCount + "-numbering_middle'>ナンバリングハイフン:</label></th><td><input type='text' name='stationservice_set-" + currentFileCount + "-numbering_middle' maxlength='200' id='id_stationservice_set-" + currentFileCount + "-numbering_middle'></td></tr>"
+				list += "<tr><th><label for='id_stationservice_set-" + currentFileCount + "-numbering_number'>駅番号:</label></th><td><input type='text' name='stationservice_set-" + currentFileCount + "-numbering_number' maxlength='200' id='id_stationservice_set-" + currentFileCount + "-numbering_number'></td></tr>"
+				list += "<tr><th><label for='id_stationservice_set-" + currentFileCount + "-sort_by_line_service'>路線(運行系統)ごとの並び順:</label></th><td><input type='text' name='stationservice_set-" + currentFileCount + "-sort_by_line_service' class='sort_by_line_service' id='id_stationservice_set-" + currentFileCount + "-sort_by_line_service'></td></tr>"
+				list += "<tr><th><label for='id_stationservice_set-" + currentFileCount + "-color'>駅カラー:</label></th><td><input type='text' name='stationservice_set-" + currentFileCount + "-color' value='' maxlength='100' id='id_stationservice_set-" + currentFileCount + "-color'><input type='hidden' name='stationservice_set-" + currentFileCount + "-station' value='" + val + "' id='id_stationservice_set-" + currentFileCount + "-station'><input type='hidden' name='stationservice_set-" + currentFileCount + "-line_service' value='{{ lineservice.pk }}' id='id_stationservice_set-" + currentFileCount + "-line_service'>"
+				list += "</table></div>"
+
+				console.log(list);
+				return list;
+			}
 		})
 	</script>
 {% endblock %}

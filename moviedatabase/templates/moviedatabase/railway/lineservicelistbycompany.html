@@ -40,6 +40,11 @@
 						<a href="{% url 'moviedatabase:lineservicelistbycompanyandprefecture' company.pk pref.pk %}" class="line-color">{{ pref }}</a>
 					{% endfor %}
 				</li>
+				{% if can_edit %}
+				<a href="{% url 'stationdata:lineregister' company.pk %}">路線追加</a><br>
+				<a href="{% url 'stationdata:lineserviceregister' company.pk %}">路線[運行系統]追加</a><br>
+				<a href="{% url 'stationdata:lineserviceeditbycompany' company.pk %}">路線[運行系統]編集</a>
+				{% endif %}
 			</div>
 		</div>
 	</div>

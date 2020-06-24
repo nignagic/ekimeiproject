@@ -24,6 +24,9 @@ $(function() {
 		$('.station-ul').slideUp(400, buttonFunc);
 	})
 
+	if ($('.part-detail-container').length == 1)
+		$('.part-detail-container').show();
+
 	$(document).on('click', '.movie-description-button', function() {
 		$('.movie-description').removeClass('movie-description-close')
 	})

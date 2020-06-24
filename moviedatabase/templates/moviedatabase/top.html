@@ -9,8 +9,7 @@
 <div class="background">
 	{% include 'moviedatabase/includes/header.html' %}
 	<section class="top-menu-container">
-		<div class="top-menu-background">
-			<img src="">
+		<div class="top-menu-background" style="background-image: url({% static 'moviedatabase/img-top/nakatsugawa.JPG' %})">
 		</div>
 		<div class="top-search-container" style="display: none;">
 			フリーワード検索
@@ -44,7 +43,11 @@
 			<a href="{% url 'moviedatabase:movielist' %}">もっと見る</a>
 		</div>
 		<div class="movie-list-right">
-			<div class="movie-list-right-inner">ここに何かを置く(未定)</div>
+			<h4 class="content-header movie-border">公式ツイート</h4>
+			<div class="tweets">
+				<!-- <div class="movie-list-right-inner">ここに何かを置く(未定)</div> -->
+				<a class="twitter-timeline" href="https://twitter.com/STANMIC_DB?ref_src=twsrc%5Etfw">Tweets by STANMIC_DB</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+			</div>
 		</div>
 	</section>
 	<section class="top-notice-container">
