@@ -71,6 +71,10 @@
 				</div>
 			</div>
 			<div class="detail-addition">
+				<h3 class="detail-header">単合区分</h3>
+				<div class="detail-content">
+					{{ form.is_collab }}
+				</div>
 				<h3 class="detail-header">使用楽曲(全体)</h3>
 				<div class="detail-content">
 					{{ form.song }}
@@ -80,12 +84,19 @@
 				<div class="detail-content">
 					{{ form.parent }}
 				</div>
+				<h3 class="detail-header">関連作品</h3>
+				<div class="detail-content">
+					{{ form.related }}
+				</div>
 				<h3 class="detail-header">補足説明</h3>
 				<div class="detail-content">
 					{{ form.explanation }}
 				</div>
+				<h3 class="detail-header">概要</h3>
+				<div class="detail-content movie-description">
+					{{ movie.description | urlize | linebreaksbr }}
+				</div>
 			</div>
-			{{ form.is_collab }}
 		</div>
 		<div class="movie-part-list">
 			<h3>パート編集</h3>
@@ -161,6 +172,11 @@
 
 {% block extrajs %}
 <script type="text/javascript">
+	$(function() {
+		d = $('.movie-description').text().replace(/<br>/g, '<br>');
+		$('.movie-description').html(d)
+	})
+
 	function add_song(name, pk) {
 		var select = document.getElementById('id_song');
 		var option = document.createElement('option');
