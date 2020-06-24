@@ -226,6 +226,8 @@ class LineServiceListbyCompanyView(generic.ListView):
 		context['company'] = company
 		context['prefs'] = prefs
 
+		context['can_edit'] = self.request.user.groups.filter(name='can_edit').exists()
+
 		return context
 
 class LineServiceListbyCompanyandPrefectureView(generic.ListView):
@@ -402,6 +404,8 @@ class MovieListbyLineView(generic.ListView):
 		context['sort'] = self.kwargs['sort']
 		context['order'] = self.kwargs['order']
 
+		context['can_edit'] = self.request.user.groups.filter(name='can_edit').exists()
+
 		return context
 
 class MovieListbyStationView(generic.ListView):
@@ -471,6 +475,8 @@ class MovieListbyLineServiceView(generic.ListView):
 
 		context['sort'] = self.kwargs['sort']
 		context['order'] = self.kwargs['order']
+
+		context['can_edit'] = self.request.user.groups.filter(name='can_edit').exists()
 
 		return context
 

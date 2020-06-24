@@ -87,6 +87,9 @@ class Movie(models.Model):
 	related = models.ManyToManyField('self', blank=True, verbose_name='関連作品')
 	explanation = models.TextField('補足説明', blank=True)
 	is_active = models.BooleanField('active', default=True)
+	class Meta:
+		ordering = ['is_collab']
+
 	def category(self):
 		parts = Part.objects.filter(movie=self.main_id)
 		categories = MovieCategory.objects.none()

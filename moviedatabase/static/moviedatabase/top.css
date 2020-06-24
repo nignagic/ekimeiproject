@@ -1,12 +1,15 @@
 .top-menu-container {
-	background: #ccc;
+	/*background: #ccc;*/
 	position: relative;
 }
 
 .top-menu-background {
 	width: 100%;
 	height: 32vw;
-	background: #f0f0f0;
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
+	/*background: #f0f0f0;*/
 }
 
 .top-search-container {
@@ -191,7 +194,7 @@
 
 .movie-list-right {
 	width: 36%;
-	padding: 2.0rem;
+	padding: 1.0rem;
 }
 
 .movie-list-right-inner {
@@ -200,6 +203,12 @@
 	padding: 1rem;
 	width: 100%;
 	height: 100%;
+}
+
+.tweets {
+	overflow-y: scroll;
+	max-height: 100%;
+	max-height: 500px;
 }
 
 .top-notice-container {
@@ -253,7 +262,7 @@
 
 @media (max-width: 768px) {
 	.top-menu-background {
-		height: 80vw;
+		height: 48vw;
 	}
 
 	.top-menu > ul {
@@ -275,6 +284,10 @@
 	.movie-list-right {
 		padding: 1rem 0;
 		width: 100%;
+	}
+
+	.tweets {
+		height: 360px;
 	}
 
 	.movie-img {
@@ -319,7 +332,8 @@
 
 	.top-notice,
 	.top-update {
-		padding: 1rem;
+		padding: 0;
+		margin-bottom: 2rem;
 		width: 100%;
 	}
 

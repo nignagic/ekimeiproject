@@ -103,7 +103,7 @@ class Station(models.Model):
 		if g:
 			s = Station.objects.filter(group_station_new=g)
 		else:
-			s = None
+			s = Station.objects.filter(pk=self.id)
 		return s
 
 	def get_group_station_id(self):

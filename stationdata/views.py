@@ -597,9 +597,12 @@ def StationRegisterView(request, line):
 			line.prefs.add(pref)
 		return redirect('stationdata:railwaytop')
 
+	prefs = Prefecture.objects.all()
+
 	context = {
 		'line': line,
-		'formset': formset
+		'formset': formset,
+		'prefs': prefs
 	}
 
 	return render(request, 'stationdata/stationregister.html', context)
