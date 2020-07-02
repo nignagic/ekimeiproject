@@ -53,7 +53,7 @@ function add_vocalnew(name, pk) {
 // 都道府県を選択したときの挙動
 $('#pref-select').children('div').on('click', function() {
 	pref = $(this).attr('value');
-	var s = "/moviedatabase/api/pref/" + pref + "/lineservice/?format=json";
+	var s = "/api/pref/" + pref + "/lineservice/?format=json";
 	$(".pref-line-select").empty();
 	$.getJSON(s, function(data) {
 		for (var i in data) {
@@ -66,7 +66,7 @@ $('#pref-select').children('div').on('click', function() {
 // 事業者名を選択したときの挙動
 $('#company-select').children('div').on('click', function() {
 	company = $(this).attr('value');
-	var s = "/moviedatabase/api/company/" + company + "/lineservice/?format=json";
+	var s = "/api/company/" + company + "/lineservice/?format=json";
 	$(".company-line-select").empty();
 	$.getJSON(s, function(data) {
 		for (var i in data) {
@@ -79,7 +79,7 @@ $('#company-select').children('div').on('click', function() {
 //路線を選択した時の挙動
 $(document).on('click', '.line-option', function() {
 	line = $(this).attr("value");
-	var s = "/moviedatabase/api/lineservice/" + line + "/stationservice/?format=json";
+	var s = "/api/lineservice/" + line + "/stationservice/?format=json";
 	$('.station-select').empty();
 	$.getJSON(s, function(data) {
 		for (var i in data) {
@@ -98,7 +98,7 @@ $(document).on('click', '.station-reverse', function() {
 //乗換検索をした時の挙動
 $(document).on('click', '.line-search-button', function() {
 	station = $(this).parents('.stations-box').find('.station_service').attr("value");
-	var s = "/moviedatabase/api/transfer/" + station + "/?format=json";
+	var s = "/api/transfer/" + station + "/?format=json";
 	$(".transfer-line-select").empty();
 
 	$('.is-active').removeClass('is-active');
@@ -137,7 +137,7 @@ $('.namesearchbutton').on('click', function() {
 })
 function namesearch() {
 	text = $('.namesearch').val();
-	var s = "/moviedatabase/api/stationsearch/" + text + "/?format=json";
+	var s = "/api/stationsearch/" + text + "/?format=json";
 	$('.station-select').empty();
 	$.getJSON(s, function(data) {
 		for (var i in data) {
