@@ -179,7 +179,6 @@ $(function() {
 					 	station = station_text_f(data[i].get_color, data[j].get_color, data[i].station_service_pk, station_text)
 					 	$('.station-ul-' + id + "-" + ul).append(station)
 					} else if ((data[i].station_service_pk != data[j-2].station_service_pk) && (data[i].get_group_station == data[j-2].get_group_station)) {
-						len--;
 					} else {
 						station = station_text_f(data[i].get_color, data[i].get_color, data[i].station_service_pk, station_text)
 						$('.station-ul-' + id + "-" + ul).append(station)
