@@ -1,0 +1,25 @@
+{% extends 'stationdata/base.html' %}
+
+{% block title %}路線(運行系統)登録{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'stationdata/register.css' %}">
+
+<h2>駅登録</h2>
+<div class="main-container">
+	<form action="" method="POST">
+		{{ form.as_p }}
+		{% csrf_token %}
+		<button type="submit" class="btn">送信</button>
+	</form>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+	$(function() {
+		$('#id_company').val('{{ company.pk }}')
+	})
+</script>
+{% endblock %}

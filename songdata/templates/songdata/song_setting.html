@@ -1,0 +1,89 @@
+{% extends 'moviedatabase/base.html' %}
+{% block content %}
+	<form action="" method="POST">
+		<div class="artist_song_container" style="display: flex;">
+			<div class="artist">
+				<select name="artist" id="id_artist" size="18">
+					{% for artist in artists %}
+					<option value="{{ artist.pk }}" data-head="{{ artist.initial }}">{{ artist }}</option>
+					{% endfor %}
+				</select>
+				<br><a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_artist_create' %}', 'subwin2', 'width=500,height=500');">+Artist</a>
+			</div>
+			<div class="song">
+				<select name="song" id="id_song" size="18">
+					{% for song in songs %}
+					<option value="{{ song.pk }}" data-head="{{ song.initial }}" data-artist="{% for artist in song.artist.all %}{{ artist }} {% endfor %}" class="song-option">{{ song }}</option>
+					{% endfor %}
+				</select>
+				<br><a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_song_create' %}', 'subwin2', 'width=500,height=500');">+Song</a>
+			</div>
+			<div id="selected-song-container">
+				<div class="selected-song" data-id="">曲名 - 歌手名<div class="delete-button">削除</div></div>
+			</div>
+		{% csrf_token %}
+		</div>
+		<button type="submit">決定</button>
+	</form>
+	<div id="is-song-setting"></div>
+{% endblock %}
+{% block extrajs %}
+	<script type="text/javascript">
+		selected_songs = []
+		
+		window.onload = function() {
+
+			opener_songs = window.opener.document.getElementById('id_song').selectedOptions
+
+			// 親ウィンドウの存在チェック
+			if (!window.opener || window.opener.closed || !opener_songs) {
+				console.log('There is no window opener');
+			} else {
+				// 親ウィンドウのartistのセレクトボックスが何か選択された状態で、かつ子ウィンドウのartistが何も選択されていない状態
+				// 後者：子ウィンドウのアーティストが選択されているのに変更されてしまうのを防ぐ
+				if (opener_songs) {
+					for (let i = 0; i < opener_songs.length; i++) {
+						song_append(opener_songs[i].value)
+					}
+				}
+			}
+
+			$(document).on('dblclick', '.song-option', function() {
+				song_append($(this).val())
+				console.log(selected_songs);
+			})
+
+		}
+		function song_append(val) {
+			selected_songs.push(val);
+
+			song = $('select#id_song option[value="'+val+'"]')
+			console.log(song)
+			name = $(song).text();
+			artist_name = $(song).data('artist');
+			$('#selected-song-container').append("<div class='selected-song' data-id='"+val+"'>"+name+" - "+artist_name+"</div>");
+		}
+
+		function add_artist(name, pk) {
+			var select = document.getElementById('id_artist');
+			var option = document.createElement('option');
+			option.setAttribute('value', pk);
+			option.innerHTML = name;
+
+			select.add(option, 0);
+			select.options[0].selected = true;
+		}
+		function add_song(name, pk, artist) {
+			var select = document.getElementById('id_song');
+			var option = document.createElement('option');
+			option.setAttribute('value', pk);
+			option.setAttribute('class', 'song-option')
+			option.setAttribute('data-artist', artist)
+			console.log(artist)
+			option.innerHTML = name;
+
+			select.add(option, 0);
+			select.options[0].selected = true;
+		}
+	</script>
+{% endblock %}

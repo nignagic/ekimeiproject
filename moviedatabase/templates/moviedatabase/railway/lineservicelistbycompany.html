@@ -41,9 +41,8 @@
 					{% endfor %}
 				</li>
 				{% if can_edit %}
-				<a href="{% url 'stationdata:lineregister' company.pk %}">路線追加</a><br>
-				<a href="{% url 'stationdata:lineserviceregister' company.pk %}">路線[運行系統]追加</a><br>
-				<a href="{% url 'stationdata:lineserviceeditbycompany' company.pk %}">路線[運行系統]編集</a>
+				<a href="{% url 'stationdata:lineregister' company.pk %}">路線[正式路線]追加・編集</a><br>
+				<a href="{% url 'stationdata:lineserviceregister' company.pk %}">路線[運行系統]追加・編集</a><br>
 				{% endif %}
 			</div>
 		</div>

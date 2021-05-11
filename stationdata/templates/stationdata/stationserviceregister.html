@@ -11,7 +11,7 @@
 	<div class="line-station-list">
 		<div class="line-list">
 			{% for line in lines %}
-				<div class="line-option" value="{{ line.pk }}">{{ line }}</div>
+				<div class="line-option" value="{{ line.pk }}" data-sort_by_company="{{ line.sort_by_company }}">{{ line }}</div>
 			{% endfor %}
 		</div>
 		<div class="station-list">
@@ -43,13 +43,21 @@
 {% block extrajs %}
 	<script>
 		$(function (){
+
+
+			$('.line-list').html(
+				$('.line-option').sort(function(a,b) {
+					return parseInt($(a).data("sort_by_company"), 10) - parseInt($(b).data("sort_by_company"), 10)
+				})
+			)
+
 			$('#id_line').val('{{ line.pk }}')
 		})
 
 		//路線を選択した時の挙動
 		$(document).on('click', '.line-option', function() {
 			line = $(this).attr("value");
-			var s = "/moviedatabase/api/line/" + line + "/station?format=json";
+			var s = "/api/line/" + line + "/station?format=json";
 			$('.station-select').empty();
 			$.getJSON(s, function(data) {
 				for (var i in data) {
@@ -110,7 +118,6 @@
 				list += "<tr><th><label for='id_stationservice_set-" + currentFileCount + "-color'>駅カラー:</label></th><td><input type='text' name='stationservice_set-" + currentFileCount + "-color' value='' maxlength='100' id='id_stationservice_set-" + currentFileCount + "-color'><input type='hidden' name='stationservice_set-" + currentFileCount + "-station' value='" + val + "' id='id_stationservice_set-" + currentFileCount + "-station'><input type='hidden' name='stationservice_set-" + currentFileCount + "-line_service' value='{{ lineservice.pk }}' id='id_stationservice_set-" + currentFileCount + "-line_service'>"
 				list += "</table></div>"
 
-				console.log(list);
 				return list;
 			}
 		})

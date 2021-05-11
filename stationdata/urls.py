@@ -32,7 +32,7 @@ urlpatterns = [
 	path('register/s/lineservice/', views.PopupLineServiceSimpleRegisterView.as_view(), name='popuplineservicesimpleregister'),
 	path('register/s/company/', views.PopupCompanySimpleRegisterView.as_view(), name='popupcompanysimpleregister'),
 	path('register/s/category/', views.PopupBelongsCategorySimpleRegisterView.as_view(), name='popupbelongscategorysimpleregister'),
-	path('edit/lineservice/<int:company>', views.LineServiceEditbyCompanyView, name='lineserviceeditbycompany'),
+	# path('edit/lineservice/<int:company>', views.LineServiceEditbyCompanyView, name='lineserviceeditbycompany'),
 	path('register/stationservice/<int:line_service>', views.StationServiceRegisterView, name='stationserviceregister'),
 
 	path('stationkanaset/', views.stationkanaset, name='stationkanaset'),

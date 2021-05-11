@@ -1,5 +1,5 @@
 from django import template
-from moviedatabase.models import StationService, LineService
+from moviedatabase.models import StationService, LineService, Station, Line
 register = template.Library()
 
 @register.filter(name='get_station_service')
@@ -18,3 +18,22 @@ def url_replace(request, field, value):
 	url_dict = request.GET.copy()
 	url_dict[field] = str(value)
 	return url_dict.urlencode()
+
+@register.filter(name='get_group_station')
+def get_group_station(value):
+	if value:
+		return Station.objects.get(pk=value).group_station_new
+	else:
+		return "デフォルト（DB新規駅）"
+
+@register.filter(name='get_group_station_line')
+def get_group_station_line(value):
+	if value:
+		station = Station.objects.get(pk=value)
+		ss = Station.objects.filter(group_station_new=station.group_station_new)
+		l = Line.objects.none()
+		for s in ss:
+			l |= Line.objects.filter(pk=s.line.id)
+		return l
+	else:
+		return ""

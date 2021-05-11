@@ -8,4 +8,5 @@ urlpatterns = [
 	path('popup/song_create/', views.PopupSongCreate.as_view(), name='popup_song_create'),
 	path('popup/artist_create/', views.PopupArtistCreate.as_view(), name='popup_artist_create'),
 	path('popup/vocal_create', views.PopupVocalCreate.as_view(), name='popup_vocal_create'),
+	path('popup/song_setting', views.popup_song_setting, name='popup_song_setting'),
 ]

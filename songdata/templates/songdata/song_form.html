@@ -11,6 +11,18 @@
 {% endblock %}
 {% block extrajs %}
 	<script type="text/javascript">
+		window.onload = function() {
+			// 親ウィンドウの存在チェック
+			if (!window.opener || window.opener.closed || !window.opener.document.getElementById('is-song-setting')) {
+				console.log('There is no window opener');
+			} else {
+				// 親ウィンドウのartistのセレクトボックスが何か選択された状態で、かつ子ウィンドウのartistが何も選択されていない状態
+				// 後者：子ウィンドウのアーティストが選択されているのに変更されてしまうのを防ぐ
+				if ((a = window.opener.document.getElementById('id_artist').value) && !document.getElementById('id_artist').value) {
+					document.getElementById('id_artist').value = a;
+				}
+			}
+		}
 		function add_artist(name, pk) {
 			var select = document.getElementById('id_artist');
 			var option = document.createElement('option');

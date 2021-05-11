@@ -114,6 +114,13 @@ class Station(models.Model):
 			s = self.id
 		return s
 
+	def get_group_station_lines(self):
+		ls = Station.objects.filter(group_station_new=self.group_station_new.id)
+		text = ""
+		for l in ls:
+			text = text + l.line.name + " / "
+		return text
+
 	def __str__(self):
 		return self.name
 
@@ -125,8 +132,8 @@ class LineService(models.Model):
 	head_company_name = models.CharField('接頭会社名', max_length=200, null=True, blank=True, default="")
 	company = models.ForeignKey(Company, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='事業者')
 	sort_by_company = models.IntegerField('事業者ごとの並び順', default=999)
-	is_formal = models.CharField('正式区間', max_length=200, null=True, blank=True)
-	is_service = models.CharField('運行系統', max_length=200, null=True, blank=True)
+	is_formal = models.CharField('正式区間', max_length=200, null=True, blank=True, default=1)
+	is_service = models.CharField('運行系統', max_length=200, null=True, blank=True, default=1)
 	color = models.CharField('路線カラー', max_length=100, null=True, blank=True)
 	prefs = models.ManyToManyField(Prefecture, blank=True)
 	STATUS_CHOICES = (
@@ -142,6 +149,8 @@ class LineService(models.Model):
 		return StationService.objects.filter(line_service=self.pk).order_by('sort_by_line_service').exclude(is_representative=True).last()
 
 	def with_company(self):
+		if self.company == None:
+			return "untitled"
 		n = ""
 		if self.company:
 			if self.company.short_name_2:
@@ -165,6 +174,8 @@ class LineService(models.Model):
 			return ""
 
 	def __str__(self):
+		if self.name == None:
+			return "untitled"
 		n = ""
 		if self.name_sub:
 			n += self.with_company() + "(" + self.name_sub + ") " + self.f_or_s()
@@ -178,6 +189,7 @@ class StationService(models.Model):
 	name = models.CharField('駅名(運行系統)', max_length=200, null=True, blank=True)
 	station = models.ForeignKey(Station, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='駅(正式)')
 	group_station_service = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, verbose_name='駅グループコード[運行系統]')
+	# group_station_service: 山手線の東京駅など、正式区間を横断する運行系統を接続する駅をまとめる
 	line_service = models.ForeignKey(LineService, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='路線(運行系統)')
 	numbering_head = models.CharField('ナンバリング接頭辞', max_length=200, null=True, blank=True, default='')
 	numbering_symbol = models.CharField('路線記号', max_length=200, null=True, blank=True, default='')

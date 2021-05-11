@@ -566,18 +566,38 @@ class CompanyRegisterView(PermissionRequiredMixin, generic.CreateView):
 		return reverse_lazy('stationdata:lineregister', kwargs={'company': self.object.pk})
 
 @permission_required('stationdata.add_line')
+# def LineRegisterView(request, company):
+# 	company = get_object_or_404(Company, pk=company)
+# 	form = forms.LineRegisterForm(request.POST or None)
+# 	if request.method == 'POST' and form.is_valid():
+# 		form.save()
+# 		line = Line.objects.latest('pk')
+# 		lineservice, created = LineService.objects.get_or_create(category=line.category, name=line.name, company=line.company, is_formal=1)
+# 		return redirect('stationdata:stationregister', line=line.pk)
+
+# 	context = {
+# 		'company': company,
+# 		'form': form
+# 	}
+
+# 	return render(request, 'stationdata/lineregister.html', context)
+
+@permission_required('stationdata.add_line')
 def LineRegisterView(request, company):
 	company = get_object_or_404(Company, pk=company)
-	form = forms.LineRegisterForm(request.POST or None)
-	if request.method == 'POST' and form.is_valid():
-		form.save()
-		line = Line.objects.latest('pk')
-		lineservice, created = LineService.objects.get_or_create(category=line.category, name=line.name, company=line.company, is_formal=1)
-		return redirect('stationdata:stationregister', line=line.pk)
+	formset = forms.LineRegisterFormset(request.POST or None, instance=company)
+	if request.method == 'POST' and formset.is_valid():
+		formset.save()
+		return redirect('moviedatabase:movielistbycompany', company=company.pk)
+
+	prefs = Prefecture.objects.all()
+	categories = BelongsCategory.objects.all()
 
 	context = {
 		'company': company,
-		'form': form
+		'formset': formset,
+		'prefs': prefs,
+		'categories': categories
 	}
 
 	return render(request, 'stationdata/lineregister.html', context)
@@ -591,11 +611,14 @@ def StationRegisterView(request, line):
 		stations = Station.objects.filter(line=line)
 		prefs = Prefecture.objects.none()
 		for station in stations:
+			if station.group_station_new == None:
+				station.group_station_new = station
+				station.save()
 			if station.pref:
 				prefs |= Prefecture.objects.filter(pk=station.pref.pk)
 		for pref in prefs:
 			line.prefs.add(pref)
-		return redirect('stationdata:railwaytop')
+		return redirect('moviedatabase:movielistbyline', line=line.pk, sort='pub', order='n')
 
 	prefs = Prefecture.objects.all()
 
@@ -606,21 +629,6 @@ def StationRegisterView(request, line):
 	}
 
 	return render(request, 'stationdata/stationregister.html', context)
-
-@permission_required('stationdata.add_lineservice')
-def LineServiceRegisterView(request, company):
-	company = get_object_or_404(Company, pk=company)
-	form = forms.LineServiceRegisterForm(request.POST or None)
-	if request.method == 'POST' and form.is_valid():
-		form.save()
-		return redirect('stationdata:stationserviceregister', line_service=pk)
-
-	context = {
-		'company': company,
-		'form': form
-	}
-
-	return render(request, 'stationdata/lineserviceregister.html', context)
 
 class LineServiceSimpleRegisterView(PermissionRequiredMixin, generic.CreateView):
 	model = LineService
@@ -683,22 +691,25 @@ class PopupBelongsCategorySimpleRegisterView(BelongsCategorySimpleRegisterView):
 		return render(self.request, 'stationdata/close.html', context)
 
 @permission_required('moviedatabase.change_lineservice')
-def LineServiceEditbyCompanyView(request, company):
+def LineServiceRegisterView(request, company):
 	company = get_object_or_404(Company, id=company)
 	form = forms.CompanyUpdateForm(request.POST or None, instance=company)
-	formset = forms.LineServiceEditFormSet(request.POST or None, instance=company)
+	formset = forms.LineServiceRegisterFormSet(request.POST or None, instance=company)
 	if request.method == 'POST' and form.is_valid() and formset.is_valid():
 		form.save()
 		formset.save()
-		return redirect('moviedatabase:railwaytop')
+		return redirect('moviedatabase:lineservicelistbycompany', company=company.pk)
+
+	categories = BelongsCategory.objects.all()
 
 	context = {
 		'company': company,
 		'form': form,
-		'formset': formset
+		'formset': formset,
+		'categories': categories
 	}
 
-	return render(request, 'stationdata/lineserviceeditbycompany.html', context)
+	return render(request, 'stationdata/lineserviceregister.html', context)
 
 @permission_required('stationdata.add_stationservice')
 def StationServiceRegisterView(request, line_service):
@@ -711,13 +722,16 @@ def StationServiceRegisterView(request, line_service):
 		prefs = Prefecture.objects.none()
 		lines = Line.objects.none()
 		for stationservice in stationservices:
+			if stationservice.group_station_service == None:
+				stationservice.group_station_service = stationservice
+				stationservice.save()
 			prefs |= Prefecture.objects.filter(pk=stationservice.station.pref.pk)
 			lines |= Line.objects.filter(pk=stationservice.station.line.pk)
 		for pref in prefs:
 			lineservice.prefs.add(pref)
 		for line in lines:
 			lineservice.line.add(line)
-		return redirect('stationdata:railwaytop')
+		return redirect('moviedatabase:movielistbylineservice', line_service=lineservice.pk, sort='pub', order='n')
 
 	context = {
 		'lineservice': lineservice,

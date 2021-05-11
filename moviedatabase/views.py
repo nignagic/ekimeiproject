@@ -18,6 +18,8 @@ from django.contrib.auth.views import (
 from . import forms
 from django.contrib.auth.decorators import permission_required
 
+import datetime
+
 # Create your views here.
 class Top(generic.ListView):
 	model = Movie
@@ -1055,7 +1057,36 @@ class MovieRegisterView(PermissionRequiredMixin, generic.CreateView):
 	form_class = forms.MovieRegisterForm
 	permission_required = ('moviedatabase.add_movie')
 	def get_success_url(self):
-		return reverse_lazy('moviedatabase:part_edit', kwargs={'main_id': self.object.main_id})
+		return reverse_lazy('moviedatabase:movie_edit', kwargs={'main_id': self.object.main_id})
+
+@permission_required('moviedatabase.add_movie')
+def movie_edit(request, main_id):
+	movie = get_object_or_404(Movie, main_id=main_id)
+	form = forms.MovieUpdateForm(request.POST or None, instance=movie)
+	parts = Part.objects.filter(movie=main_id)
+	partcount = parts.count()
+	if request.method == 'POST' and form.is_valid():
+		form.save()
+		if partcount == 0 and (request.POST['part-division'] == 'single'):
+			p = Part.objects.create(sort_by_movie="0", short_name="0", name="", movie=movie, start_time=datetime.timedelta(0))
+			p.participant.add(movie.channel.main_name)
+			songs = movie.song.all()
+			for song in songs:
+				p.song.add(song)
+			return redirect('moviedatabase:station_edit', main_id=main_id, sort_by_movie=0)
+		elif partcount == 1:
+			f = parts.first()
+			return redirect('moviedatabase:station_edit', main_id=main_id, sort_by_movie=f.sort_by_movie)
+		return redirect('moviedatabase:part_edit', main_id=main_id)
+
+	context = {
+		'movie': movie,
+		'form': form,
+		'parts': parts,
+		'partcount': partcount
+	}
+
+	return render(request, 'moviedatabase/movie_edit.html', context)
 
 @permission_required('moviedatabase.add_part')
 def movie_part_edit(request, main_id):
@@ -1065,30 +1096,16 @@ def movie_part_edit(request, main_id):
 	if request.method == 'POST' and form.is_valid() and formset.is_valid():
 		form.save()
 		formset.save()
-		querysetzero = Part.objects.filter(movie=main_id, sort_by_movie=0)
-		querysetone = Part.objects.filter(movie=main_id, sort_by_movie=1)
-		if (request.POST['single-part-boolean'] == "true") and querysetzero.first():
-			name = movie.channel.main_name
-			querysetzero.first().participant.add(name)
-			songs = movie.song.all()
-			for song in songs:
-				querysetzero.first().song.add(song)
-		if querysetzero.first():
-			return redirect('moviedatabase:station_edit', main_id=main_id, sort_by_movie=0)
-		elif querysetone.first():
-			return redirect('moviedatabase:station_edit', main_id=main_id, sort_by_movie=1)
+		firstpart = Part.objects.filter(movie=main_id).order_by('sort_by_movie').first()
+		if firstpart:
+			return redirect('moviedatabase:station_edit', main_id=main_id, sort_by_movie=firstpart.sort_by_movie)
 		else:
 			return redirect('moviedatabase:detail', main_id=main_id)
-
-	names = Name.objects.all()
-	songs = Song.objects.all()
 
 	context = {
 		'movie': movie,
 		'form': form,
-		'formset': formset,
-		'names': names,
-		'songs': songs
+		'formset': formset
 	}
 
 	return render(request, 'moviedatabase/part_edit.html', context)
@@ -1207,6 +1224,17 @@ class StationServiceSearchViewSet(generics.ListAPIView):
 	def get_queryset(self):
 		q = self.kwargs['word']
 		return StationService.objects.filter(name__contains=q)
+
+class GroupStationSearchViewSet(generics.ListAPIView):
+	serializer_class = serializer.StationSerializer
+	def get_queryset(self):
+		q = self.kwargs['word']
+		ss = Station.objects.filter(name__contains=q)
+		c = Station.objects.none()
+		for s in ss:
+			if s.group_station_new:
+				c |= Station.objects.filter(pk=s.group_station_new.id)
+		return c
 
 class LineServiceTransferViewSet(generics.ListAPIView):
 	serializer_class = serializer.LineServiceSerializer

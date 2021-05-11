@@ -14,9 +14,10 @@ class StationServiceSerializer(serializers.ModelSerializer):
 class StationSerializer(serializers.ModelSerializer):
 	line_pk = serializers.IntegerField(source='line.id')
 	station_pk = serializers.IntegerField(source='id')
+	lines = serializers.CharField(source='get_group_station_lines')
 	class Meta:
-		model = StationService
-		fields = ('__str__', 'station_pk', 'line_pk', 'name')
+		model = Station
+		fields = ['__str__', 'station_pk', 'line_pk', 'lines', 'name']
 
 class LineServiceSerializer(serializers.ModelSerializer):
 	line_service_pk = serializers.IntegerField(source='id')

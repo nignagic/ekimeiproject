@@ -11,12 +11,27 @@ class LineRegisterForm(forms.ModelForm):
 	class Meta:
 		model = Line
 		fields = '__all__'
+		widgets = {
+			'sort_by_company': forms.TextInput(attrs={
+				'class': 'sort_by_company',
+			}),
+		}
+
+LineRegisterFormset = forms.inlineformset_factory(
+	parent_model = Company,
+	fk_name = 'company',
+	model = Line, 
+	form = LineRegisterForm,
+	extra = 0,
+	can_delete = False
+)
 
 class StationRegisterForm(forms.ModelForm):
 	class Meta:
 		model = Station
-		fields = ('name', 'name_kana', 'line', 'sort_by_line', 'open_ymd', 'close_ymd', 'pref', 'status')
+		fields = ('group_station_new', 'name', 'name_kana', 'line', 'sort_by_line', 'open_ymd', 'close_ymd', 'pref', 'status')
 		widgets = {
+			'group_station_new': forms.TextInput(),
 			'sort_by_line': forms.TextInput(attrs={
 				'class': 'sort_by_line',
 			}),
@@ -31,26 +46,26 @@ StationRegisterFormset = forms.inlineformset_factory(
 	can_delete = False
 )
 
-class LineServiceRegisterForm(forms.ModelForm):
-	class Meta:
-		model = LineService
-		fields = '__all__'
-
 class CompanyUpdateForm(forms.ModelForm):
 	class Meta:
 		model = Company
 		fields = ('name', 'short_name', 'short_name_2', 'name_kana', 'color')
 
-class LineServiceEditForm(forms.ModelForm):
+class LineServiceRegisterForm(forms.ModelForm):
 	class Meta:
 		model = LineService
-		fields = ('category', 'name', 'name_sub', 'company', 'color', 'prefs', 'sort_by_company')
+		fields = ('category', 'name', 'name_sub', 'color', 'sort_by_company', 'status', 'is_formal', 'is_service')
+		widgets = {
+			'sort_by_company': forms.TextInput(attrs={
+				'class': 'sort_by_company',
+			}),
+		}
 
-LineServiceEditFormSet = forms.inlineformset_factory(
+LineServiceRegisterFormSet = forms.inlineformset_factory(
 	parent_model = Company,
 	fk_name = 'company',
 	model = LineService,
-	form = LineServiceEditForm,
+	form = LineServiceRegisterForm,
 	extra = 0,
 	can_delete = False
 )
