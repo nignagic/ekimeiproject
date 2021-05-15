@@ -9,12 +9,12 @@
 <div class="background">
 	{% include 'moviedatabase/includes/header.html' %}
 	<section class="top-menu-container">
-		<div class="top-menu-background" style="background-image: url({% static 'moviedatabase/img-top/nakatsugawa.JPG' %})">
+		<div class="top-menu-background" style="background-image: url({% static 'moviedatabase/img-top/honancho.JPG' %})">
 		</div>
 		<div class="top-search-container">
 			<div class="top-search">
 				フリーワード検索
-				<form action="" method="get" class="search-form">
+				<form action="{% url 'moviedatabase:freesearch' %}" method="get" class="search-form">
 					<input type="textbox" name="word" class="search-box" value="{% if word %}{{ word }}{% endif %}">
 					<button class="search-button" type="submit"><i class="fas fa-search"></i></button>
 				</form>

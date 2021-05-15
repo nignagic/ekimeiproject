@@ -80,34 +80,15 @@
 				</div>
 			</div>
 			<div class="detail-addition">
-				<!-- {% if movie.song.all %}
-				<h3 class="movie-detail-header">使用楽曲(全体)(旧式)</h3>
-				<div class="detail-content">
-					<table class="song-table">
-					{% for song in movie.song.all %}
-						<tr>
-							<td class="song-name"><a href="{% url 'moviedatabase:movielistbysong' song.id 'pub' 'n' %}">{{ song }}</a></td>
-							{% if song.artist %}
-								<td class="artist-name">
-								{% for artist in song.artist.all %}
-									{{ artist }}<br>
-								{% endfor %}
-								</td>
-							{% endif %}
-						</tr>
-						{% endfor %}
-					</table>
-				</div>
-				{% endif %} -->
 				{% if movie.songnew.all %}
 				<h3 class="movie-detail-header">使用楽曲(全体)</h3>
 				<div class="detail-content">
 					<table class="song-table">
 					{% for songnew in movie.songnew.all %}
 						<tr>
-							<td class="song-name"><a href="">{{ songnew.song_name }}</a></td>
+							<td class="song-name"><a href="{% url 'moviedatabase:songsearch' %}?word={{ songnew.song_name }}">{{ songnew.song_name }}</a></td>
 								<td class="artist-name">
-								{{ songnew.artist_name }}
+								<a href="{% url 'moviedatabase:artistsearch' %}?word={{ songnew.artist_name }}">{{ songnew.artist_name }}</a>
 								</td>
 						</tr>
 						{% endfor %}
@@ -235,7 +216,7 @@
 							<th class="part-detail-label">使用楽曲</th>
 							<td class="part-detail-content">
 									{% for songnew in part.songnew.all %}
-										<a href="">{{ songnew }}</a>
+										<a href="{% url 'moviedatabase:songsearch' %}?word={{ songnew.song_name }}">{{ songnew.song_name }}</a><a href="{% url 'moviedatabase:artistsearch' %}?word={{ songnew.artist_name }}">{{ songnew.artist_name }}</a>
 										{% if forloop.last %}
 										{% else %}
 											<span>/</span>

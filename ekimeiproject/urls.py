@@ -21,4 +21,5 @@ urlpatterns = [
     path('', include('moviedatabase.urls'), name='moviedatabasenew'),
     path('stationdata/', include('stationdata.urls'), name='stationdata'),
     path('songdata/', include('songdata.urls'), name='songdata'),
+    path('auth/', include('social_django.urls', namespace='social')),
 ]

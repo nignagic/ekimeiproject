@@ -8,6 +8,7 @@ urlpatterns = [
 	path('', views.Top.as_view(), name='top'),
 	path('login/', views.Login.as_view(), name='login'),
 	path('logout/', views.Logout.as_view(), name='logout'),
+	path('search/', views.FreeSearchView, name='freesearch'),
 
 	path('railway/', views.RailwayTopView.as_view(), name='railwaytop'),
 	path('railway/category/', views.BelongsCategoryListView.as_view(), name='categorylist'),
@@ -27,9 +28,9 @@ urlpatterns = [
 	path('railway/station/<int:station_service>/<slug:sort>/<slug:order>/', views.MovieListbyStationServiceView.as_view(), name='movielistbystationservice'),
 
 	path('music/', views.MusicTopView.as_view(), name='musictop'),
-	path('music/artist/<slug:kana>/', views.ArtistListView.as_view(), name='artistlist'),
-	path('music/song/<slug:kana>/', views.SongListView.as_view(), name='songlist'),
-	path('music/artist/<int:artist>/song/<slug:kana>/', views.SongListbyArtistView.as_view(), name='songlistbyartist'),
+	# path('music/artist/<slug:kana>/', views.ArtistListView.as_view(), name='artistlist'),
+	# path('music/song/<slug:kana>/', views.SongListView.as_view(), name='songlist'),
+	# path('music/artist/<int:artist>/song/<slug:kana>/', views.SongListbyArtistView.as_view(), name='songlistbyartist'),
 	# path('music/vocal/<slug:kana>/', views.VocalListView.as_view(), name='vocallist'),
 	path('music/search/artist/', views.ArtistSearchView.as_view(), name='artistsearch'),
 	path('music/search/song/', views.SongSearchView.as_view(), name='songsearch'),

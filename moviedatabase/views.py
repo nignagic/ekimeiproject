@@ -83,6 +83,80 @@ class MovieListView(generic.ListView):
 
 		return context
 
+def FreeSearchView(request):
+	word = request.GET.get('word')
+
+	movies = Movie.objects.none()
+	if word:
+		parts = Part.objects.filter(Q(name__icontains=word) | Q(explanation__icontains=word))
+		for part in parts:
+			movies |= Movie.objects.filter(pk=part.movie.pk)
+		movies |= Movie.objects.filter(Q(title__icontains=word) | Q(main_id__icontains=word) | Q(description__icontains=word) | Q(explanation__icontains=word))
+	mcount = movies.count
+	movies = movies.order_by('-published_at')[:5]
+
+	lineservices = LineService.objects.none()
+	if word:
+		lineservices = LineService.objects.filter(Q(name__icontains=word) | Q(name_sub__icontains=word)).order_by('company', 'sort_by_company')
+	lcount = lineservices.count
+	lineservices = lineservices[:10]
+
+	stationservices = StationService.objects.none()
+	if word:
+		stationservices = StationService.objects.filter(name__icontains=word).order_by('line_service')
+	scount = stationservices.count
+	stationservices = stationservices[:10]
+
+	creators = Creator.objects.none()
+	if word:
+		creators = Creator.objects.filter(Q(name__icontains=word) | Q(name_kana__icontains=word)).order_by('name_kana')
+	ccount = creators.count
+	creators = creators[:10]
+
+	movies_artist = Movie.objects.none()
+	if word:
+		songnews = SongNew.objects.filter(Q(artist_name__icontains=word) | Q(artist_name_kana__icontains=word)).order_by('artist_name_kana')
+		for song in songnews:
+			movies_artist |= Movie.objects.filter(songnew=song)
+			parts = Part.objects.filter(songnew=song)
+			for part in parts:
+				movies_artist |= Movie.objects.filter(pk=part.movie.pk)
+	
+	movies_artist = movies_artist.exclude(is_active=False).order_by('-published_at').distinct()
+	acount = movies_artist.count
+	movies_artist = moviequery(movies_artist, "pub", "n")[:5]
+
+	movies_song = Movie.objects.none()
+	if word:
+		songnews = SongNew.objects.filter(Q(song_name__icontains=word) | Q(song_name_kana__icontains=word) | Q(tag__icontains=word)).order_by('song_name_kana')
+		for song in songnews:
+			movies_song |= Movie.objects.filter(songnew=song)
+			parts = Part.objects.filter(songnew=song)
+			for part in parts:
+				movies_song |= Movie.objects.filter(pk=part.movie.pk)
+	
+	movies_song = movies_song.exclude(is_active=False).order_by('-published_at').distinct()
+	songcount = movies_song.count
+	movies_song = moviequery(movies_song, "pub", "n")[:5]
+
+	context = {
+		'movie_list': movies,
+		"lineservices": lineservices,
+		"stationservices": stationservices,
+		"creators": creators,
+		"movies_artist": movies_artist,
+		"movies_song": movies_song,
+		'mcount': mcount,
+		'lcount': lcount,
+		'scount': scount,
+		'ccount': ccount,
+		'acount': acount,
+		'songcount': songcount,
+		"word": word
+	}
+
+	return render(request, 'moviedatabase/freesearch.html', context)
+
 class RailwayTopView(generic.TemplateView):
 	template_name = 'moviedatabase/railway/railwaytop.html'
 
@@ -703,54 +777,64 @@ class VocalListView(generic.ListView):
 	template_name = 'moviedatabase/music/vocallist.html'
 
 class ArtistSearchView(generic.ListView):
-	model = Artist
-	paginate_by = 30
+	model = Movie
+	paginate_by = 15
 	template_name = 'moviedatabase/music/artistsearch.html'
 
 	def get_queryset(self):
 		queryset = super().get_queryset()
-		queryset = Artist.objects.none()
+		queryset = Movie.objects.none()
 		word = self.request.GET.get('word')
 		if word:
-			queryset = Artist.objects.filter(Q(name__icontains=word) | Q(name_kana__icontains=word)).order_by('name_kana')
-		return queryset
+			songnews = SongNew.objects.filter(Q(artist_name__icontains=word) | Q(artist_name_kana__icontains=word)).order_by('artist_name_kana')
+			
+			for song in songnews:
+				queryset |= Movie.objects.filter(songnew=song)
+				parts = Part.objects.filter(songnew=song)
+				for part in parts:
+					queryset |= Movie.objects.filter(pk=part.movie.pk)
+		
+		queryset = queryset.exclude(is_active=False).order_by('-published_at').distinct()
+		sort = "pub"
+		order = "n"
+		return moviequery(queryset, sort, order)
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		
 		word = self.request.GET.get('word')
 		context['word'] = word
-		count = 0
-		if word:
-			count = Artist.objects.filter(Q(name__icontains=word) | Q(name_kana__icontains=word)).order_by('name_kana').count()
-
-		context['count'] = count
 
 		return context
 
 class SongSearchView(generic.ListView):
-	model = Song
-	paginate_by = 30
+	model = Movie
+	paginate_by = 15
 	template_name = 'moviedatabase/music/songsearch.html'
 
 	def get_queryset(self):
 		queryset = super().get_queryset()
-		queryset = Song.objects.none()
+		queryset = Movie.objects.none()
 		word = self.request.GET.get('word')
 		if word:
-			queryset = Song.objects.filter(Q(name__icontains=word) | Q(name_kana__icontains=word) | Q(tieup__icontains=word) | Q(description__icontains=word)).order_by('name_kana')
-		return queryset
+			songnews = SongNew.objects.filter(Q(song_name__icontains=word) | Q(song_name_kana__icontains=word) | Q(tag__icontains=word)).order_by('song_name_kana')
+			
+			for song in songnews:
+				queryset |= Movie.objects.filter(songnew=song)
+				parts = Part.objects.filter(songnew=song)
+				for part in parts:
+					queryset |= Movie.objects.filter(pk=part.movie.pk)
+		
+		queryset = queryset.exclude(is_active=False).order_by('-published_at').distinct()
+		sort = "pub"
+		order = "n"
+		return moviequery(queryset, sort, order)
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		
 		word = self.request.GET.get('word')
 		context['word'] = word
-		count = 0
-		if word:
-			count = Song.objects.filter(Q(name__icontains=word) | Q(name_kana__icontains=word) | Q(tieup__icontains=word) | Q(description__icontains=word)).order_by('name_kana').count()
-
-		context['count'] = count
 
 		return context
 
@@ -1038,18 +1122,12 @@ def detail_movie(request, main_id):
 		onlyonepart = True
 	else:
 		onlyonepart = False
-	songs = Song.objects.none()
-	for part in parts:
-		partsongs = part.song.all()
-		for partsong in partsongs:
-			songs |= Song.objects.filter(pk=partsong.pk)
 
 	can_edit = request.user.groups.filter(name='can_edit').exists()
 
 	context = {
 		'movie': movie,
 		'parts': parts,
-		'songs': songs,
 		'onlyonepart': onlyonepart,
 		'can_edit': can_edit
 	}
@@ -1075,9 +1153,9 @@ def movie_edit(request, main_id):
 		if partcount == 0 and (request.POST['part-division'] == 'single'):
 			p = Part.objects.create(sort_by_movie="0", short_name="0", name="", movie=movie, start_time=datetime.timedelta(0))
 			p.participant.add(movie.channel.main_name)
-			songs = movie.song.all()
+			songs = movie.songnew.all()
 			for song in songs:
-				p.song.add(song)
+				p.songnew.add(song)
 			return redirect('moviedatabase:station_edit', main_id=main_id, sort_by_movie=0)
 		elif partcount == 1:
 			f = parts.first()

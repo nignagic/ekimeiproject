@@ -1,0 +1,12 @@
+{% extends 'moviedatabase/base.html' %}
+{% block content %}
+	<form action="" method="POST">
+		<table>
+			{{ form.as_table }}
+		</table>
+		{% csrf_token %}
+		<button type="submit">送信</button>
+	</form>
+{% endblock %}
+{% block extrajs %}
+{% endblock %}

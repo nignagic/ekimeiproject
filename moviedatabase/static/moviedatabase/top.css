@@ -23,16 +23,16 @@
 
 .top-search {
 	width: 100%;
-	max-width: 400px;
+	max-width: 600px;
 	background-color: rgba(0, 0, 0, 0.6);
-	padding: 8px;
+	padding: 8px 32px;
 	margin: 0 auto;
 	color: #fff;
 }
 
 .search-form {
 	position: relative;
-	width: 16rem;
+	/*width: 16rem;*/
 	height: 2rem;
 	margin: 0.5rem auto;
 }

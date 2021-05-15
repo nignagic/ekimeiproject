@@ -31,6 +31,22 @@ class PopupSongCreate(SongCreate):
 		}
 		return render(self.request, 'songdata/close_song.html', context)
 
+class SongNewCreate(PermissionRequiredMixin, generic.CreateView):
+	model = SongNew
+	fields = '__all__'
+	permission_required = ('songdata.add_song')
+	success_url = reverse_lazy('songdata:songlist')
+
+class PopupSongNewCreate(SongNewCreate):
+	def form_valid(self, form):
+		songnew = form.save()
+		context = {
+			'object_name': str(songnew),
+			'object_pk': songnew.pk,
+			'function_name': 'add_songnew'
+		}
+		return render(self.request, 'songdata/close_songnew.html', context)
+
 class ArtistCreate(PermissionRequiredMixin, generic.CreateView):
 	model = Artist
 	fields = '__all__'
@@ -74,12 +90,10 @@ def popup_song_setting(request):
 		}
 		return render(request, 'songdata/close_song_setting.html', context)
 
-	songs = Song.objects.all()
-	artists = Artist.objects.all()
+	songnews = SongNew.objects.all()
 
 	context = {
-		'songs': songs,
-		'artists': artists
+		'songnews': songnews,
 	}
 
 	return render(request, 'songdata/song_setting.html', context)
@@ -110,6 +124,11 @@ class SongViewSet(generics.ListAPIView):
 	serializer_class = serializer.SongSerializer
 	def get_queryset(self):
 		return Song.objects.filter(pk=self.kwargs['song'])
+
+class SongNewViewSet(generics.ListAPIView):
+	serializer_class = serializer.SongNewSerializer
+	def get_queryset(self):
+		return SongNew.objects.filter(pk=self.kwargs['songnew'])
 
 class VocalViewSet(generics.ListAPIView):
 	serializer_class = serializer.VocalNewSerializer

@@ -35,14 +35,14 @@
 			$('#selected_song_in_movie_name').append("未設定");
 		} else {
 			$.each(songs, function(i, val) {
-				txt = "<input type='hidden' name='song' value='" + val + "' class='selected_song_in_movie' id='id_song_" + i + "'>"
+				txt = "<input type='hidden' name='songnew' value='" + val + "' class='selected_song_in_movie' id='id_songnew_" + i + "'>"
 				$('#selected_song_in_movie_list').append(txt)
 
-				var s = "/songdata/api/song/" + val + "?format=json";
+				var s = "/songdata/api/songnew/" + val + "?format=json";
 				n = ""
 				$.getJSON(s, function(data) {
 					for (var i in data) {
-						$("#selected_song_in_movie_name").append(data[i].song_name);
+						$("#selected_song_in_movie_name").append(data[i].__str__);
 					}
 				})
 			})

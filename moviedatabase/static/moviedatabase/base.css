@@ -262,9 +262,10 @@ ul, li {
 	margin: 0;
 	padding: 0;
 	width: 100%;
-	box-shadow: 0 2px 4px rgba(0,0,0,.3);
+	box-shadow: 0 4px 8px rgba(0,0,0,.3);
 	background-color: #fff;
 	z-index: 10000;
+	position: relative;
 }
 
 .header {
@@ -272,29 +273,137 @@ ul, li {
 	padding: 0;
 	display: flex;
 	width: 100%;
-	max-width: 1280px;
+	max-height: 96px;
+	/*max-width: 1280px;*/
 	justify-content: space-between;
 }
 
 .header-title a {
 	display: block;
-	padding: 1rem;
+	/*padding: 1rem;*/
+	/*background-color: #cc5c00;*/
+	color: #fff;
+	/*height: 100%;*/
+}
+
+.header-logo {
+	height: 96px;
+	transition: all .3s;
+}
+
+.header-logo:hover {
+	opacity: 0.8;
+}
+
+.header-content {
+	flex: 1;
+}
+
+.header-content-upper {
+	width: 100%;
+	background-color: #338a9e;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	padding: 0.4rem;
+	color: #fff;
+	font-weight: normal;
+	font-size: 0.9rem;
+	height: 32px;
+}
+
+.mypage {
+	color: #fff;
+	margin: 0 1rem;
+}
+
+.login-out {
+	padding: 0 1rem;
+}
+
+.login-out-button {
+	background-color: #fff;
+	color: #338a9e;
+	border-radius: 1rem;
+	margin: 0 0.5rem;
+	padding: 0.1rem 0.5rem;
+}
+
+.header-content-lower {
+	height: 64px;
 }
 
 .header-menu {
 	display: flex;
+	justify-content: flex-end;
 }
 
 .header-menu-li a {
 	display: block;
-	padding: 1rem;
-	color: #fff;
+	padding: 0.5rem 0;
+	color: #06262b;
 	transition: all .3s;
+	background-color: #fff;
+}
+
+.header-menu-li-a-inner {
+	border-left: 1px solid #ccc;
+	padding: 1rem 2rem;
+}
+
+.header-menu-li-a-inner p {
+	border-bottom-width: 4px;
+	border-bottom-style: solid;
+	line-height: 0.8
 }
 
 .header-menu-li a:hover {
-	color: #06262b;
+	background-color: #f7f7f7;
+}
+
+.header-search-title {
+	padding: 0 1rem 0 0;
+}
+
+.header-search-form {
+	position: relative;
+	height: 1.2rem;
+	width: 10rem;
+	margin: 0 2rem 0 0;
+}
+
+.header-search-container .header-search-form {
+	margin: 0;
+}
+
+.header-search-box {
+	position: absolute;
+	top: 0;
+	left: 0;
+	font-size: 0.8rem;
+	width: 100%;
+	height: 100%;
+	padding: 0 2rem 0 1rem;
 	background: #fff;
+	border-radius: 0.6rem;
+	border: none;
+}
+
+.header-search-button {
+	position: absolute;
+	top: 0;
+	right: 0.3rem;
+	height: 100%;
+	background: none;
+	color: #666;
+	border: none;
+	font-size: 0.8rem;
+	transition: all .3s;
+	cursor: pointer;
+}
+
+.header-search-button:hover{
+	color:#7fbfff;
 }
 
 @media (max-width: 768px) {

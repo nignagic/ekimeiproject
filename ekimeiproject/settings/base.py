@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'social_django',
     'rest_framework',
     'user',
     'stationdata',
@@ -59,10 +60,18 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',  # <- Here
+                'social_django.context_processors.login_redirect', # <- Here
             ],
         },
     },
 ]
+
+AUTHENTICATION_BACKENDS = (
+ 'social_core.backends.google.GoogleOAuth2',  # for Google authentication
+
+ 'django.contrib.auth.backends.ModelBackend',
+)
 
 WSGI_APPLICATION = 'ekimeiproject.wsgi.application'
 
@@ -111,3 +120,6 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 100000000
 
 LOGIN_URL = 'moviedatabase:login'
 LOGIN_REDIRECT_URL = 'moviedatabase:top'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '723081560885-uhlefjltsibkt9qvln6ua2tbgme13u1e.apps.googleusercontent.com'  #Paste CLient Key
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'gNfTcxIRk7OAB50wssEHaqBq' #Paste Secret Key

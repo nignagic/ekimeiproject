@@ -78,7 +78,7 @@ class MovieRegisterForm(forms.ModelForm):
 class MovieUpdateForm(forms.ModelForm):
 	class Meta:
 		model = Movie
-		fields = ('title', 'channel', 'main_id', 'youtube_id', 'niconico_id', 'published_at', 'duration', 'n_view', 'n_like', 'n_dislike', 'n_dislike', 'n_comment', 'description', 'reg_date', 'song', 'is_collab', 'parent', 'related', 'explanation')
+		fields = ('title', 'channel', 'main_id', 'youtube_id', 'niconico_id', 'published_at', 'duration', 'n_view', 'n_like', 'n_dislike', 'n_dislike', 'n_comment', 'description', 'reg_date', 'songnew', 'is_collab', 'parent', 'related', 'explanation')
 		widgets = {
 			'title': forms.HiddenInput(attrs={
 				'class': 'title',
@@ -119,7 +119,7 @@ class MovieUpdateForm(forms.ModelForm):
 			'reg_date': forms.HiddenInput(attrs={
 				'class': 'reg_date',
 			}),
-			'song': forms.MultipleHiddenInput(attrs={
+			'songnew': forms.MultipleHiddenInput(attrs={
 				'class': 'selected_song_in_movie',
 			}),
 			'parent': forms.MultipleHiddenInput(attrs={
@@ -133,7 +133,7 @@ class MovieUpdateForm(forms.ModelForm):
 class PartEditFormforinline(forms.ModelForm):
 	class Meta:
 		model = Part
-		fields = ('sort_by_movie', 'short_name', 'name', 'movie', 'participant', 'start_time', 'song', 'explanation')
+		fields = ('sort_by_movie', 'short_name', 'name', 'movie', 'participant', 'start_time', 'songnew', 'explanation')
 		widgets = {
 			'sort_by_movie': forms.HiddenInput(attrs={
 				'class': 'sort_by_movie',
@@ -153,7 +153,7 @@ class PartEditFormforinline(forms.ModelForm):
 			'start_time': forms.TextInput(attrs={
 				'class': 'start_time',
 			}),
-			'song': forms.MultipleHiddenInput(attrs={
+			'songnew': forms.MultipleHiddenInput(attrs={
 				'class': 'song',
 			}),
 			'explanation': forms.HiddenInput(attrs={
@@ -177,7 +177,7 @@ PartEditFormset = forms.inlineformset_factory(
 class PartEditForm(forms.ModelForm):
 	class Meta:
 		model = Part
-		fields = ('name', 'movie', 'participant', 'category', 'start_time', 'song', 'vocalnew', 'explanation')
+		fields = ('name', 'movie', 'participant', 'category', 'start_time', 'songnew', 'vocalnew', 'explanation')
 		widgets = {
 			'name': forms.TextInput(attrs={
 				'class': 'name',
@@ -194,7 +194,7 @@ class PartEditForm(forms.ModelForm):
 			'start_time': forms.TextInput(attrs={
 				'class': 'start_time',
 			}),
-			'song': forms.MultipleHiddenInput(attrs={
+			'songnew': forms.MultipleHiddenInput(attrs={
 				'class': 'selected_song_in_movie',
 			}),
 			'vocalnew': forms.MultipleHiddenInput(attrs={

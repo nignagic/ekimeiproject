@@ -1,25 +1,17 @@
 {% extends 'moviedatabase/base.html' %}
 {% block content %}
 	<form action="" method="POST">
-		<div class="artist_song_container" style="display: flex;">
-			<div class="artist">
-				<select name="artist" id="id_artist" size="18">
-					{% for artist in artists %}
-					<option value="{{ artist.pk }}" data-initial="{{ artist.initial }}" class="artist-option">{{ artist }}</option>
-					{% endfor %}
-				</select>
-				<br><a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_artist_create' %}', 'subwin2', 'width=500,height=500');">+Artist</a>
-			</div>
+		<div class="artist_song_container" style="display: block;">
 			<div class="song">
-				<select name="song" id="id_song" size="18">
-					{% for song in songs %}
-					<option value="{{ song.pk }}" data-initial="{{ song.initial }}" class="song-option">{{ song }} - {% for artist in song.artist.all %}{{ artist }} {% endfor %}</option>
+				<select name="song" id="id_songnew" size="18" style="display: none;">
+					{% for songnew in songnews %}
+					<option value="{{ songnew.pk }}" class="songnew-option">{{ songnew }}</option>
 					{% endfor %}
 				</select>
-				<br><a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_song_create' %}', 'subwin2', 'width=500,height=500');">+Song</a>
 			</div>
 			<div id="selected-song-container">
 			</div>
+				<br><a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_songnew_create' %}', 'subwin2', 'width=500,height=500');">+Song</a>
 			<input type="hidden" name="selected-song-list" id="selected-song-list" value="">
 		{% csrf_token %}
 		</div>
@@ -48,58 +40,29 @@
 					})
 				}
 			}
-
-			$(document).on('dblclick', '.song-option', function() {
-				song_append($(this).val())
-			})
-
 		}
-
-		//路線を選択した時の挙動
-		$(document).on('click', '.artist-option', function() {
-			artist = $(this).val();
-			var s = "/songdata/api/artist/" + artist + "/song/?format=json";
-			$('#id_song').empty();
-			$.getJSON(s, function(data) {
-				for (var i in data) {
-					var op_song = "<option value='" + data[i].song_pk + "' data-initial='" + data[i].song_initial + "' class='song-option'>" + data[i].song_name + " - " + data[i].artist_name + "</option>"
-					$("#id_song").append(op_song);
-				}
-			})
-		})
 
 		function song_append(val) {
 			selected_songs.push(val);
 			$('#selected-song-list').val(selected_songs);
 
-			song = $('select#id_song option[value="'+val+'"]')
+			song = $('select#id_songnew option[value="'+val+'"]')
 			name = $(song).text();
 			$('#selected-song-container').append("<div class='selected-song' data-id='"+val+"'>"+name+"</div>");
 
 			console.log($('#selected-song-list').val())
 		}
-
-		function add_artist(name, pk, initial) {
-			var select = document.getElementById('id_artist');
+		function add_songnew(name, pk) {
+			var select = document.getElementById('id_songnew');
 			var option = document.createElement('option');
 			option.setAttribute('value', pk);
-			option.setAttribute('class', 'artist-option')
-			option.setAttribute('data-initial', initial)
+			option.setAttribute('class', 'songnew-option')
 			option.innerHTML = name;
 
 			select.add(option, 0);
 			select.options[0].selected = true;
-		}
-		function add_song(name, pk, artist) {
-			var select = document.getElementById('id_song');
-			var option = document.createElement('option');
-			option.setAttribute('value', pk);
-			option.setAttribute('class', 'song-option')
-			option.setAttribute('data-artist', artist)
-			option.innerHTML = name;
 
-			select.add(option, 0);
-			select.options[0].selected = true;
+			song_append(pk)
 		}
 	</script>
 {% endblock %}

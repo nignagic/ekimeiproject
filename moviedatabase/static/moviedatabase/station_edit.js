@@ -46,7 +46,7 @@ $(function() {
 	add_selected_vocal(selected_vocal_list)
 })
 
-// 楽曲変更
+// 参加者変更
 function add_selected_participant(list) {
 	participants = list.split(',')
 	$('#selected_participant_list').empty()
@@ -69,6 +69,7 @@ function add_selected_participant(list) {
 	}
 }
 
+// 楽曲変更
 function add_selected_song(list) {
 	songs = list.split(',')
 	$('#selected_song_in_movie_list').empty()
@@ -77,20 +78,21 @@ function add_selected_song(list) {
 		$('#selected_song_in_movie_name').append("未設定");
 	} else {
 		$.each(songs, function(i, val) {
-			txt = "<input type='hidden' name='song' value='" + val + "' class='selected_song_in_movie' id='id_song_" + i + "'>"
+			txt = "<input type='hidden' name='songnew' value='" + val + "' class='selected_song_in_movie' id='id_songnew_" + i + "'>"
 			$('#selected_song_in_movie_list').append(txt)
 
-			var s = "/songdata/api/song/" + val + "?format=json";
+			var s = "/songdata/api/songnew/" + val + "?format=json";
 			n = ""
 			$.getJSON(s, function(data) {
 				for (var i in data) {
-					$("#selected_song_in_movie_name").append(data[i].song_name);
+					$("#selected_song_in_movie_name").append(data[i].__str__);
 				}
 			})
 		})
 	}
 }
 
+// ボーカル変更
 function add_selected_vocal(list) {
 	vocals = list.split(',')
 	$('#selected_vocal_list').empty()

@@ -5,21 +5,20 @@
 {% load static %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
+<link rel="stylesheet" href="{% static 'moviedatabase/objectlist.css' %}">
 <div class="background">
 	{% include 'moviedatabase/includes/header.html' %}
 	<div class="detail-header">
 		<div class="detail-header-content">
-			<span class="detail-category artist-background">アーティスト</span>
 			<div class="detail-name">{% if word %}{{ word }}{% endif %}</div>
-			<div class="detail-name-sub"></div>
+			<div class="detail-name-sub">アーティスト</div>
 			<div class="sub-name">
 				{% if word %}
 					キーワード：{{ word }}
 				{% endif %}
 			</div>
 			<div class="under-color artist-background">
-			</div>
-			<div class="line-bottom">
+				{{ count }}件
 			</div>
 			<div class="line-bottom">
 				<form action="" method="get" class="search-form">
@@ -32,10 +31,17 @@
 
 	<div class="main-content">
 		<div class="main-content-inner">
-			<div class="detail-movie-list">
-				<h4 class="movie-list-header artist-border">動画一覧</h4>
-				{% include 'moviedatabase/includes/movielist.html' %}
+			<div class="object-list">
+				<ul class="object-list-ul">
+				{% for a in artist_list %}
+					<li class="object-list-li">
+						<a href="{% url 'moviedatabase:movielistbyartist' a.pk 'pub' 'n' %}" class="artist-color">
+							<div>{{ a }}</div>
+						</a>
+					</li>
+				{% endfor %}
 				{% include 'moviedatabase/includes/pagination.html' %}
+				</ul>
 			</div>
 			<div class="detail-side">
 			</div>

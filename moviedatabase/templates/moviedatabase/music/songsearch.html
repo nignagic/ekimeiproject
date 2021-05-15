@@ -5,20 +5,21 @@
 {% load static %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
-<link rel="stylesheet" href="{% static 'moviedatabase/objectlist.css' %}">
 <div class="background">
 	{% include 'moviedatabase/includes/header.html' %}
 	<div class="detail-header">
 		<div class="detail-header-content">
+			<span class="detail-category song-background">楽曲</span>
 			<div class="detail-name">{% if word %}{{ word }}{% endif %}</div>
-			<div class="detail-name-sub">楽曲</div>
+			<div class="detail-name-sub"></div>
 			<div class="sub-name">
 				{% if word %}
 					キーワード：{{ word }}
 				{% endif %}
 			</div>
 			<div class="under-color song-background">
-				{{ count }}件
+			</div>
+			<div class="line-bottom">
 			</div>
 			<div class="line-bottom">
 				<form action="" method="get" class="search-form">
@@ -31,31 +32,40 @@
 
 	<div class="main-content">
 		<div class="main-content-inner">
-			<div class="object-list">
-				<ul class="object-list-ul">
-				{% for s in song_list %}
-					<li class="object-list-li">
-						<a href="{% url 'moviedatabase:movielistbysong' s.pk 'pub' 'n' %}" class="song-color">
-							<div>{{ s }}</div>
-							<div>
-								{% for a in s.artist.all %}
-									{{ a }}
-									{% if forloop.last %}
-									{% else %}
-									 / 
-									{% endif %}
-								{% endfor %}
-							</div>
-						</a>
-					</li>
-				{% endfor %}
+			<div class="detail-movie-list">
+				<h4 class="movie-list-header song-border">動画一覧</h4>
+				{% include 'moviedatabase/includes/movielist.html' %}
 				{% include 'moviedatabase/includes/pagination.html' %}
-				</ul>
-			</div>
-			<div class="detail-side">
 			</div>
 		</div>
 	</div>
 	<small>&copy; 2020 nignagIC</small>
 </div>
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+	$(function() {
+		url = $('#song-original').data('url');
+
+		YouTubeIdstartnum = url.indexOf("v=");
+		niconicoIdstartnum = url.indexOf("watch/");
+		if (YouTubeIdstartnum != -1) {
+			videoId = url.substr(YouTubeIdstartnum+2, 11);
+			$('#song-original').append("<iframe src='https://www.youtube.com/embed/" + videoId + "' width='1280' height='720' frameborder='0' gesture='media' allowfullscreen></iframe>");
+		} else if (niconicoIdstartnum != -1) {
+			videoId = url.substr(niconicoIdstartnum+6, 10);
+			target = document.getElementById('song-original');
+			var write = document.write;
+			document.write = function(arg) {
+				target.innerHTML = arg;
+				document.write = write;
+			}
+			script = document.createElement('script')
+			script.setAttribute('type', 'text/javascript');
+			script.setAttribute('src', "https://embed.nicovideo.jp/watch/" + videoId + "/script?w=640&h=360");
+			target.appendChild(script);
+		}
+	})
+</script>
 {% endblock %}

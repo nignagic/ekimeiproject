@@ -12,6 +12,12 @@ class SongSerializer(serializers.ModelSerializer):
 		model = Song
 		fields = ('__str__', 'song_pk', 'song_initial', 'song_name', 'artist_name')
 
+class SongNewSerializer(serializers.ModelSerializer):
+	song_pk = serializers.IntegerField(source='id')
+	class Meta:
+		model = SongNew
+		fields = ('__str__', 'song_pk', 'song_name', 'artist_name')
+
 class VocalNewSerializer(serializers.ModelSerializer):
 	vocal_pk = serializers.IntegerField(source='id')
 	vocal_name = serializers.CharField(source='name')
