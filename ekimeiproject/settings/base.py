@@ -121,5 +121,3 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 100000000
 LOGIN_URL = 'moviedatabase:login'
 LOGIN_REDIRECT_URL = 'moviedatabase:top'
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '723081560885-uhlefjltsibkt9qvln6ua2tbgme13u1e.apps.googleusercontent.com'  #Paste CLient Key
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'gNfTcxIRk7OAB50wssEHaqBq' #Paste Secret Key
