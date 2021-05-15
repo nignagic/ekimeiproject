@@ -5,7 +5,9 @@ from django.urls import reverse_lazy
 
 from django.contrib.auth.decorators import permission_required
 
+from rest_framework import generics
 from .models import *
+from . import serializer
 
 # Create your views here.
 class SongCreate(PermissionRequiredMixin, generic.CreateView):
@@ -27,7 +29,7 @@ class PopupSongCreate(SongCreate):
 			'object_artist': artist,
 			'function_name': 'add_song'
 		}
-		return render(self.request, 'songdata/closesong.html', context)
+		return render(self.request, 'songdata/close_song.html', context)
 
 class ArtistCreate(PermissionRequiredMixin, generic.CreateView):
 	model = Artist
@@ -37,13 +39,15 @@ class ArtistCreate(PermissionRequiredMixin, generic.CreateView):
 
 class PopupArtistCreate(ArtistCreate):
 	def form_valid(self, form):
+		return self
 		artist = form.save()
 		context = {
 			'object_name': str(artist),
 			'object_pk': artist.pk,
+			'object_initial': artist.initial,
 			'function_name': 'add_artist'
 		}
-		return render(self.request, 'songdata/close.html', context)
+		return render(self.request, 'songdata/close_artist.html', context)
 
 class VocalCreate(PermissionRequiredMixin, generic.CreateView):
 	model = VocalNew
@@ -63,6 +67,13 @@ class PopupVocalCreate(VocalCreate):
 
 @permission_required('songdata.add_song')
 def popup_song_setting(request):
+	if request.method == 'POST':
+
+		context = {
+			'song_list': request.POST['selected-song-list']
+		}
+		return render(request, 'songdata/close_song_setting.html', context)
+
 	songs = Song.objects.all()
 	artists = Artist.objects.all()
 
@@ -72,3 +83,35 @@ def popup_song_setting(request):
 	}
 
 	return render(request, 'songdata/song_setting.html', context)
+
+@permission_required('songdata.add_song')
+def popup_vocal_setting(request):
+	if request.method == 'POST':
+
+		context = {
+			'vocal_list': request.POST['selected-vocal-list']
+		}
+		return render(request, 'songdata/close_vocal_setting.html', context)
+
+	vocals = VocalNew.objects.all()
+
+	context = {
+		'vocals': vocals,
+	}
+
+	return render(request, 'songdata/vocal_setting.html', context)
+
+class SongbyArtistViewSet(generics.ListAPIView):
+	serializer_class = serializer.SongSerializer
+	def get_queryset(self):
+		return Song.objects.filter(artist=self.kwargs['artist'])
+
+class SongViewSet(generics.ListAPIView):
+	serializer_class = serializer.SongSerializer
+	def get_queryset(self):
+		return Song.objects.filter(pk=self.kwargs['song'])
+
+class VocalViewSet(generics.ListAPIView):
+	serializer_class = serializer.VocalNewSerializer
+	def get_queryset(self):
+		return VocalNew.objects.filter(pk=self.kwargs['vocal'])

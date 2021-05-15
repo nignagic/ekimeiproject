@@ -41,14 +41,38 @@
 					<div>
 						種類<br>{{ part_form.category }}
 					</div>
-					<div>
-						参加者<br>{{ part_form.participant }}<br><a href="javascript:void(0);" onclick="window.open('{% url 'moviedatabase:popup_name_create' %}', 'subwin', 'width=500,height=500');">+Name</a>
+					<div class="detail-content">
+						<h3 class="detail-header">参加者</h3>
+						<div id="selected_participant_list">
+							{{ part_form.participant }}
+						</div>
+						<div id="selected_participant_name">
+						</div>
+						<div class="setting-button" style="text-align: right;">
+							<a href="javascript:void(0);" onclick="window.open('{% url 'moviedatabase:popup_participant_setting' %}', 'subwin', 'height=500');">変更</a>
+						</div>
 					</div>
-					<div>
-						使用楽曲(パート単体)<br>{{ part_form.song }}<br><a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_song_create' %}', 'subwin', 'width=500,height=500');">+Song</a>
+					<div class="detail-content">
+						<h3 class="detail-header">使用楽曲(パート単体)</h3>
+						<div id="selected_song_in_movie_list">
+							{{ part_form.song }}
+						</div>
+						<div id="selected_song_in_movie_name">
+						</div>
+						<div class="setting-button" style="text-align: right;">
+							<a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_song_setting' %}', 'subwin', 'height=500');">変更</a>
+						</div>
 					</div>
-					<div>
-						使用ボーカル<br>{{ part_form.vocalnew }}<br><a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_vocal_create' %}', 'subwin', 'width=500,height=500');">+Vocal</a>
+					<div class="detail-content">
+						<h3 class="detail-header">使用ボーカル</h3>
+						<div id="selected_vocal_list">
+							{{ part_form.vocalnew }}
+						</div>
+						<div id="selected_vocal_name">
+						</div>
+						<div class="setting-button" style="text-align: right;">
+							<a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_vocal_setting' %}', 'subwin', 'height=500');">変更</a>
+						</div>
 					</div>
 				</div>
 				<div>

@@ -1,0 +1,12 @@
+<html>
+	<head></head>
+	<body>
+		<script type="text/javascript">
+			var object_name = '{{ object_name }}';
+			var object_pk = '{{ object_pk }}';
+			var object_initial = '{{ object_initial }}';
+			window.opener.{{ function_name }}(object_name, object_pk, object_initial);
+			window.close();
+		</script>
+	</body>
+</html>

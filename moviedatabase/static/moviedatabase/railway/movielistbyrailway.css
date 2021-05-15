@@ -8,10 +8,32 @@
 	justify-content: center;
 	text-align: center;
 	filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.4));
+
+	position: relative;
+	z-index: 0;
+	overflow: hidden;
+}
+
+.railway-header:before {
+	content: '';
+	background: inherit;
+	-webkit-filter: blur(16px);
+	-moz-filter: blur(16px);
+	-o-filter: blur(16px);
+	-ms-filter: blur(16px);
+	filter: blur(16px) brightness(80%);
+	position: absolute;
+	top: -16px;
+	left: -16px;
+	right: -16px;
+	bottom: -16px;
+	z-index: -1;
+	background-color: rgba(255, 255, 255, 0.8);
 }
 
 .railway-header-content {
 	width: 100%;
+	filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.5))drop-shadow(0px 0px 1px rgba(255, 255, 255, 0.4))drop-shadow(0px 0px 1px rgba(255, 255, 255, 0.4))drop-shadow(0px 0px 1px rgba(255, 255, 255, 0.4))drop-shadow(0px 0px 1px rgba(255, 255, 255, 0.4))drop-shadow(0px 0px 2px rgba(255, 255, 255, 0.4))drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.4));
 }
 
 .company-link {

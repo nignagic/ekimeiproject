@@ -80,8 +80,8 @@
 				</div>
 			</div>
 			<div class="detail-addition">
-				{% if movie.song.all %}
-				<h3 class="movie-detail-header">使用楽曲(全体)</h3>
+				<!-- {% if movie.song.all %}
+				<h3 class="movie-detail-header">使用楽曲(全体)(旧式)</h3>
 				<div class="detail-content">
 					<table class="song-table">
 					{% for song in movie.song.all %}
@@ -98,23 +98,19 @@
 						{% endfor %}
 					</table>
 				</div>
-				{% endif %}
-				{% if song %}
-				<h3 class="movie-detail-header">使用楽曲(パート単体)</h3>
+				{% endif %} -->
+				{% if movie.songnew.all %}
+				<h3 class="movie-detail-header">使用楽曲(全体)</h3>
 				<div class="detail-content">
 					<table class="song-table">
-					{% for song in songs %}
+					{% for songnew in movie.songnew.all %}
 						<tr>
-							<td class="song-name"><a href="{% url 'moviedatabase:movielistbysong' song.id 'pub' 'n' %}">{{ song }}</a></td>
-							{% if song.artist %}
+							<td class="song-name"><a href="">{{ songnew.song_name }}</a></td>
 								<td class="artist-name">
-								{% for artist in song.artist.all %}
-									{{ artist }}<br>
-								{% endfor %}
+								{{ songnew.artist_name }}
 								</td>
-							{% endif %}
 						</tr>
-					{% endfor %}
+						{% endfor %}
 					</table>
 				</div>
 				{% endif %}
@@ -200,8 +196,8 @@
 									{% endif %}
 								{% if part.song.all %}
 								 - 
-									{% for song in part.song.all %}
-										{{ song }}
+									{% for songnew in part.songnew.all %}
+										{{ songnew }}
 										{% if forloop.last %}
 										{% else %}
 											<span>/</span>
@@ -234,12 +230,12 @@
 							</td>
 						</tr>
 						{% endif %}
-						{% if part.song.all %}
+						{% if part.songnew.all %}
 						<tr class="part-detail-row">
 							<th class="part-detail-label">使用楽曲</th>
 							<td class="part-detail-content">
-									{% for song in part.song.all %}
-										<a href="{% url 'moviedatabase:movielistbysong' song.id 'pub' 'n' %}">{{ song }}</a>
+									{% for songnew in part.songnew.all %}
+										<a href="">{{ songnew }}</a>
 										{% if forloop.last %}
 										{% else %}
 											<span>/</span>

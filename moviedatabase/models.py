@@ -74,7 +74,8 @@ class Movie(models.Model):
 	reg_date = models.DateTimeField('データベース登録日時', null=True, blank=True)
 	update_date = models.DateTimeField('データベース更新日時', null=True, blank=True)
 
-	song = models.ManyToManyField(Song, blank=True, verbose_name='使用楽曲(動画全体)')
+	song = models.ManyToManyField(Song, blank=True, verbose_name='使用楽曲(動画全体)(旧)')
+	songnew = models.ManyToManyField(SongNew, blank=True, verbose_name='使用楽曲(楽曲全体)')
 	# vocal = models.ManyToManyField(Vocal, blank=True, verbose_name='使用ボーカル(動画全体)')
 	vocalnew = models.ManyToManyField(VocalNew, blank=True, verbose_name='使用ボーカル(動画全体)')
 
@@ -121,7 +122,8 @@ class Part(models.Model):
 	participant = models.ManyToManyField(Name, blank=True, verbose_name='参加名義')
 	category = models.ForeignKey(MovieCategory, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='カテゴリー')
 	start_time = models.DurationField('開始時間', null=True, blank=True, default='00:00:00')
-	song = models.ManyToManyField(Song, blank=True, verbose_name='使用楽曲(パート)')
+	song = models.ManyToManyField(Song, blank=True, verbose_name='使用楽曲(パート)(旧)')
+	songnew = models.ManyToManyField(SongNew, blank=True, verbose_name='使用楽曲(パート)')
 	# vocal = models.ManyToManyField(Vocal, blank=True, verbose_name='使用ボーカル(パート)')
 	vocalnew = models.ManyToManyField(VocalNew, blank=True, verbose_name='使用ボーカル(パート)')
 	explanation = models.TextField('補足説明', null=True, blank=True)

@@ -1,0 +1,92 @@
+{% extends 'moviedatabase/base.html' %}
+{% block content %}
+	<form action="" method="POST">
+		<div class="creator_name_container" style="display: flex;">
+			<div class="creator">
+				<select name="creator" id="id_creator" size="18">
+					{% for creator in creators %}
+					<option value="{{ creator.pk }}" class="creator-option">{{ creator }}</option>
+					{% endfor %}
+				</select>
+			</div>
+			<div class="name">
+				<select name="name" id="id_name" size="18">
+					{% for name in names %}
+					<option value="{{ name.pk }}" class="name-option" style="display: none;">{{ name }}</option>
+					{% endfor %}
+				</select>
+				<br><a href="javascript:void(0);" onclick="window.open('{% url 'moviedatabase:popup_name_create' %}', 'subwin2', 'width=500,height=500');">+Name</a>
+			</div>
+			<div id="selected-participant-container">
+			</div>
+			<input type="hidden" name="selected-participant-list" id="selected-participant-list" value="">
+		{% csrf_token %}
+		</div>
+		<button type="submit">決定</button>
+	</form>
+	<!-- 名義追加の子ウィンドウで使用 -->
+	<div id="is-name-setting"></div>
+{% endblock %}
+{% block extrajs %}
+	<script type="text/javascript">
+		selected_participants = []
+		
+		window.onload = function() {
+
+			opener_participants = window.opener.$('.selected_participant')
+
+			// 親ウィンドウの存在チェック
+			if (!window.opener || window.opener.closed || !opener_participants) {
+				console.log('There is no window opener');
+			} else {
+				// 親ウィンドウのartistのセレクトボックスが何か選択された状態で、かつ子ウィンドウのartistが何も選択されていない状態
+				// 後者：子ウィンドウのアーティストが選択されているのに変更されてしまうのを防ぐ
+				if (opener_participants) {
+					opener_participants.each(function(i, val) {
+						participant_append(val.value)
+					})
+				}
+			}
+
+			$(document).on('dblclick', '.name-option', function() {
+				participant_append($(this).val())
+			})
+
+		}
+
+		//作者(creator)を選択した時の挙動
+		$(document).on('click', '.creator-option', function() {
+			creator = $(this).val();
+			var s = "/api/creator/" + creator + "/name/?format=json";
+			$('#id_name').empty();
+			$.getJSON(s, function(data) {
+				for (var i in data) {
+					var op_name = "<option value='" + data[i].name_pk + "' class='name-option'>" + data[i].name + "</option>"
+					$("#id_name").append(op_name);
+				}
+			})
+		})
+
+		function participant_append(val) {
+			selected_participants.push(val);
+			$('#selected-participant-list').val(selected_participants);
+
+			name_option = $('select#id_name option[value="'+val+'"]')
+			name = $(name_option).text();
+			$('#selected-participant-container').append("<div class='selected-participant' data-id='"+val+"'>"+name+"</div>");
+
+			console.log($('#selected-participant-list').val())
+		}
+
+		function add_name(name, pk, initial) {
+			var select = document.getElementById('id_name');
+			var option = document.createElement('option');
+			option.setAttribute('value', pk);
+			option.setAttribute('class', 'name-option')
+			option.innerHTML = name;
+
+			select.add(option, 0);
+			select.options[0].selected = true;
+		}
+	</script>
+{% endblock %}

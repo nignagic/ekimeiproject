@@ -1,0 +1,110 @@
+
+		<div class="movie-detail">
+			<div class="youtube-container">
+				<div class="youtube">
+					<div id="player"></div>
+					<script>
+						var tag = document.createElement('script');
+
+						tag.src = "https://www.youtube.com/iframe_api";
+						var firstScriptTag = document.getElementsByTagName('script')[0];
+						firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+						var player;
+						function onYouTubeIframeAPIReady() {
+							player = new YT.Player('player', {
+								    videoId: '{{ movie.youtube_id }}',
+							})
+						}
+
+						$(document).on('click', '.time-set', function() {
+							t = parseInt(player.getCurrentTime())
+							$(this).prev('.start_time').val(inttosecond(t))
+						})
+						function inttosecond(t) {
+							s = (t % 60) % 60
+							if (s < 10) s = "0" + s
+							m = Math.floor(t / 60) % 60
+							if (m < 10) m = "0" + m
+							h = Math.floor(t / 3600)
+							if (h < 10) h + "0" + h
+							return h + ":" + m + ":" + s
+						}
+					</script>
+				</div>
+			</div>
+			<div class="detail-original">
+				<a href="https://www.youtube.com/watch?v={{ movie.youtube_id }}" target="_blank" class="movie-title-link"><h2 class="movie-title">{{ movie.title }}</h2></a>
+				{{ form.title }}
+				{{ form.main_id }}
+				{{ form.youtube_id }}
+				{{ form.niconico_id }}
+				{{ form.published_at }}
+				{{ form.duration }}
+				{{ form.n_view }}
+				{{ form.n_like }}
+				{{ form.n_dislike }}
+				{{ form.n_comment }}
+				{{ form.description }}
+				{{ form.reg_date }}
+				<div class="movie-channel">
+					<div class="movie-channel-img">
+						<img src="url">
+					</div>
+					<div class="movie-channel-name">{{ movie.channel }}</div>
+				</div>
+				{{ form.channel }}
+				<h3 class="detail-header">投稿日時</h3>
+				<div class="detail-content">
+					{% load tz %}
+					<p class="movie-published-jpn">{{ movie.published_at|timezone:'Asia/Tokyo'|date:"Y年n月d日 H:i:s" }} <small>(日本時間)</small></p>
+				</div>
+			</div>
+			<div class="detail-addition">
+				<h3 class="detail-header">単合区分</h3>
+				<div class="detail-content">
+					{{ form.is_collab }}
+				</div>
+				<h3 class="detail-header">使用楽曲(全体)</h3>
+				<div class="detail-content">
+					<div id="selected_song_in_movie_list">
+						{{ form.song }}
+					</div>
+					<div id="selected_song_in_movie_name">
+					</div>
+					<div class="setting-button" style="text-align: right;">
+						<a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_song_setting' %}', 'subwin', 'height=500');">変更</a>
+					</div>
+				</div>
+				<h3 class="detail-header">親作品</h3>
+				<div class="detail-content">
+					<div id="selected_parent_movie_list">
+						{{ form.parent }}
+					</div>
+					<div id="selected_parent_movie_name">
+					</div>
+					<div class="setting-button" style="text-align: right;">
+						<a href="javascript:void(0);" onclick="window.open('{% url 'moviedatabase:popup_parent_movie_setting' %}', 'subwin', 'height=500');">変更</a>
+					</div>
+				</div>
+				<h3 class="detail-header">関連作品</h3>
+				<div class="detail-content">
+					<div id="selected_related_movie_list">
+						{{ form.related }}
+					</div>
+					<div id="selected_related_movie_name">
+					</div>
+					<div class="setting-button" style="text-align: right;">
+						<a href="javascript:void(0);" onclick="window.open('{% url 'moviedatabase:popup_related_movie_setting' %}', 'subwin', 'height=500');">変更</a>
+					</div>
+				</div>
+				<h3 class="detail-header">補足説明</h3>
+				<div class="detail-content">
+					{{ form.explanation }}
+				</div>
+				<h3 class="detail-header">概要</h3>
+				<div class="detail-content movie-description">
+					{{ movie.description | urlize | linebreaksbr }}
+				</div>
+			</div>
+		</div>

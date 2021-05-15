@@ -37,3 +37,19 @@ class StationInMovieSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = StationInMovie
 		fields = ['sung_name', 'station_service_pk', 'get_group_station', 'line_service_pk', 'line_service_name', 'pref', 'get_color', 'back_rel', 'is_representative', 'category']
+
+class MovieSerializer(serializers.ModelSerializer):
+	movie_pk = serializers.IntegerField(source='id')
+	movie_name = serializers.CharField(source='title')
+	channel_name = serializers.CharField(source='channel.name')
+	class Meta:
+		model = LineService
+		fields = ('movie_pk', 'movie_name', 'channel_name')
+		
+class NameSerializer(serializers.ModelSerializer):
+	name_pk = serializers.IntegerField(source='id')
+	name = serializers.CharField(source='__str__')
+	creator_name = serializers.CharField(source='creator.name')
+	class Meta:
+		model = LineService
+		fields = ('name_pk', 'name', 'creator_name')

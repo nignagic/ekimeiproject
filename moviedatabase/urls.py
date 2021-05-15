@@ -55,6 +55,9 @@ urlpatterns = [
 	path('movie/edit/<slug:main_id>/part/', views.movie_part_edit, name='part_edit'),
 	path('movie/edit/<slug:main_id>/part/<int:sort_by_movie>', views.movie_part_station_edit, name='station_edit'),
 	path('popup/name_create/', views.PopupNameCreate.as_view(), name='popup_name_create'),
+	path('popup/parent_movie_setting/', views.popup_parent_movie_setting, name='popup_parent_movie_setting'),
+	path('popup/related_movie_setting/', views.popup_related_movie_setting, name='popup_related_movie_setting'),
+	path('popup/participant_setting/', views.popup_participant_setting, name='popup_participant_setting'),
 
 	path('updateinformation/<slug:main_id>/', views.UpdateInformation, name='updateinformation'),
 	path('updateinformationforuser/<int:creator>/', views.UpdateInformationforCreator, name='updateinformationforcreator'),
@@ -67,4 +70,8 @@ urlpatterns = [
 	url('^api/groupstationsearch/(?P<word>.+)/$', views.GroupStationSearchViewSet.as_view(), name='groupstationsearchapi'),
 	url('^api/transfer/(?P<station_service>.+)/$', views.LineServiceTransferViewSet.as_view(), name='lineservicetransferapi'),
 	url('^api/partstation/(?P<id>.+)/$', views.PartStationViewSet.as_view(), name='partstationapi'),
+	url('^api/channel/(?P<channel>.+)/movie/', views.MoviebyChannelViewSet.as_view(), name='moviebychannelapi'),
+	url('^api/movie/(?P<movie>.+)/', views.MovieViewSet.as_view(), name='movieapi'),
+	url('^api/creator/(?P<creator>.+)/name/', views.NamebyCreatorViewSet.as_view(), name='namebycreatorapi'),
+	url('^api/name/(?P<name>.+)/', views.NameViewSet.as_view(), name='nameapi'),
 ]

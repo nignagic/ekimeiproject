@@ -47,8 +47,26 @@ class Song(models.Model):
 		else:
 			return "a"
 
+	def get_artist_name(self):
+		a = ""
+		artists = self.artist.all()
+		if artists:
+			for artist in artists:
+				a = a + artist.__str__() + " "
+		return a
+
 	def __str__(self):
 		return self.name
+
+class SongNew(models.Model):
+	song_name = models.CharField('曲名', max_length=200)
+	song_name_kana = models.CharField('曲名カナ', max_length=200, null=True, blank=True)
+	artist_name = models.TextField('アーティスト名', max_length=400, null=True, blank=True)
+	artist_name_kana = models.TextField('アーティスト名カナ', max_length=400, null=True, blank=True)
+	tag = models.TextField('タグ', max_length=400, null=True, blank=True)
+
+	def __str__(self):
+		return self.song_name + " - " + self.artist_name
 
 class VocalNew(models.Model):
 	name = models.CharField('ボーカル名', max_length=200)

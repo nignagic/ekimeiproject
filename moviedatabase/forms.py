@@ -119,6 +119,15 @@ class MovieUpdateForm(forms.ModelForm):
 			'reg_date': forms.HiddenInput(attrs={
 				'class': 'reg_date',
 			}),
+			'song': forms.MultipleHiddenInput(attrs={
+				'class': 'selected_song_in_movie',
+			}),
+			'parent': forms.MultipleHiddenInput(attrs={
+				'class': 'selected_parent_movie',
+			}),
+			'related': forms.MultipleHiddenInput(attrs={
+				'class': 'selected_related_movie',
+			}),
 		}
 
 class PartEditFormforinline(forms.ModelForm):
@@ -176,8 +185,8 @@ class PartEditForm(forms.ModelForm):
 			'movie': forms.HiddenInput(attrs={
 				'class': 'movie',
 			}),
-			'participant': forms.SelectMultiple(attrs={
-				'class': 'participant',
+			'participant': forms.MultipleHiddenInput(attrs={
+				'class': 'selected_participant',
 			}),
 			'category': forms.Select(attrs={
 				'class': 'category',
@@ -185,11 +194,11 @@ class PartEditForm(forms.ModelForm):
 			'start_time': forms.TextInput(attrs={
 				'class': 'start_time',
 			}),
-			'song': forms.SelectMultiple(attrs={
-				'class': 'song',
+			'song': forms.MultipleHiddenInput(attrs={
+				'class': 'selected_song_in_movie',
 			}),
-			'vocalnew': forms.SelectMultiple(attrs={
-				'class': 'vocalnew',
+			'vocalnew': forms.MultipleHiddenInput(attrs={
+				'class': 'selected_vocalnew',
 			}),
 			'explanation': forms.TextInput(attrs={
 				'class': 'explanation',

@@ -380,8 +380,9 @@ class MovieListbyLineView(generic.ListView):
 			stationservices = StationService.objects.filter(station=station)
 			for stationservice in stationservices:
 				stationinmovies = StationInMovie.objects.filter(station_service=stationservice)
-				for movie in stationinmovies:
-					queryset |= Movie.objects.filter(pk=movie.part.movie.pk)
+				for stationinmovie in stationinmovies:
+					if (stationinmovie.part):
+						queryset |= Movie.objects.filter(pk=movie.part.movie.pk)
 			
 		queryset = queryset.exclude(is_active=False).order_by('-published_at')
 		sort = self.kwargs['sort']
@@ -423,7 +424,8 @@ class MovieListbyStationView(generic.ListView):
 		for stationservice in stationservices:
 			stationinmovies = StationInMovie.objects.filter(station_service=stationservice)
 			for stationinmovie in stationinmovies:
-				queryset |= Movie.objects.filter(pk=stationinmovie.part.movie.pk)
+				if (stationinmovie.part):
+					queryset |= Movie.objects.filter(pk=stationinmovie.part.movie.pk)
 			
 		queryset = queryset.exclude(is_active=False).order_by('-published_at')
 		sort = self.kwargs['sort']
@@ -457,7 +459,8 @@ class MovieListbyLineServiceView(generic.ListView):
 		lineservice = LineService.objects.get(pk=self.kwargs['line_service'])
 		lineinmovies = LineInMovie.objects.filter(line_service=lineservice)
 		for lineinmovie in lineinmovies:
-			queryset |= Movie.objects.filter(pk=lineinmovie.part.movie.pk)
+			if (lineinmovie.part):
+				queryset |= Movie.objects.filter(pk=lineinmovie.part.movie.pk)
 
 		queryset = queryset.exclude(is_active=False).order_by('-published_at')
 		sort = self.kwargs['sort']
@@ -493,14 +496,16 @@ class MovieListbyStationServiceView(generic.ListView):
 		stationservice = StationService.objects.get(pk=self.kwargs['station_service'])
 		stationinmovies = StationInMovie.objects.filter(station_service=stationservice)
 		for stationinmovie in stationinmovies:
-			queryset |= Movie.objects.filter(pk=stationinmovie.part.movie.pk)
+			if (stationinmovie.part):
+				queryset |= Movie.objects.filter(pk=stationinmovie.part.movie.pk)
 
 		stationservicegroup = stationservice.get_group_station_service()
 		if stationservicegroup:
 			if stationservicegroup.station.line == stationservice.station.line:
 				stationinmovies = StationInMovie.objects.filter(station_service=stationservice)
 				for stationinmovie in stationinmovies:
-					queryset |= Movie.objects.filter(pk=stationinmovie.part.movie.pk)
+					if (stationinmovie.part):
+						queryset |= Movie.objects.filter(pk=stationinmovie.part.movie.pk)
 
 		queryset = queryset.exclude(is_active=False).order_by('-published_at')
 		sort = self.kwargs['sort']
@@ -1165,7 +1170,68 @@ class PopupNameCreate(NameCreate):
 			'object_pk': name.pk,
 			'function_name': 'add_name'
 		}
-		return render(self.request, 'songdata/close.html', context)
+		return render(self.request, 'moviedatabase/close_name.html', context)
+
+
+@permission_required('moviedatabase.add_movie')
+def popup_parent_movie_setting(request):
+	if request.method == 'POST':
+		context = {
+			'movie_list': request.POST['selected-movie-list'],
+			'movie_type': "parent"
+		}
+		return render(request, 'moviedatabase/close_movie_setting.html', context)
+
+	channels = YoutubeChannel.objects.all()
+	movies = Movie.objects.all()
+
+	context = {
+		'channels': channels,
+		'movies': movies,
+		'movie_type': "parent"
+	}
+
+	return render(request, 'moviedatabase/movie_setting.html', context)
+
+@permission_required('moviedatabase.add_movie')
+def popup_related_movie_setting(request):
+	if request.method == 'POST':
+
+		context = {
+			'movie_list': request.POST['selected-movie-list'],
+			'movie_type': "related"
+		}
+		return render(request, 'moviedatabase/close_movie_setting.html', context)
+
+	channels = YoutubeChannel.objects.all()
+	movies = Movie.objects.all()
+
+	context = {
+		'channels': channels,
+		'movies': movies,
+		'movie_type': "related"
+	}
+
+	return render(request, 'moviedatabase/movie_setting.html', context)
+
+@permission_required('moviedatabase.add_movie')
+def popup_participant_setting(request):
+	if request.method == 'POST':
+
+		context = {
+			'participant_list': request.POST['selected-participant-list'],
+		}
+		return render(request, 'moviedatabase/close_participant_setting.html', context)
+
+	creators = Creator.objects.all()
+	names = Name.objects.all()
+
+	context = {
+		'creators': creators,
+		'names': names,
+	}
+
+	return render(request, 'moviedatabase/participant_setting.html', context)
 
 @permission_required('moviedatabase.add_movieupdateinformation')
 def UpdateInformation(request, main_id):
@@ -1252,3 +1318,23 @@ class PartStationViewSet(generics.ListAPIView):
 	serializer_class = serializer.StationInMovieSerializer
 	def get_queryset(self):
 		return StationInMovie.objects.filter(part=self.kwargs['id']).order_by('sort_by_part')
+
+class MoviebyChannelViewSet(generics.ListAPIView):
+	serializer_class = serializer.MovieSerializer
+	def get_queryset(self):
+		return Movie.objects.filter(channel=self.kwargs['channel']).order_by('-published_at')
+
+class MovieViewSet(generics.ListAPIView):
+	serializer_class = serializer.MovieSerializer
+	def get_queryset(self):
+		return Movie.objects.filter(id=self.kwargs['movie'])
+
+class NamebyCreatorViewSet(generics.ListAPIView):
+	serializer_class = serializer.NameSerializer
+	def get_queryset(self):
+		return Name.objects.filter(creator=self.kwargs['creator'])
+
+class NameViewSet(generics.ListAPIView):
+	serializer_class = serializer.NameSerializer
+	def get_queryset(self):
+		return Name.objects.filter(id=self.kwargs['name'])

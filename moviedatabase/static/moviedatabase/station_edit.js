@@ -17,37 +17,100 @@ function TimetoSecond(time) {
 $(function() {
 	d = $('.movie-description').text().replace(/<br>/g, '<br>');
 	$('.movie-description').html(d)
+
+	// ページ読み込み時の、参加者情報読み込み
+	ps = $('#selected_participant_list .selected_participant');
+	selected_participant_list = ""
+	ps.each(function (i, val) {
+		if (i != 0) selected_participant_list += ","
+		selected_participant_list += val.value
+	})
+	add_selected_participant(selected_participant_list)
+
+	// ページ読み込み時の、楽曲情報読み込み
+	ss = $('#selected_song_in_movie_list .selected_song_in_movie');
+	selected_song_in_movie_list = ""
+	ss.each(function (i, val) {
+		if (i != 0) selected_song_in_movie_list += ","
+		selected_song_in_movie_list += val.value
+	})
+	add_selected_song(selected_song_in_movie_list)
+
+	// ページ読み込み時の、ボーカル情報読み込み
+	vs = $('#selected_vocal_list .selected_vocalnew');
+	selected_vocal_list = ""
+	vs.each(function (i, val) {
+		if (i != 0) selected_vocal_list += ","
+		selected_vocal_list += val.value
+	})
+	add_selected_vocal(selected_vocal_list)
 })
 
-//曲・ボーカル追加
-function add_name(name, pk) {
-	var select = $('select.participant')[0];
-	var option = document.createElement('option');
-	option.setAttribute('value', pk);
-	option.innerHTML = name;
+// 楽曲変更
+function add_selected_participant(list) {
+	participants = list.split(',')
+	$('#selected_participant_list').empty()
+	$('#selected_participant_name').empty();
+	if (participants == "") {
+		$('#selected_participant_name').append("未設定");
+	} else {
+		$.each(participants, function(i, val) {
+			txt = "<input type='hidden' name='participant' value='" + val + "' class='selected_participant' id='id_participant_" + i + "'>"
+			$('#selected_participant_list').append(txt)
 
-	select.add(option, 0);
-	select.options[0].selected = true;
+			var s = "/api/name/" + val + "?format=json";
+			n = ""
+			$.getJSON(s, function(data) {
+				for (var i in data) {
+					$("#selected_participant_name").append(data[i].name);
+				}
+			})
+		})
+	}
 }
 
-function add_song(name, pk) {
-	var select = $('select.song')[0];
-	var option = document.createElement('option');
-	option.setAttribute('value', pk);
-	option.innerHTML = name;
+function add_selected_song(list) {
+	songs = list.split(',')
+	$('#selected_song_in_movie_list').empty()
+	$('#selected_song_in_movie_name').empty();
+	if (songs == "") {
+		$('#selected_song_in_movie_name').append("未設定");
+	} else {
+		$.each(songs, function(i, val) {
+			txt = "<input type='hidden' name='song' value='" + val + "' class='selected_song_in_movie' id='id_song_" + i + "'>"
+			$('#selected_song_in_movie_list').append(txt)
 
-	select.add(option, 0);
-	select.options[0].selected = true;
+			var s = "/songdata/api/song/" + val + "?format=json";
+			n = ""
+			$.getJSON(s, function(data) {
+				for (var i in data) {
+					$("#selected_song_in_movie_name").append(data[i].song_name);
+				}
+			})
+		})
+	}
 }
 
-function add_vocalnew(name, pk) {
-	var select = $('select.vocalnew')[0];
-	var option = document.createElement('option');
-	option.setAttribute('value', pk);
-	option.innerHTML = name;
+function add_selected_vocal(list) {
+	vocals = list.split(',')
+	$('#selected_vocal_list').empty()
+	$('#selected_vocal_name').empty();
+	if (vocals == "") {
+		$('#selected_vocal_name').append("未設定");
+	} else {
+		$.each(vocals, function(i, val) {
+			txt = "<input type='hidden' name='vocalnew' value='" + val + "' class='selected_vocalnew' id='id_vocalnew_" + i + "'>"
+			$('#selected_vocal_list').append(txt)
 
-	select.add(option, 0);
-	select.options[0].selected = true;
+			var s = "/songdata/api/vocal/" + val + "?format=json";
+			n = ""
+			$.getJSON(s, function(data) {
+				for (var i in data) {
+					$("#selected_vocal_name").append(data[i].vocal_name);
+				}
+			})
+		})
+	}
 }
 
 // 都道府県を選択したときの挙動

@@ -5,7 +5,7 @@
 			<div class="artist">
 				<select name="artist" id="id_artist" size="18">
 					{% for artist in artists %}
-					<option value="{{ artist.pk }}" data-head="{{ artist.initial }}">{{ artist }}</option>
+					<option value="{{ artist.pk }}" data-initial="{{ artist.initial }}" class="artist-option">{{ artist }}</option>
 					{% endfor %}
 				</select>
 				<br><a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_artist_create' %}', 'subwin2', 'width=500,height=500');">+Artist</a>
@@ -13,18 +13,19 @@
 			<div class="song">
 				<select name="song" id="id_song" size="18">
 					{% for song in songs %}
-					<option value="{{ song.pk }}" data-head="{{ song.initial }}" data-artist="{% for artist in song.artist.all %}{{ artist }} {% endfor %}" class="song-option">{{ song }}</option>
+					<option value="{{ song.pk }}" data-initial="{{ song.initial }}" class="song-option">{{ song }} - {% for artist in song.artist.all %}{{ artist }} {% endfor %}</option>
 					{% endfor %}
 				</select>
 				<br><a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_song_create' %}', 'subwin2', 'width=500,height=500');">+Song</a>
 			</div>
 			<div id="selected-song-container">
-				<div class="selected-song" data-id="">曲名 - 歌手名<div class="delete-button">削除</div></div>
 			</div>
+			<input type="hidden" name="selected-song-list" id="selected-song-list" value="">
 		{% csrf_token %}
 		</div>
 		<button type="submit">決定</button>
 	</form>
+	<!-- 楽曲追加の子ウィンドウで使用 -->
 	<div id="is-song-setting"></div>
 {% endblock %}
 {% block extrajs %}
@@ -33,7 +34,7 @@
 		
 		window.onload = function() {
 
-			opener_songs = window.opener.document.getElementById('id_song').selectedOptions
+			opener_songs = window.opener.$('.selected_song_in_movie')
 
 			// 親ウィンドウの存在チェック
 			if (!window.opener || window.opener.closed || !opener_songs) {
@@ -42,32 +43,48 @@
 				// 親ウィンドウのartistのセレクトボックスが何か選択された状態で、かつ子ウィンドウのartistが何も選択されていない状態
 				// 後者：子ウィンドウのアーティストが選択されているのに変更されてしまうのを防ぐ
 				if (opener_songs) {
-					for (let i = 0; i < opener_songs.length; i++) {
-						song_append(opener_songs[i].value)
-					}
+					opener_songs.each(function(i, val) {
+						song_append(val.value)
+					})
 				}
 			}
 
 			$(document).on('dblclick', '.song-option', function() {
 				song_append($(this).val())
-				console.log(selected_songs);
 			})
 
 		}
+
+		//路線を選択した時の挙動
+		$(document).on('click', '.artist-option', function() {
+			artist = $(this).val();
+			var s = "/songdata/api/artist/" + artist + "/song/?format=json";
+			$('#id_song').empty();
+			$.getJSON(s, function(data) {
+				for (var i in data) {
+					var op_song = "<option value='" + data[i].song_pk + "' data-initial='" + data[i].song_initial + "' class='song-option'>" + data[i].song_name + " - " + data[i].artist_name + "</option>"
+					$("#id_song").append(op_song);
+				}
+			})
+		})
+
 		function song_append(val) {
 			selected_songs.push(val);
+			$('#selected-song-list').val(selected_songs);
 
 			song = $('select#id_song option[value="'+val+'"]')
-			console.log(song)
 			name = $(song).text();
-			artist_name = $(song).data('artist');
-			$('#selected-song-container').append("<div class='selected-song' data-id='"+val+"'>"+name+" - "+artist_name+"</div>");
+			$('#selected-song-container').append("<div class='selected-song' data-id='"+val+"'>"+name+"</div>");
+
+			console.log($('#selected-song-list').val())
 		}
 
-		function add_artist(name, pk) {
+		function add_artist(name, pk, initial) {
 			var select = document.getElementById('id_artist');
 			var option = document.createElement('option');
 			option.setAttribute('value', pk);
+			option.setAttribute('class', 'artist-option')
+			option.setAttribute('data-initial', initial)
 			option.innerHTML = name;
 
 			select.add(option, 0);
@@ -79,7 +96,6 @@
 			option.setAttribute('value', pk);
 			option.setAttribute('class', 'song-option')
 			option.setAttribute('data-artist', artist)
-			console.log(artist)
 			option.innerHTML = name;
 
 			select.add(option, 0);

@@ -10,4 +10,5 @@ class ArtistAdmin(admin.ModelAdmin):
 # Register your models here.
 admin.site.register(Artist, ArtistAdmin)
 admin.site.register(Song, SongAdmin)
+admin.site.register(SongNew)
 admin.site.register(VocalNew)

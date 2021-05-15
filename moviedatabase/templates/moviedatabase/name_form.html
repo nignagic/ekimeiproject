@@ -8,3 +8,19 @@
 		<button type="submit">送信</button>
 	</form>
 {% endblock %}
+{% block extrajs %}
+	<script type="text/javascript">
+		window.onload = function() {
+			// 親ウィンドウの存在チェック
+			if (!window.opener || window.opener.closed || !window.opener.document.getElementById('is-name-setting')) {
+				console.log('There is no window opener');
+			} else {
+				// 親ウィンドウのartistのセレクトボックスが何か選択された状態で、かつ子ウィンドウのartistが何も選択されていない状態
+				// 後者：子ウィンドウのアーティストが選択されているのに変更されてしまうのを防ぐ
+				if ((a = window.opener.document.getElementById('id_creator').value) && !document.getElementById('id_creator').value) {
+					document.getElementById('id_creator').value = a;
+				}
+			}
+		}
+	</script>
+{% endblock %}
