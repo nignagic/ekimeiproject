@@ -4,12 +4,14 @@ register = template.Library()
 
 @register.filter(name='get_station_service')
 def get_station_service(value):
-	return StationService.objects.get(pk=value)
+	if value:
+		return StationService.objects.get(pk=value)
 
 @register.filter(name='get_line_service')
 def get_line_service(value):
-	s = StationService.objects.get(pk=value)
-	return LineService.objects.get(pk=s.line_service.pk)
+	if value:
+		s = StationService.objects.get(pk=value)
+		return LineService.objects.get(pk=s.line_service.pk)
 
 @register.simple_tag
 def url_replace(request, field, value):

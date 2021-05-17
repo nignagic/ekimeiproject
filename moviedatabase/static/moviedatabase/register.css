@@ -44,28 +44,14 @@ ul, li {
 }
 
 .background {
-	background: url();
+	background: #180556;
 	background-position: center center;
 	position: relative;
 	z-index: 0;
 	/*overflow: hidden;*/
-	padding: 0 32px;
-}
-
-.background:before {
-	content: '';
-	background: inherit;
-	-webkit-filter: blur(5px);
-	-moz-filter: blur(5px);
-	-o-filter: blur(5px);
-	-ms-filter: blur(5px);
-	filter: blur(5px);
-	position: absolute;
-	top: -5px;
-	left: -5px;
-	right: -5px;
-	bottom: -5px;
-	z-index: -1;
+	padding: 0;
+	margin: 0;
+	min-height: 100vh;
 }
 
 .main-container {
@@ -73,6 +59,91 @@ ul, li {
 	padding: 32px;
 	margin: 0 auto;
 	background: white;
+}
+
+.register-header {
+	text-align: center;
+	font-size: 1.8rem;
+	padding: 2rem 0 0 0;
+}
+
+.title-line {
+	width: 4rem;
+	text-align: center;
+	margin: 0 auto;
+	padding: 1rem 0;
+	border-bottom: 1px solid #ccc;
+}
+
+.register-notice {
+	width: 100%;
+	max-width: 512px;
+	margin: 2rem auto;
+	padding: 0 2rem;
+	text-align: center;
+	font-weight: normal;
+}
+
+.register-form-container {
+	margin: 2rem auto;
+	width: 512px;
+}
+
+.register-form-info {
+	display: inline-block;
+	color: #fff;
+	background-color: #230b73;
+	padding: 0.2rem 0.4rem;
+	position: relative;
+	font-weight: normal;
+}
+
+.register-form-area {
+	width: 100%;
+	position: relative;
+	background-color: #fff;
+	padding: 0.4rem;
+	border: 1px solid #230b73;
+}
+
+.search-input {
+	border: 0;
+	font: inherit;
+	font-weight: normal;
+	font-size: 1.2rem;
+	width: 100%;
+	outline: 0;
+}
+
+.register-form-lower {
+	display: flex;
+	align-items: flex-start;
+	justify-content: flex-end;
+}
+
+.register-form-status {
+	margin: 1rem;
+	font-size: 0.9rem;
+	font-weight: normal;
+	color: #cc0000;
+	flex: 1;
+}
+
+.search-button {
+	border: 2px solid #2e108c;
+	margin: 0.5rem 0 0 auto;
+	padding: 0.6rem 0.8rem;
+	color: #fff;
+	background-color: #2e108c;
+	cursor: pointer;
+	border-radius: 0.4rem;
+	font: inherit;
+	transition: all .3s;
+}
+
+.search-button:hover {
+	background-color: #fff;
+	color: #2e108c;
 }
 
 .container {
@@ -318,6 +389,60 @@ ul, li {
 	border-radius: 10px;
 }
 
+/*送信ボタン*/
+.submit-banner {
+	position: sticky;
+	bottom: 0;
+	width: 100%;
+	background-color: white;
+	box-shadow: 0 -2px 8px 0px rgba(0, 0, 0, 0.4);
+}
+
+.submit-banner-inner {
+	width: 100%;
+	max-width: 1080px;
+	margin: 0 auto;
+	padding: 1rem 2rem;
+}
+
+.submit-content {
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-start;
+}
+
+.submit-form-status {
+	font-weight: normal;
+	font-size: 0.9rem;
+	color: #cc0000;
+	flex: 1;
+}
+
+.submit-button {
+	margin: 0;
+	padding: 0.6rem 1.2rem;
+	color: #fff;
+	border-radius: 0.4rem;
+	font: inherit;
+	display: block;
+}
+
+.submit-button:disabled {
+	border: 2px solid #ccc;
+	background-color: #ccc;
+}
+
+.submit-button:enabled {
+	border: 2px solid #3846ac;
+	background-color: #3846ac;
+	cursor: pointer;
+	transition: all .3s;
+}
+
+.submit-button:enabled:hover {
+	background-color: #fff;
+	color: #3846ac;
+}
 
 /*ここから動画再生ボックス*/
 .youtube-frame {

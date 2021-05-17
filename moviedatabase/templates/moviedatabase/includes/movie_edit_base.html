@@ -54,7 +54,7 @@
 					<div class="movie-channel-name">{{ movie.channel }}</div>
 				</div>
 				{{ form.channel }}
-				<h3 class="detail-header">投稿日時</h3>
+				<h3 class="movie-detail-header">投稿日時</h3>
 				<div class="detail-content">
 					{% load tz %}
 					<p class="movie-published-jpn">{{ movie.published_at|timezone:'Asia/Tokyo'|date:"Y年n月d日 H:i:s" }} <small>(日本時間)</small></p>
@@ -65,7 +65,7 @@
 				<div class="detail-content">
 					{{ form.is_collab }}
 				</div>
-				<h3 class="detail-header">使用楽曲(全体)</h3>
+				<h3 class="detail-header">使用楽曲(動画全体)</h3>
 				<div class="detail-content">
 					<div id="selected_song_in_movie_list">
 						{{ form.songnew }}
@@ -73,7 +73,7 @@
 					<div id="selected_song_in_movie_name">
 					</div>
 					<div class="setting-button" style="text-align: right;">
-						<a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_song_setting' %}', 'subwin', 'height=500');">変更</a>
+						<a class="alter-button" href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_song_setting' %}', 'subwin', 'height=500');">変更</a>
 					</div>
 				</div>
 				<h3 class="detail-header">親作品</h3>
@@ -84,7 +84,7 @@
 					<div id="selected_parent_movie_name">
 					</div>
 					<div class="setting-button" style="text-align: right;">
-						<a href="javascript:void(0);" onclick="window.open('{% url 'moviedatabase:popup_parent_movie_setting' %}', 'subwin', 'height=500');">変更</a>
+						<a class="alter-button" href="javascript:void(0);" onclick="window.open('{% url 'moviedatabase:popup_parent_movie_setting' %}', 'subwin', 'height=500');">変更</a>
 					</div>
 				</div>
 				<h3 class="detail-header">関連作品</h3>
@@ -95,14 +95,14 @@
 					<div id="selected_related_movie_name">
 					</div>
 					<div class="setting-button" style="text-align: right;">
-						<a href="javascript:void(0);" onclick="window.open('{% url 'moviedatabase:popup_related_movie_setting' %}', 'subwin', 'height=500');">変更</a>
+						<a class="alter-button" href="javascript:void(0);" onclick="window.open('{% url 'moviedatabase:popup_related_movie_setting' %}', 'subwin', 'height=500');">変更</a>
 					</div>
 				</div>
 				<h3 class="detail-header">補足説明</h3>
 				<div class="detail-content">
 					{{ form.explanation }}
 				</div>
-				<h3 class="detail-header">概要</h3>
+				<h3 class="movie-detail-header">概要</h3>
 				<div class="detail-content movie-description">
 					{{ movie.description | urlize | linebreaksbr }}
 				</div>

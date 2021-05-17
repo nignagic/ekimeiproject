@@ -5,69 +5,92 @@
 {% load static %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'moviedatabase/part_edit.css' %}">
-{% for m in movies %}{{ m }}<br>{% endfor %}
-<form name="part_add" method="post">
-	<h2>動画・パート情報編集</h2>
-	<div class="main-container">
-		{% include 'moviedatabase/includes/movie_edit_base.html' %}
-		<div class="movie-part-list">
-			<h3>パート編集</h3>
-			{{ formset.management_form }}
-			<div class="part-container">
-			{% for form in formset %}
-				<div class="part-header">
-					<div class="part-handle">
-						<a class="sortable-handle">■</a>
-					</div>
-					{{ form.id }}
-					{{ form.sort_by_movie }}
-					{{ form.movie }}
-					{{ form.participant }}
-					{{ form.song }}
-					{{ form.explanation }}
-					<div class="part-name-short">
-						番号<br>{{ form.short_name }}
-						<div class="name-short-error">{{ form.short_name.errors }}</div>
-					</div>
-					<div class="part-name">
-						路線説明またはパート名{{ form.name }}<br>
-						開始位置{{ form.start_time }}<input type="button" class="time-set" value="現在位置に指定">
-						<div class="name-error">{{ form.name.errors }}</div>
-						<div class="part-start-time">
-							<p><span class="participant-list"></span>
-							<span class="part-song-list"> - </span></p>
+<div class="background">
+	<form name="part_add" method="post" id="main-form">
+		<h2>動画・パート情報編集</h2>
+		<div class="main-container">
+			{% include 'moviedatabase/includes/movie_edit_base.html' %}
+			<div class="movie-part-list">
+				<h3 class="detail-header">パート編集</h3>
+				{{ formset.management_form }}
+				<div class="part-container">
+				{% for form in formset %}
+					<div class="part-header">
+						<div class="part-handle">
+							<a class="sortable-handle"><i class="fas fa-bars"></i></a>
+						</div>
+						{{ form.id }}
+						{{ form.sort_by_movie }}
+						{{ form.movie }}
+						{{ form.participant }}
+						{{ form.song }}
+						{{ form.explanation }}
+						<div class="part-name-short">
+							番号<br>{{ form.short_name }}
+							<div class="error-message">{{ form.short_name.errors }}</div>
+						</div>
+						<div class="part-name">
+							<table>
+								<tr>
+									<td>路線説明/パート名</td>
+									<td>
+										{{ form.name }}
+										<p class="error-message">{{ form.name.errors }}</p>
+									</td>
+								</tr>
+							
+								<tr>
+									<td>開始位置</td>
+									<td>
+										{{ form.start_time }}
+										<input type="button" class="time-set" value="現在位置に指定">
+									</td>
+								</tr>
+							</table>
+
+							<div class="part-start-time">
+								<p><span class="participant-list"></span>
+								<span class="part-song-list"></span></p>
+							</div>
+						</div>
+						<div class="detail-link">
+							<div class="station-button">
+								<a href="{% url 'moviedatabase:station_edit' movie.main_id form.sort_by_movie.value %}" target="_blank">駅情報<br>編集</a>
+							</div>
 						</div>
 					</div>
-					<div class="detail-link">
-						{% if form.sort_by_movie.value != None and form.short_name.value %}
-						<div class="station-button">
-							<a href="{% url 'moviedatabase:station_edit' movie.main_id form.sort_by_movie.value %}">駅情報<br>編集</a>
-						</div>
-						{% else %}
-						<div class="delete-button">
-							<a class="delete-text">削除</a>
-						</div>
-						{% endif %}
-					</div>
+				{% endfor %}
 				</div>
-			{% if form.errors %}
-				{{ form.non_field_errors }}
-			{% endif %}
-		{% for field, errors in form.errors.items %}
-			{% for error in errors %}
-				<p>{{ field }}{{ error }}</p>
-			{% endfor %}
-		{% endfor %}
-			{% endfor %}
+			</div>
+		</div>
+		{% csrf_token %}
+	</form>
+	<div class="submit-banner">
+		<div class="submit-banner-inner">
+			<div class="submit-content">
+				<div class="submit-form-status">
+					{% for form in formset %}
+						{% if form.errors %}
+							{{ form.non_field_errors }}
+						{% endif %}
+						{% for field, errors in form.errors.items %}
+							{% for error in errors %}
+								<p>{{ error }} (Error in {{ field }})</p>
+							{% endfor %}
+						{% endfor %}
+					{% endfor %}
+					{% for field, errors in form.errors.items %}
+						{% for error in errors %}
+							<p>{{ error }} (Error in {{ field }})</p>
+						{% endfor %}
+					{% endfor %}
+				</div>
+				<input type="button" class="part-add" value="パート追加">
+				<button class="submit-button" form="main-form" onclick="submit();">送信</button>
 			</div>
 		</div>
 	</div>
-	<div class="submit-button">
-		<input type="button" class="part-add" value="パート追加">
-		{% csrf_token %}
-		<button type="button" onclick="submit();" class="btn btn-primary">送信</button>
-	</div>
-</form>
+</div>
 {% endblock %}
 
 {% block extrajs %}
@@ -145,17 +168,22 @@
 			v = "";
 			t = "";
 		}
-		p = "<div class='part-header'><div class='part-handle'><a class='sortable-handle'>■</a></div>"
+		p = "<div class='part-header'>"
+		p += "<div class='part-handle'><a class='sortable-handle'><i class='fas fa-bars'></i></a></div>"
 		p += "<input type='hidden' name='part_set-" + currentFileCount + "-id' id='id_part_set-" + currentFileCount + "-id'>"
 		p += "<input type='hidden' name='part_set-" + currentFileCount + "-sort_by_movie' class='sort_by_movie' id='id_part_set-" + currentFileCount + "-sort_by_movie'>"
-		p += "<input type='hidden' name='part_set-" + currentFileCount + "-movie' value='{{ movie.main_id }}' id='id_part_set-" + currentFileCount + "-movie'>"
+		p += "<input type='hidden' name='part_set-" + currentFileCount + "-movie' value='t_b4WYAbvvA' id='id_part_set-" + currentFileCount + "-movie'>"
+
 		p += "<input type='hidden' name='part_set-" + currentFileCount + "-explanation' class='explanation' id='id_part_set-" + currentFileCount + "-explanation'>"
-		p += "<div class='part-name-short'>番号<br><input type='text' name='part_set-" + currentFileCount + "-short_name' value='" + v + "' class='short_name' maxlength='10' id='id_part_set-" + currentFileCount + "-short_name'><div class='name-short-error'></div></div>"
-		p += "<div class='part-name'>路線説明またはパート名<input type='text' name='part_set-" + currentFileCount + "-name' class='name' maxlength='200' id='id_part_set-" + currentFileCount + "-name'><br>"
-		p += "開始位置<input type='text' name='part_set-" + currentFileCount + "-start_time' value='" + t + "' class='start_time' id='id_part_set-" + currentFileCount + "-start_time'><input type='button' class='time-set' value='現在位置に指定'><br>"
-		p += "<div class='name-error'></div>"
-		p += "<div class='part-start-time'><p><span class='participant-list'></span><span class='part-song-list'> - </span></p></div></div>"
-		p += "<div class='detail-link'><div class='delete-button'><a class='delete-text'>削除</a></div></div></div>"
+		p += "<div class='part-name-short'>番号<br><input type='text' name='part_set-" + currentFileCount + "-short_name' class='short_name' maxlength='10' id='id_part_set-" + currentFileCount + "-short_name' value='" + v + "'><div class='error-message'></div></div>"
+		p += "<div class='part-name'>"
+		p += "<table><tr><td>路線説明/パート名</td><td><input type='text' name='part_set-" + currentFileCount + "-name' class='name' maxlength='200' id='id_part_set-" + currentFileCount + "-name'><p class='error-message'></p></td></tr>"
+
+		p += "<tr><td>開始位置</td><td><input type='text' name='part_set-" + currentFileCount + "-start_time' value='" + t + "' class='start_time' id='id_part_set-" + currentFileCount + "-start_time'><input type='button' class='time-set' value='現在位置に指定'></td></tr></table>"
+
+		p += "<div class='part-start-time'><p><span class='participant-list'></span><span class='part-song-list'></span></p></div></div>"
+		p += "<div class='detail-link'><div class='delete-button'>削除</div></div>"
+		p += "</div>"
 
 		return p
 	}

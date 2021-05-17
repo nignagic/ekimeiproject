@@ -1115,7 +1115,7 @@ class MovieListbyNiconicoView(generic.ListView):
 
 		return context
 
-def detail_movie(request, main_id):
+def confirm_movie(request, main_id):
 	movie = get_object_or_404(Movie, main_id=main_id)
 	parts = Part.objects.filter(movie=movie).order_by('sort_by_movie')
 	if parts.count() == 1:
@@ -1129,7 +1129,39 @@ def detail_movie(request, main_id):
 		'movie': movie,
 		'parts': parts,
 		'onlyonepart': onlyonepart,
-		'can_edit': can_edit
+		'can_edit': can_edit,
+		'type': "confirm"
+	}
+
+	return render(request, 'moviedatabase/detail.html', context)
+
+def detail_movie(request, main_id):
+	movie = get_object_or_404(Movie, main_id=main_id)
+	parts = Part.objects.filter(movie=movie).order_by('sort_by_movie')
+	if parts.count() == 1:
+		onlyonepart = True
+	else:
+		onlyonepart = False
+
+	can_edit = request.user.groups.filter(name='can_edit').exists()
+
+	if 'confirm' in request.POST:
+		info = MovieUpdateInformation.objects.filter(movie=movie)
+		if info:
+			t = 'U'
+		else:
+			t = 'C'
+		i = MovieUpdateInformation(movie=movie, creator=None, is_create=t, reg_date=timezone.now())
+		i.save()
+		movie.update_date = timezone.now()
+		movie.save()
+
+	context = {
+		'movie': movie,
+		'parts': parts,
+		'onlyonepart': onlyonepart,
+		'can_edit': can_edit,
+		'type': "detail"
 	}
 
 	return render(request, 'moviedatabase/detail.html', context)
@@ -1150,7 +1182,7 @@ def movie_edit(request, main_id):
 	partcount = parts.count()
 	if request.method == 'POST' and form.is_valid():
 		form.save()
-		if partcount == 0 and (request.POST['part-division'] == 'single'):
+		if partcount == 0 and ('single' in request.POST):
 			p = Part.objects.create(sort_by_movie="0", short_name="0", name="", movie=movie, start_time=datetime.timedelta(0))
 			p.participant.add(movie.channel.main_name)
 			songs = movie.songnew.all()
@@ -1217,7 +1249,7 @@ def movie_part_station_edit(request, main_id, sort_by_movie):
 
 		queryset = Part.objects.filter(movie=main_id, sort_by_movie=sort_by_movie+1)
 		if queryset.first() is None:
-			return redirect('moviedatabase:detail', main_id=main_id)
+			return redirect('moviedatabase:confirm', main_id=main_id)
 		else:
 			return redirect('moviedatabase:station_edit', main_id=main_id, sort_by_movie=sort_by_movie+1)
 

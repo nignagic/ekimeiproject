@@ -74,6 +74,21 @@ class MovieRegisterForm(forms.ModelForm):
 			'description': '',
 			'reg_date': '',
 		}
+		error_messages = {
+			'title': {
+				'required': 'タイトルが適切に入力されていません'
+			},
+			'main_id': {
+				'required': '動画IDが適切に入力されていません',
+			},
+			'channel': {
+				'invalid_choice': 'この動画のチャンネルはデータベース上の登録対象外です'
+			}
+		}
+
+	def clean(self):
+		if Movie.objects.filter(main_id=self.cleaned_data['main_id']).exists():
+				raise forms.ValidationError("この動画は既にデータベース上に存在しています。")
 
 class MovieUpdateForm(forms.ModelForm):
 	class Meta:
@@ -119,6 +134,7 @@ class MovieUpdateForm(forms.ModelForm):
 			'reg_date': forms.HiddenInput(attrs={
 				'class': 'reg_date',
 			}),
+			'is_collab': forms.RadioSelect(),
 			'songnew': forms.MultipleHiddenInput(attrs={
 				'class': 'selected_song_in_movie',
 			}),
@@ -195,7 +211,7 @@ class PartEditForm(forms.ModelForm):
 				'class': 'start_time',
 			}),
 			'songnew': forms.MultipleHiddenInput(attrs={
-				'class': 'selected_song_in_movie',
+				'class': 'selected_song_in_part',
 			}),
 			'vocalnew': forms.MultipleHiddenInput(attrs={
 				'class': 'selected_vocalnew',
@@ -216,9 +232,9 @@ class StationInMovieEditForm(forms.ModelForm):
 	)
 	class Meta:
 		model = StationInMovie
-		fields = ('sort_by_part', 'part', 'station_service', 'sung_name', 'back_rel')
+		fields = ('sort_by_part', 'part', 'station_service', 'sung_name', 'back_rel', 'explanation')
 		widgets = {
-			'sort_by_part': forms.TextInput(attrs={
+			'sort_by_part': forms.HiddenInput(attrs={
 				'class': 'sort_by_part',
 			}),
 			'part': forms.Select(attrs={
@@ -233,6 +249,9 @@ class StationInMovieEditForm(forms.ModelForm):
 			'back_rel': forms.TextInput(attrs={
 				'class': 'back_rel',
 			}),
+			'explanation': forms.TextInput(attrs={
+				'class': 'explanation',
+			})
 		}
 
 StationInMovieEditFormset = forms.inlineformset_factory(

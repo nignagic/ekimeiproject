@@ -116,7 +116,7 @@ class Movie(models.Model):
 
 class Part(models.Model):
 	sort_by_movie = models.IntegerField()
-	short_name = models.CharField(max_length=10)
+	short_name = models.CharField(max_length=10, null=True, blank=True)
 	name = models.CharField('パート名', max_length=200, null=True, blank=True)
 	movie = models.ForeignKey(Movie, to_field='main_id', null=True, blank=True, on_delete=models.SET_NULL, verbose_name='動画')
 	participant = models.ManyToManyField(Name, blank=True, verbose_name='参加名義')
@@ -130,8 +130,10 @@ class Part(models.Model):
 	def __str__(self):
 		if self.name:
 			n = self.name
-		else:
+		elif self.short_name:
 			n = self.short_name
+		else:
+			n = "#" + str(self.sort_by_movie+1)
 
 		if self.movie:
 			return "【" + n + "】" + self.movie.title
@@ -144,6 +146,7 @@ class StationInMovie(models.Model):
 	station_service = models.ForeignKey(StationService, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='駅')
 	sung_name = models.CharField('歌唱名', null=True, blank=True, max_length=400)
 	back_rel = models.IntegerField('前駅との関係', default=1)
+	explanation = models.TextField('補足説明', null=True, blank=True)
 	def __str__(self):
 		return self.sung_name
 

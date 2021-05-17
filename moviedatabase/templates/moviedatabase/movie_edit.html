@@ -5,60 +5,86 @@
 {% load static %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'moviedatabase/part_edit.css' %}">
-{% for m in movies %}{{ m }}<br>{% endfor %}
-<form name="part_add" method="post">
-	<h2>動画情報編集</h2>
-	<div class="main-container">
-		{% include 'moviedatabase/includes/movie_edit_base.html' %}
-		<div class="movie-part-list">
-			{% if partcount == 0 %}
-			<input type="radio" name="part-division" value="single" checked="">　パート分けなし<br>
-			<input type="radio" name="part-division" value="multiple">　パート分けあり
-			{% else %}
-				{% for part in parts %}
-				<div class="part-header" {% if onlyonepart %}style="display: none;"{% endif %}>
-					<div class="part-name-short"><span>{{ part.short_name }}</span></div>
-					<table class="part-table" data-part_id="{{ part.id }}" data-category="{{ part.category }}">
-						<tr>
-							<td class="part-header-up">
-								{{ part.name }}
-							</td>
-						</tr>
-						<tr class="row-2">
-							<td>
-								{% if part.participant.all %}
-									{% for participant in part.participant.all %}
-										{{ participant }}
-										{% if forloop.last %}
-										{% else %}
-											<span>/</span>
-										{% endif %}
-									{% endfor %}
-									{% endif %}
-								{% if part.song.all %}
-								 - 
-									{% for song in part.song.all %}
-										{{ song }}
-										{% if forloop.last %}
-										{% else %}
-											<span>/</span>
-										{% endif %}
-									{% endfor %}
-								{% endif %}
-							</td>
-						</tr>
-					</table>
+<div class="background">
+	<form name="part_add" method="post" id="main-form">
+		<h2>動画情報編集</h2>
+		<div class="main-container">
+			{% include 'moviedatabase/includes/movie_edit_base.html' %}
+			<div class="movie-part-list">
+				{% if partcount != 0 %}
+					<div class="part-container">
+					{% for part in parts %}
+						<div class="part-header" {% if onlyonepart %}style="display: none;"{% endif %}>
+							<div class="part-name-short"><span>{% if part.short_name %}{{ part.short_name }}{% endif %}</span></div>
+							<div class="part-name">
+								<table>
+									<tr>
+										<td>{{ part.name }}</td>
+									</tr>
+									<tr>
+										<td>
+											{% if part.participant.all %}
+												{% for participant in part.participant.all %}
+													{{ participant }}
+													{% if forloop.last %}
+													{% else %}
+														<span>/</span>
+													{% endif %}
+												{% endfor %}
+												{% endif %}
+											{% if part.song.all %}
+											 - 
+												{% for song in part.song.all %}
+													{{ song }}
+													{% if forloop.last %}
+													{% else %}
+														<span>/</span>
+													{% endif %}
+												{% endfor %}
+											{% endif %}
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					{% endfor %}
+					</div>
+				{% endif %}
+			</div>
+		</div>
+		{% csrf_token %}
+	</form>
+	<div class="submit-banner">
+		<div class="submit-banner-inner">
+			<div class="submit-content">
+				<div class="submit-form-status">
+					{% for form in formset %}
+						{% if form.errors %}
+							{{ form.non_field_errors }}
+						{% endif %}
+						{% for field, errors in form.errors.items %}
+							{% for error in errors %}
+								<p>{{ error }} (Error in {{ field }})</p>
+							{% endfor %}
+						{% endfor %}
+					{% endfor %}
+					{% for field, errors in form.errors.items %}
+						{% for error in errors %}
+							<p>{{ error }} (Error in {{ field }})</p>
+						{% endfor %}
+					{% endfor %}
 				</div>
-				{% endfor %}
-			{% endif %}
-			<input type="radio" name="part-division" value="exist" style="display: none;">
+				{% if partcount == 0 %}
+					<button class="multiple-button" form="main-form" name="multiple" onclick="submit();">パート分けありとして登録<span class="button-sub">合作など</span></button>
+					<button class="submit-button" form="main-form" name="single" onclick="submit();">パート分けなしとして登録<span class="button-sub">単作など</span></button>
+				{% else %}
+					<button class="submit-button" form="main-form" name="multiple" onclick="submit();">送信</button>
+				{% endif %}
+			</div>
 		</div>
 	</div>
-	<div class="submit-button">
-		{% csrf_token %}
-		<button type="button" onclick="submit();" class="btn btn-primary">送信</button>
-	</div>
-</form>
+	</form>
+</div>
 {% endblock %}
 
 {% block extrajs %}

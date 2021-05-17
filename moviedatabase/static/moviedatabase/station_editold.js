@@ -1,6 +1,6 @@
 //YouTubeジャンプ
 $('.youtube-jump').on('click', function() {
-	time = $(this).siblings('.start_time').val()
+	time = $(this).prev('.start_time').val()
 	console.log(time)
 	player.playVideo();
 	player.seekTo(TimetoSecond(time), true);
@@ -28,13 +28,13 @@ $(function() {
 	add_selected_participant(selected_participant_list)
 
 	// ページ読み込み時の、楽曲情報読み込み
-	ss = $('#selected_song_in_part_list .selected_song_in_part');
-	selected_song_in_part_list = ""
+	ss = $('#selected_song_in_movie_list .selected_song_in_movie');
+	selected_song_in_movie_list = ""
 	ss.each(function (i, val) {
-		if (i != 0) selected_song_in_part_list += ","
-		selected_song_in_part_list += val.value
+		if (i != 0) selected_song_in_movie_list += ","
+		selected_song_in_movie_list += val.value
 	})
-	add_selected_song(selected_song_in_part_list)
+	add_selected_song(selected_song_in_movie_list)
 
 	// ページ読み込み時の、ボーカル情報読み込み
 	vs = $('#selected_vocal_list .selected_vocalnew');
@@ -72,20 +72,20 @@ function add_selected_participant(list) {
 // 楽曲変更
 function add_selected_song(list) {
 	songs = list.split(',')
-	$('#selected_song_in_part_list').empty()
-	$('#selected_song_in_part_name').empty();
+	$('#selected_song_in_movie_list').empty()
+	$('#selected_song_in_movie_name').empty();
 	if (songs == "") {
-		$('#selected_song_in_part_name').append("未設定");
+		$('#selected_song_in_movie_name').append("未設定");
 	} else {
 		$.each(songs, function(i, val) {
 			txt = "<input type='hidden' name='songnew' value='" + val + "' class='selected_song_in_movie' id='id_songnew_" + i + "'>"
-			$('#selected_song_in_part_list').append(txt)
+			$('#selected_song_in_movie_list').append(txt)
 
 			var s = "/songdata/api/songnew/" + val + "?format=json";
 			n = ""
 			$.getJSON(s, function(data) {
 				for (var i in data) {
-					$("#selected_song_in_part_name").append(data[i].__str__);
+					$("#selected_song_in_movie_name").append(data[i].__str__);
 				}
 			})
 		})
@@ -161,8 +161,8 @@ $(document).on('click', '.station-reverse', function() {
 })
 
 //乗換検索をした時の挙動
-$(document).on('click', '.station-line-search-button', function() {
-	station = $(this).parents('.station-box').find('.station_service').attr("value");
+$(document).on('click', '.line-search-button', function() {
+	station = $(this).parents('.stations-box').find('.station_service').attr("value");
 	var s = "/api/transfer/" + station + "/?format=json";
 	$(".transfer-line-select").empty();
 
@@ -191,32 +191,32 @@ $(function() {
 	})
 })
 
-// //駅名検索をした時の挙動
-// $('.namesearch').keypress(function(e) {
-// 	if (e.which == 13) {
-// 		namesearch();
-// 	}
-// })
-// $('.namesearchbutton').on('click', function() {
-// 	namesearch();
-// })
-// function namesearch() {
-// 	text = $('.namesearch').val();
-// 	var s = "/api/stationsearch/" + text + "/?format=json";
-// 	$('.station-select').empty();
-// 	$.getJSON(s, function(data) {
-// 		for (var i in data) {
-// 			var op_station = "<option value='" + data[i].station_service_pk + "' data-name='" + data[i].__str__ + "' data-line='" + data[i].line_service_name + "' class='station-option'>" + data[i].__str__ + " ‐ " + data[i].line_service_name + "</option>"
-// 			$('.station-select').append(op_station)
-// 		}
-// 	})
-// }
-// $(document).ready(function() {
-// 	$('input,textarea[readonly]').not($('input[type="button"],input[type="submit"]')).keypress(function (e) {
-// 		if (!e) var e = window.event;
-// 		if (e.keyCode == 13) return false;
-// 	})
-// })
+//駅名検索をした時の挙動
+$('.namesearch').keypress(function(e) {
+	if (e.which == 13) {
+		namesearch();
+	}
+})
+$('.namesearchbutton').on('click', function() {
+	namesearch();
+})
+function namesearch() {
+	text = $('.namesearch').val();
+	var s = "/api/stationsearch/" + text + "/?format=json";
+	$('.station-select').empty();
+	$.getJSON(s, function(data) {
+		for (var i in data) {
+			var op_station = "<option value='" + data[i].station_service_pk + "' data-name='" + data[i].__str__ + "' data-line='" + data[i].line_service_name + "' class='station-option'>" + data[i].__str__ + " ‐ " + data[i].line_service_name + "</option>"
+			$('.station-select').append(op_station)
+		}
+	})
+}
+$(document).ready(function() {
+	$('input,textarea[readonly]').not($('input[type="button"],input[type="submit"]')).keypress(function (e) {
+		if (!e) var e = window.event;
+		if (e.keyCode == 13) return false;
+	})
+})
 
 //駅登録リスト
 $(function() {
@@ -225,9 +225,6 @@ $(function() {
 			return parseInt($(a).find('.sort_by_part').val(), 10) - parseInt($(b).find('.sort_by_part').val(), 10)
 		})
 	)
-
-	$('.sortable-delete input').prop('checked', false)
-	$('.sortable-delete input').hide()
 
 	var totalManageElement = $('input#id_stationinmovie_set-TOTAL_FORMS');
 	var currentFileCount = parseInt(totalManageElement.val());
@@ -265,28 +262,27 @@ $(function() {
 	}
 
 	function text(val, name, line_name, currentFileCount) {
-		t = "<div class='station_form'><div class='station-content'>"
-		t += "<div class='station-relation'><input type='hidden' name='stationinmovie_set-" + currentFileCount + "-id' id='id_stationinmovie_set-" + currentFileCount + "-id'>"
-		t += "<input type='hidden' name='stationinmovie_set-" + currentFileCount + "-sort_by_part' class='sort_by_part' id='id_stationinmovie_set-" + currentFileCount + "-sort_by_part'>"
-		t += "<div class='station-relation-line'></div>"
-		t += "<div class='station-relation-select'><select name='stationinmovie_set-" + currentFileCount + "-back_rel' id='id_stationinmovie_set-" + currentFileCount + "-back_rel'>"
-		t += "<option value='0'>強制的につなげる</option><option value='1' selected>通常接続</option><option value='2'>強制的に離す</option>"
-		t += "</select></div></div>"
-
-		t += "<div class='station-box'>"
-		t += "<div class='station-sortable'><a class='sortable-handle'><i class='fas fa-bars'></i></a></div>"
-		t += "<div class='station-line-search'><a class='station-line-search-button'>路線検索</a></div>"
-
-		t += "<div class='station-info'><div class='station-info-top'><input type='hidden' name='stationinmovie_set-" + currentFileCount + "-station_service' class='station_service' id='id_stationinmovie_set-" + currentFileCount + "-station_service' value='" + val + "'>"
-		t += "<div class='station-name-fixed'>" + name + "</div>"
-		t += "<div class='station-line-name'>" + line_name + "</div>"
-		t += "</div>"
-		t += "<div class='station-info-bottom'>"
-		t += "<div class='station-sung-name'>歌唱名：<input type='text' name='stationinmovie_set-" + currentFileCount + "-sung_name' class='sung_name' maxlength='400' id='id_stationinmovie_set-" + currentFileCount + "-sung_name' value='" + name + "'></div>"
-		t += "<div class='station-explanation'>備考：<input type='text' name='stationinmovie_set-" + currentFileCount + "-explanation' class='explanation' id='id_stationinmovie_set-" + currentFileCount + "-explanation'></div></div></div>"
-		t += "<div class='station-delete'><a class='sortable-delete'><input type='checkbox' name='stationinmovie_set-" + currentFileCount + "-DELETE' id='id_stationinmovie_set-" + currentFileCount + "-DELETE' style='display: none;'><i class='fas fa-times'></i></a></div>"
-		t += "</div></div></div>"
-		return t
+		e = "<div class='station_form'><div class='stations'><div class='stations-handle'><a class='sortable-handle'>■</a></div><div class='stations-content'>"
+		e += "<div class='stations-relation'>"
+		e += "<input type='hidden' name='stationinmovie_set-" + currentFileCount + "-id' value='' id='id_stationinmovie_set-" + currentFileCount + "-id'>"
+		e += "<input type='hidden' name='stationinmovie_set-" + currentFileCount + "-sort_by_part' value='' class='sort_by_part' id='id_stationinmovie_set-" + currentFileCount + "-sort_by_part'>"
+		e += "<div class='stations-relation-line'></div>"
+		e += "<div class='stations-relation-select'>"
+		e += "<select name='stationinmovie_set-" + currentFileCount + "-back_rel' id='id_stationinmovie_set-" + currentFileCount + "-back_rel'>"
+		e += "<option value='0'>強制的につなげる</option><option value='1' selected>通常接続</option><option value='2'>強制的に離す</option>"
+		e += "</select></div></div>"
+		e += "<div class='stations-box'>"
+		e += "<div class='line-search'><a class='line-search-button'>路線<br>検索</a></div>"
+		e += "<div class='stations-info'><div class='stations-info-top'>"
+		e += "<input type='hidden' name='stationinmovie_set-" + currentFileCount + "-station_service' value='" + val + "' class='station_service' id='id_stationinmovie_set-" + currentFileCount + "-station_service'>"
+		e += "<div class='station-name-container'><div class='station-name-fixed'>" + name + "</div>"
+		e += "<div class='stations-remarks'>備考<input type='textbox' name='remarks[]' class='stations-remarks-text'></div></div></div>"
+		e += "<div class='stations-info-bottom'><div class='station-sung-name'>"
+		e += "歌唱名：<input type='text' name='stationinmovie_set-" + currentFileCount + "-sung_name' value='" + name + "' maxlength='50' id='id_stationinmovie_set-" + currentFileCount + "-sung_name'>"
+		e += "</div><div class='line-name'>" + line_name + "</div></div></div>"
+		e += "<div class='stations-delete'><a class='sortable-delete'><input type='checkbox' name='stationinmovie_set-" + currentFileCount + "-DELETE' id='id_stationinmovie_set-" + currentFileCount + "-DELETE'>削除</a></div>"
+		e += "</div></div></div></div>"
+		return e
 	}
 
 	$('div.selected-list').sortable({
