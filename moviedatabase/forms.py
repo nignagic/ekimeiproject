@@ -10,9 +10,6 @@ class LoginForm(AuthenticationForm):
 	"""ログインフォーム"""
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-		for field in self.fields.values():
-			field.widget.attrs['class'] = 'form-control'
-			field.widget.attrs['placeholder'] = field.label
 
 class MovieRegisterForm(forms.ModelForm):
 	class Meta:
@@ -86,9 +83,23 @@ class MovieRegisterForm(forms.ModelForm):
 			}
 		}
 
+	def __init__(self, *args, **kwargs):
+		self.request = kwargs.pop('request')
+		super(MovieRegisterForm, self).__init__(*args, **kwargs)
+
 	def clean(self):
+		channel = self.cleaned_data['channel']
+		cs = self.request.user.all_can_edit_channel()
+		flag = False
+		for c in cs:
+			if (c == channel):
+				flag = True
+
+		if not flag:
+			raise forms.ValidationError("このチャンネルの動画はログイン中のユーザーでは登録できません")
+
 		if Movie.objects.filter(main_id=self.cleaned_data['main_id']).exists():
-				raise forms.ValidationError("この動画は既にデータベース上に存在しています。")
+			raise forms.ValidationError("この動画は既にデータベース上に存在しています。")
 
 class MovieUpdateForm(forms.ModelForm):
 	class Meta:
@@ -158,22 +169,22 @@ class PartEditFormforinline(forms.ModelForm):
 				'class': 'short_name',
 			}),
 			'name': forms.TextInput(attrs={
-				'class': 'name',
+				'class': 'part_name',
 			}),
 			'movie': forms.HiddenInput(attrs={
-				'class': 'movie',
+				'class': 'part_movie',
 			}),
 			'participant': forms.MultipleHiddenInput(attrs={
-				'class': 'participant',
+				'class': 'part_participant',
 			}),
 			'start_time': forms.TextInput(attrs={
 				'class': 'start_time',
 			}),
 			'songnew': forms.MultipleHiddenInput(attrs={
-				'class': 'song',
+				'class': 'part_song',
 			}),
 			'explanation': forms.HiddenInput(attrs={
-				'class': 'explanation',
+				'class': 'part_explanation',
 			}),
 		}
 

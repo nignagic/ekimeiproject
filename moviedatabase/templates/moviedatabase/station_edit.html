@@ -54,8 +54,68 @@
 						</div>
 					</div>
 					<div class="part-detail-container shadow">
+					{% if partcount == 1 %}
 						<h2 class="part-detail-header">
-							パート情報
+							詳細情報
+						</h2>
+						<div class="part-detail">
+							<div class="part-detail-left">
+								<table>
+									<tr>
+										<th>種類</th>
+										<td>{{ part_form.category }}</td>
+									</tr>
+									<tr>
+										<th>使用ボーカル</th>
+										<td>
+											<div id="selected_vocal_list">
+												{{ part_form.vocalnew }}
+											</div>
+											<div id="selected_vocal_name"></div>
+											<div class="setting-button" style="text-align: right;">
+												<a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_vocal_setting' %}', 'subwin', 'height=500');">変更</a>
+											</div>
+										</td>
+									</tr>
+								</table>
+								{{ part_form.movie }}
+							</div>
+							<div class="part-detail-right">
+								<table>
+									<tr>
+										<th>参加者</th>
+										<td>
+											<div id="selected_participant_list">
+												{{ part_form.participant }}
+											</div>
+											<div id="selected_participant_name"></div>
+											<div class="setting-button" style="text-align: right;">
+												<a href="javascript:void(0);" onclick="window.open('{% url 'moviedatabase:popup_participant_setting' %}', 'subwin', 'height=500');">変更</a>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>使用楽曲</th>
+										<td>
+											<div id="selected_song_in_part_list">
+												{{ part_form.songnew }}
+											</div>
+											<div id="selected_song_in_part_name"></div>
+											<div class="setting-button" style="text-align: right;">
+												<a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_song_setting' %}', 'subwin', 'height=500');">変更</a>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>補足説明</th>
+										<td>{{ part_form.explanation }}</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					{% else %}
+						<h2 class="part-detail-header">
+							パート情報 - #{{ part.part_num }}（パート番号：{% if part.short_name %}{{ part.short_name }}{% else %}未設定{% endif %}）
 						</h2>
 						<div class="part-detail">
 							<div class="part-detail-left">
@@ -97,7 +157,7 @@
 										</td>
 									</tr>
 									<tr>
-										<th>使用楽曲(パート単体)</th>
+										<th>使用楽曲<br><small>(パート単体)</small></th>
 										<td>
 											<div id="selected_song_in_part_list">
 												{{ part_form.songnew }}
@@ -123,6 +183,7 @@
 								</table>
 							</div>
 						</div>
+					{% endif %}
 					</div>
 				</div>
 				<div class="edit-lower">
@@ -247,7 +308,7 @@
 				<div class="submit-banner-inner">
 					<div class="submit-content">
 						<div class="submit-form-status">
-							{% for form in formsrt %}
+							{% for form in formset %}
 								{% if form.errors %}
 									{{ form.non_field_errors }}
 								{% endif %}

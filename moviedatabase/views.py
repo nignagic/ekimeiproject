@@ -42,7 +42,21 @@ class Login(LoginView):
 	template_name = 'moviedatabase/login.html'
 
 class Logout(LogoutView):
-	template_name = 'moviedatabase/top.html'
+	template_name = 'moviedatabase/logout.html'
+
+def Mypage(request):
+	updateinformations = MovieUpdateInformation.objects.filter(user=request.user)
+
+	context = {
+		'updateinformations': updateinformations,
+		'user': request.user
+	}
+
+	return render(request, 'moviedatabase/mypage.html', context)
+
+def Terms(request):
+	return render(request, 'moviedatabase/static-page/terms.html')
+
 
 class MovieListView(generic.ListView):
 	model = Movie
@@ -302,7 +316,7 @@ class LineServiceListbyCompanyView(generic.ListView):
 		context['company'] = company
 		context['prefs'] = prefs
 
-		context['can_edit'] = self.request.user.groups.filter(name='can_edit').exists()
+		context['admin'] = self.request.user.groups.filter(name='admin').exists()
 
 		return context
 
@@ -456,7 +470,7 @@ class MovieListbyLineView(generic.ListView):
 				stationinmovies = StationInMovie.objects.filter(station_service=stationservice)
 				for stationinmovie in stationinmovies:
 					if (stationinmovie.part):
-						queryset |= Movie.objects.filter(pk=movie.part.movie.pk)
+						queryset |= Movie.objects.filter(pk=stationinmovie.part.movie.pk)
 			
 		queryset = queryset.exclude(is_active=False).order_by('-published_at')
 		sort = self.kwargs['sort']
@@ -481,7 +495,7 @@ class MovieListbyLineView(generic.ListView):
 		context['sort'] = self.kwargs['sort']
 		context['order'] = self.kwargs['order']
 
-		context['can_edit'] = self.request.user.groups.filter(name='can_edit').exists()
+		context['admin'] = self.request.user.groups.filter(name='admin').exists()
 
 		return context
 
@@ -555,7 +569,7 @@ class MovieListbyLineServiceView(generic.ListView):
 		context['sort'] = self.kwargs['sort']
 		context['order'] = self.kwargs['order']
 
-		context['can_edit'] = self.request.user.groups.filter(name='can_edit').exists()
+		context['admin'] = self.request.user.groups.filter(name='admin').exists()
 
 		return context
 
@@ -936,7 +950,7 @@ class MovieListbyVocalView(generic.ListView):
 
 class CreatorListView(generic.ListView):
 	model = Creator
-	paginate_by = 30
+	paginate_by = 200
 	template_name = 'moviedatabase/creator/creatorlist.html'
 
 	def get_queryset(self):
@@ -1033,9 +1047,9 @@ class MovieListbyCreatorView(generic.ListView):
 		context['sort'] = self.kwargs['sort']
 		context['order'] = self.kwargs['order']
 
-		can_edit = self.request.user.groups.filter(name='can_edit').exists()
+		admin = self.request.user.groups.filter(name='admin').exists()
 
-		context['can_edit'] = can_edit
+		context['admin'] = admin
 
 		return context
 
@@ -1115,7 +1129,18 @@ class MovieListbyNiconicoView(generic.ListView):
 
 		return context
 
+def add_updatehistory(request, main_id, category):
+	movie = Movie.objects.get(main_id=main_id)
+	i = UpdateHistory(movie=movie, user=request.user, reg_date=timezone.now(), category=category)
+	i.save()
+
+@permission_required('moviedatabase.add_movie')
 def confirm_movie(request, main_id):
+	if not can_edit_channel(request, main_id):
+		return redirect('moviedatabase:login')
+
+	add_updatehistory(request, main_id, 'access-confirm')
+
 	movie = get_object_or_404(Movie, main_id=main_id)
 	parts = Part.objects.filter(movie=movie).order_by('sort_by_movie')
 	if parts.count() == 1:
@@ -1144,14 +1169,16 @@ def detail_movie(request, main_id):
 		onlyonepart = False
 
 	can_edit = request.user.groups.filter(name='can_edit').exists()
+	can_edit = can_edit and can_edit_channel(request, main_id)
 
 	if 'confirm' in request.POST:
+		add_updatehistory(request, main_id, 'complete-confirm')
 		info = MovieUpdateInformation.objects.filter(movie=movie)
 		if info:
 			t = 'U'
 		else:
 			t = 'C'
-		i = MovieUpdateInformation(movie=movie, creator=None, is_create=t, reg_date=timezone.now())
+		i = MovieUpdateInformation(movie=movie, creator=None, is_create=t, user=request.user, reg_date=timezone.now())
 		i.save()
 		movie.update_date = timezone.now()
 		movie.save()
@@ -1171,11 +1198,32 @@ class MovieRegisterView(PermissionRequiredMixin, generic.CreateView):
 	model = Movie
 	form_class = forms.MovieRegisterForm
 	permission_required = ('moviedatabase.add_movie')
+
+	def get_form_kwargs(self):
+		kw = super(MovieRegisterView, self).get_form_kwargs()
+		kw['request'] = self.request
+		return kw
+		
 	def get_success_url(self):
 		return reverse_lazy('moviedatabase:movie_edit', kwargs={'main_id': self.object.main_id})
 
+def can_edit_channel(request, main_id):
+	cs = request.user.all_can_edit_channel()
+	movie = Movie.objects.get(main_id=main_id)
+	flag = False
+
+	for c in cs:
+		if (c == movie.channel):
+			flag = True
+	return flag
+
 @permission_required('moviedatabase.add_movie')
 def movie_edit(request, main_id):
+	if not can_edit_channel(request, main_id):
+		return redirect('moviedatabase:login')
+
+	add_updatehistory(request, main_id, 'access-movie-edit')
+
 	movie = get_object_or_404(Movie, main_id=main_id)
 	form = forms.MovieUpdateForm(request.POST or None, instance=movie)
 	parts = Part.objects.filter(movie=main_id)
@@ -1205,6 +1253,11 @@ def movie_edit(request, main_id):
 
 @permission_required('moviedatabase.add_part')
 def movie_part_edit(request, main_id):
+	if not can_edit_channel(request, main_id):
+		return redirect('moviedatabase:login')
+
+	add_updatehistory(request, main_id, 'access-part-edit')
+
 	movie = get_object_or_404(Movie, main_id=main_id)
 	form = forms.MovieUpdateForm(request.POST or None, instance=movie)
 	formset = forms.PartEditFormset(request.POST or None, instance=movie)
@@ -1227,6 +1280,11 @@ def movie_part_edit(request, main_id):
 
 @permission_required('moviedatabase.add_stationinmovie')
 def movie_part_station_edit(request, main_id, sort_by_movie):
+	if not can_edit_channel(request, main_id):
+		return redirect('moviedatabase:login')
+
+	add_updatehistory(request, main_id, 'access-part-station-edit')
+
 	part = get_object_or_404(Part, movie=main_id, sort_by_movie=sort_by_movie)
 	part_form = forms.PartEditForm(request.POST or None, instance=part)
 	formset = forms.StationInMovieEditFormset(request.POST or None, instance=part)
@@ -1253,6 +1311,7 @@ def movie_part_station_edit(request, main_id, sort_by_movie):
 		else:
 			return redirect('moviedatabase:station_edit', main_id=main_id, sort_by_movie=sort_by_movie+1)
 
+	partcount = Part.objects.filter(movie=main_id).count()
 	prefs = Prefecture.objects.all()
 	companies = Company.objects.all()
 
@@ -1261,7 +1320,8 @@ def movie_part_station_edit(request, main_id, sort_by_movie):
 		'part_form': part_form,
 		'formset': formset,
 		'prefs': prefs,
-		'companies': companies
+		'companies': companies,
+		'partcount': partcount
 	}
 
 	return render(request, 'moviedatabase/station_edit.html', context)

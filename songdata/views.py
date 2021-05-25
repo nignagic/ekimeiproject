@@ -34,12 +34,14 @@ class PopupSongCreate(SongCreate):
 class SongNewCreate(PermissionRequiredMixin, generic.CreateView):
 	model = SongNew
 	fields = '__all__'
-	permission_required = ('songdata.add_song')
+	permission_required = ('songdata.add_songnew')
 	success_url = reverse_lazy('songdata:songlist')
 
 class PopupSongNewCreate(SongNewCreate):
 	def form_valid(self, form):
 		songnew = form.save()
+		songnew.user = self.request.user
+		songnew.save()
 		context = {
 			'object_name': str(songnew),
 			'object_pk': songnew.pk,
@@ -81,7 +83,7 @@ class PopupVocalCreate(VocalCreate):
 		}
 		return render(self.request, 'songdata/close.html', context)
 
-@permission_required('songdata.add_song')
+@permission_required('songdata.add_songnew')
 def popup_song_setting(request):
 	if request.method == 'POST':
 
@@ -98,7 +100,7 @@ def popup_song_setting(request):
 
 	return render(request, 'songdata/song_setting.html', context)
 
-@permission_required('songdata.add_song')
+@permission_required('songdata.add_vocalnew')
 def popup_vocal_setting(request):
 	if request.method == 'POST':
 

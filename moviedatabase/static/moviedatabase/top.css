@@ -155,6 +155,7 @@
 .movie-info {
 	padding: 0.25rem 0 0 1rem;
 	overflow: hidden;
+	flex: 1;
 }
 
 .movie-published,

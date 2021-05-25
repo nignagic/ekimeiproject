@@ -17,7 +17,7 @@
 					/
 					<div class="login-out">
 					{% if user.is_authenticated %}
-						<p class="display-4"><a class="mypage" href="">マイページ</a><a class="lead login-out-button" href="{% url 'moviedatabase:logout' %}">ログアウト</a></p>
+						<p class="display-4"><a class="mypage" href="{% url 'moviedatabase:mypage' %}">マイページ</a><a class="lead login-out-button" href="{% url 'moviedatabase:logout' %}">ログアウト</a></p>
 					{% else %}
 						<a class="lead login-out-button" href="{% url 'moviedatabase:login' %}">ログイン</a>
 					{% endif %}

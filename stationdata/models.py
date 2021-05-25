@@ -184,6 +184,14 @@ class LineService(models.Model):
 
 		return n
 
+	def status_text(self):
+		if self.status == 1:
+			return "[未]"
+		elif self.status == 2:
+			return "[廃]"
+		else:
+			return ""
+
 class StationService(models.Model):
 	# category = models.ForeignKey(ObjectCategory, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='名称カテゴリー')
 	name = models.CharField('駅名(運行系統)', max_length=200, null=True, blank=True)

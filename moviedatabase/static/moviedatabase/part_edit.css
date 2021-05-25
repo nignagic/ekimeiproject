@@ -146,8 +146,12 @@ ul, li {
 	padding: 0 0 1.0rem 1.0rem;
 }
 
-.detail-content > select {
-	width: 100%;
+#selected_song_in_movie_name p,
+#selected_parent_movie_name p,
+#selected_related_movie_name p {
+	padding: 2px;
+	border-bottom: 1px solid #ccc;
+	font-size: 0.9rem;
 }
 
 .alter-button {

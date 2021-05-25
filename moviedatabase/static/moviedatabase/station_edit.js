@@ -62,7 +62,7 @@ function add_selected_participant(list) {
 			n = ""
 			$.getJSON(s, function(data) {
 				for (var i in data) {
-					$("#selected_participant_name").append(data[i].name);
+					$("#selected_participant_name").append("<p>" + data[i].name + "</p>");
 				}
 			})
 		})
@@ -85,7 +85,7 @@ function add_selected_song(list) {
 			n = ""
 			$.getJSON(s, function(data) {
 				for (var i in data) {
-					$("#selected_song_in_part_name").append(data[i].__str__);
+					$("#selected_song_in_part_name").append("<p>" + data[i].__str__ + "</p>");
 				}
 			})
 		})
@@ -108,7 +108,7 @@ function add_selected_vocal(list) {
 			n = ""
 			$.getJSON(s, function(data) {
 				for (var i in data) {
-					$("#selected_vocal_name").append(data[i].vocal_name);
+					$("#selected_vocal_name").append("<p>" + data[i].vocal_name + "</p>");
 				}
 			})
 		})
@@ -122,7 +122,8 @@ $('#pref-select').children('div').on('click', function() {
 	$(".pref-line-select").empty();
 	$.getJSON(s, function(data) {
 		for (var i in data) {
-			var op_line = "<div value='" + data[i].line_service_pk + "' class='line-option'>" + data[i].__str__ + "</div>";
+			name_sub = data[i].name_sub ? "(" + data[i].name_sub + ")" : "";
+			var op_line = "<div value='" + data[i].line_service_pk + "' class='line-option'><span class='linelist-company-name'>" + data[i].company_short_name + "</span>" + data[i].name + "<span>" + name_sub + data[i].status_text + data[i].f_or_s + "</span>" + "</div>";
 			$(".pref-line-select").append(op_line);
 		}
 	})
@@ -135,7 +136,8 @@ $('#company-select').children('div').on('click', function() {
 	$(".company-line-select").empty();
 	$.getJSON(s, function(data) {
 		for (var i in data) {
-			var op_line = "<div value='" + data[i].line_service_pk + "' class='line-option'>" + data[i].__str__ + "</div>";
+			name_sub = data[i].name_sub ? "(" + data[i].name_sub + ")" : "";
+			var op_line = "<div value='" + data[i].line_service_pk + "' class='line-option'>" + data[i].name + "<span>" + name_sub + data[i].status_text + data[i].f_or_s + "</span>" + "</div>";
 			$(".company-line-select").append(op_line);
 		}
 	})
@@ -191,32 +193,32 @@ $(function() {
 	})
 })
 
-// //駅名検索をした時の挙動
-// $('.namesearch').keypress(function(e) {
-// 	if (e.which == 13) {
-// 		namesearch();
-// 	}
-// })
-// $('.namesearchbutton').on('click', function() {
-// 	namesearch();
-// })
-// function namesearch() {
-// 	text = $('.namesearch').val();
-// 	var s = "/api/stationsearch/" + text + "/?format=json";
-// 	$('.station-select').empty();
-// 	$.getJSON(s, function(data) {
-// 		for (var i in data) {
-// 			var op_station = "<option value='" + data[i].station_service_pk + "' data-name='" + data[i].__str__ + "' data-line='" + data[i].line_service_name + "' class='station-option'>" + data[i].__str__ + " ‐ " + data[i].line_service_name + "</option>"
-// 			$('.station-select').append(op_station)
-// 		}
-// 	})
-// }
-// $(document).ready(function() {
-// 	$('input,textarea[readonly]').not($('input[type="button"],input[type="submit"]')).keypress(function (e) {
-// 		if (!e) var e = window.event;
-// 		if (e.keyCode == 13) return false;
-// 	})
-// })
+//駅名検索をした時の挙動
+$('.namesearch').keypress(function(e) {
+	if (e.which == 13) {
+		namesearch();
+	}
+})
+$('.namesearchbutton').on('click', function() {
+	namesearch();
+})
+function namesearch() {
+	text = $('.namesearch').val();
+	var s = "/api/stationsearch/" + text + "/?format=json";
+	$('.station-select').empty();
+	$.getJSON(s, function(data) {
+		for (var i in data) {
+			var op_station = "<option value='" + data[i].station_service_pk + "' data-name='" + data[i].__str__ + "' data-line='" + data[i].line_service_name + "' class='station-option'>" + data[i].__str__ + " ‐ " + data[i].line_service_name + "</option>"
+			$('.station-select').append(op_station)
+		}
+	})
+}
+$(document).ready(function() {
+	$('input,textarea[readonly]').not($('input[type="button"],input[type="submit"]')).keypress(function (e) {
+		if (!e) var e = window.event;
+		if (e.keyCode == 13) return false;
+	})
+})
 
 //駅登録リスト
 $(function() {

@@ -150,12 +150,35 @@ input, select {
 }
 
 .part-detail {
-	padding: 2rem;
+	padding: 1rem;
 	display: flex;
 	background-color: #d4f1d4;
 	color: #333;
 	height: 100%;
 	overflow-y: scroll;
+}
+
+.part-detail-left {
+	width: 33%;
+	margin-right: 1rem;
+}
+
+.part-detail-right {
+	width: 67%;
+}
+
+.part-detail table {
+	width: 100%;
+}
+
+.part-detail th,
+.part-detail td {
+	padding: 0.5rem;
+	border-bottom: 1px solid #ccc;
+}
+
+.part-detail td {
+	font-weight: normal;
 }
 
 .edit-lower {
@@ -221,17 +244,46 @@ input, select {
 
 .select-div {
 	overflow-y: scroll;
-	border: 1px solid #ccc;
 	margin: 0 0.4rem 0 0;
 	padding: 2px;
 	width: 10rem;
-	font-weight: normal;
 	height: 100%;
+}
+/* スクロールの幅の設定 */
+*::-webkit-scrollbar {
+	width: 0.5rem;
+	height: 0.5rem;
+}
+
+/* スクロールの背景の設定 */
+*::-webkit-scrollbar-track {
+	border-radius: 4px;
+	box-shadow: inset 0 0 5px rgba(0, 0, 0, .1);
+}
+
+/* スクロールのつまみ部分の設定 */
+*::-webkit-scrollbar-thumb {
+	border-radius: 4px;
+	background: #999;
+}
+
+.select-div div {
+	padding: 2px 4px;
+	background-color: #eee;
+	margin: 2px;
+}
+
+.select-div span {
+	font-size: 0.9rem;
+}
+
+.linelist-company-name {
+	margin-right: 0.5rem;
 }
 
 .select-div div:hover {
 	color: white;
-	background-color: blue;
+	background-color: #4060ab;
 	transition: all .1s;
 	cursor: pointer;
 }
@@ -280,7 +332,14 @@ input, select {
 	padding: 2px;
 	width: 10rem;
 	height: 100%;
-	font-weight: normal;
+	border: 0;
+}
+
+.station-select option {
+	padding: 2px 4px;
+	background-color: #eee;
+	margin: 2px;
+	font-weight: bold;
 }
 
 .station-append {

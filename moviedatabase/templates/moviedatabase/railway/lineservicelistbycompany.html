@@ -40,13 +40,13 @@
 						<a href="{% url 'moviedatabase:lineservicelistbycompanyandprefecture' company.pk pref.pk %}" class="line-color">{{ pref }}</a>
 					{% endfor %}
 				</li>
-				{% if can_edit %}
+				{% if admin %}
 				<a href="{% url 'stationdata:lineregister' company.pk %}">路線[正式路線]追加・編集</a><br>
 				<a href="{% url 'stationdata:lineserviceregister' company.pk %}">路線[運行系統]追加・編集</a><br>
 				{% endif %}
 			</div>
 		</div>
 	</div>
-	<small>&copy; 2020 nignagIC</small>
+	{% include 'moviedatabase/includes/footer.html' %}
 </div>
 {% endblock %}

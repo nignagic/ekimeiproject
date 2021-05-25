@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 import re
@@ -64,6 +65,8 @@ class SongNew(models.Model):
 	artist_name = models.TextField('アーティスト名', max_length=400, null=True, blank=True)
 	artist_name_kana = models.TextField('アーティスト名カナ', max_length=400, null=True, blank=True)
 	tag = models.TextField('タグ', max_length=400, null=True, blank=True)
+
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='登録者')
 
 	def __str__(self):
 		return self.song_name + " - " + self.artist_name

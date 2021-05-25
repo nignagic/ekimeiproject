@@ -1,28 +1,47 @@
 {% extends 'moviedatabase/base.html' %}
+
+{% load static %}
+
 {% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/setting.css' %}">
 	<form action="" method="POST">
-		<div class="creator_name_container" style="display: flex;">
-			<div class="creator">
-				<select name="creator" id="id_creator" size="18">
-					{% for creator in creators %}
-					<option value="{{ creator.pk }}" class="creator-option">{{ creator }}</option>
-					{% endfor %}
-				</select>
+		<div class="background">
+			<div class="creator_name_container">
+				<div class="creator">
+					<h3>作者</h3>
+					<select name="creator" id="id_creator" multiple="">
+						{% for creator in creators %}
+						<option value="{{ creator.pk }}" class="creator-option">{{ creator }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="name">
+					<h3>名義</h3>
+					<select name="name" id="id_name" multiple="">
+						{% for name in names %}
+						<option value="{{ name.pk }}" class="name-option" style="display: none;">{{ name }}</option>
+						{% endfor %}
+					</select>
+					<br><a href="javascript:void(0);" onclick="window.open('{% url 'moviedatabase:popup_name_create' %}', 'subwin2', 'width=500,height=500');">名義を追加する</a>
+				</div>
+				<div id="selected-participant-container">
+					<h3>選択済みリスト</h3>
+					<div id="selected-participant-div-list">
+					</div>
+				</div>
+				<input type="hidden" name="selected-participant-list" id="selected-participant-list" value="">
+			{% csrf_token %}
 			</div>
-			<div class="name">
-				<select name="name" id="id_name" size="18">
-					{% for name in names %}
-					<option value="{{ name.pk }}" class="name-option" style="display: none;">{{ name }}</option>
-					{% endfor %}
-				</select>
-				<br><a href="javascript:void(0);" onclick="window.open('{% url 'moviedatabase:popup_name_create' %}', 'subwin2', 'width=500,height=500');">+Name</a>
+			<div class="submit-banner">
+				<div class="submit-banner-inner">
+					<div class="submit-content">
+						<div class="submit-form-status">
+						</div>
+						<button onclick="submit();" class="submit-button">決定</button>
+					</div>
+				</div>
 			</div>
-			<div id="selected-participant-container">
-			</div>
-			<input type="hidden" name="selected-participant-list" id="selected-participant-list" value="">
-		{% csrf_token %}
 		</div>
-		<button type="submit">決定</button>
 	</form>
 	<!-- 名義追加の子ウィンドウで使用 -->
 	<div id="is-name-setting"></div>
@@ -52,6 +71,17 @@
 				participant_append($(this).val())
 			})
 
+			$(document).on('click', '.delete-button', function() {
+				div = $(this).parent('.selected-participant')
+				div.hide();
+
+				val = div.data("id");
+				console.log(val)
+				const new_selected_participants = selected_participants.filter(n => n !== String(val));
+				selected_participants = new_selected_participants
+				$('#selected-participant-list').val(selected_participants);
+			})
+
 		}
 
 		//作者(creator)を選択した時の挙動
@@ -73,7 +103,7 @@
 
 			name_option = $('select#id_name option[value="'+val+'"]')
 			name = $(name_option).text();
-			$('#selected-participant-container').append("<div class='selected-participant' data-id='"+val+"'>"+name+"</div>");
+			$('#selected-participant-div-list').append("<div class='selected-participant' data-id='"+val+"'><p>"+name+"</p><a class='delete-button'><i class='fas fa-times'></i></a></div>");
 
 			console.log($('#selected-participant-list').val())
 		}

@@ -47,7 +47,7 @@
 			</div>
 			<div class="railway-side">
 				<h4 class="side-header">駅一覧</h4>
-				{% if can_edit %}
+				{% if admin %}
 				<a href="{% url 'stationdata:stationregister' line.pk %}">駅情報編集</a>
 				{% endif %}
 				<ul class="station-list-ul">
@@ -64,6 +64,6 @@
 			</div>
 		</div>
 	</div>
-	<small>&copy; 2020 nignagIC</small>
+	{% include 'moviedatabase/includes/footer.html' %}
 </div>
 {% endblock %}

@@ -21,9 +21,10 @@ class StationSerializer(serializers.ModelSerializer):
 
 class LineServiceSerializer(serializers.ModelSerializer):
 	line_service_pk = serializers.IntegerField(source='id')
+	company_short_name = serializers.CharField(source='company.short_name_2')
 	class Meta:
 		model = LineService
-		fields = ('__str__', 'line_service_pk')
+		fields = ('__str__', 'line_service_pk', 'company_short_name', 'name', 'name_sub', 'status_text', 'f_or_s')
 
 class StationInMovieSerializer(serializers.ModelSerializer):
 	station_service_pk = serializers.IntegerField(source='station_service.id')

@@ -94,6 +94,7 @@
 .movie-info {
 	padding: 0.25em 0 0 1em;
 	overflow: hidden;
+	flex: 1;
 }
 
 .movie-published,

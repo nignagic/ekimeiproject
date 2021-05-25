@@ -1,18 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
-<h2>Login</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
-   <br>
-  <p><strong>-- OR --</strong></p>
-  <a href="{% url 'social:begin' 'google-oauth2' %}">Login with Google</a><br>
-</body>
-</html>
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}ログイン{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/login.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="login-main-container">
+		<h2 class="login-header">ログイン</h2>
+		<div class="login-box">
+			<a href="{% url 'social:begin' 'google-oauth2' %}" class="google-button">
+				<img src="{% static 'moviedatabase/img-top/btn_google_signin_dark_normal_web.png' %}">
+				<img src="{% static 'moviedatabase/img-top/btn_google_signin_dark_focus_web.png' %}">
+			</a>
+			<div class="login-border"></div>
+			<form method="post">
+				<div class="login-form">
+					{% csrf_token %}
+					<div>
+						<p>ユーザー名</p>
+						<p>{{ form.username }}</p>
+					</div>
+					<div>
+						<p>パスワード</p>
+						<p>{{ form.password }}</p>
+					</div>
+					<div class="login-border"></div>
+					<div class="button-container">
+						<button type="submit">ログイン</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	{% include 'moviedatabase/includes/footer.html' %}
+</div>
+{% endblock %}

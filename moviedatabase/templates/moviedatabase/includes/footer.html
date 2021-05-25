@@ -1,0 +1,54 @@
+<div class="footer">
+	<ul class="footer-inner">
+		<li>
+			<h5>駅名動画データベース</h5>
+			<ul>
+				<li>
+					<a href="">駅名動画データベースについて</a>
+				</li>
+				<li>
+					<a href="">開発ブログ</a>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<h5>駅名動画を探す</h5>
+			<ul>
+				<li>
+					<a href="{% url 'moviedatabase:railwaytop' %}">鉄道から探す</a>
+				</li>
+				<li>
+					<a href="{% url 'moviedatabase:creatortop' 'all' %}">作者から探す</a>
+				</li>
+				<li>
+					<a href="{% url 'moviedatabase:musictop' %}">楽曲から探す</a>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<h5>ヘルプ</h5>
+			<ul>
+				<li>
+					<a href="">ヘルプ</a>
+				</li>
+				<li>
+					<a href="">ガイドライン</a>
+				</li>
+			</ul>
+		</li>
+		<li>
+			<h5>サポート</h5>
+			<ul>
+				<li>
+					<a href="{% url 'moviedatabase:terms' %}">利用規約</a>
+				</li>
+				<li>
+					<a href="">プライバシーポリシー</a>
+				</li>
+			</ul>
+		</li>
+	</ul>
+	<div class="footer-lower">
+		駅名動画データベース STANMIC DATABASE &copy; 2021 nignagIC
+	</div>
+</div>

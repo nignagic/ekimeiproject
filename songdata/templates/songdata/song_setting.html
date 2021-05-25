@@ -1,21 +1,38 @@
 {% extends 'moviedatabase/base.html' %}
+
+{% load static %}
+
 {% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/setting.css' %}">
 	<form action="" method="POST">
-		<div class="artist_song_container" style="display: block;">
-			<div class="song">
-				<select name="song" id="id_songnew" size="18" style="display: none;">
-					{% for songnew in songnews %}
-					<option value="{{ songnew.pk }}" class="songnew-option">{{ songnew }}</option>
-					{% endfor %}
-				</select>
+		<div class="background">
+			<div class="artist_song_container" style="display: block;">
+				<div class="song">
+					<select name="song" id="id_songnew" size="18" style="display: none;">
+						{% for songnew in songnews %}
+						<option value="{{ songnew.pk }}" class="songnew-option">{{ songnew }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div id="selected-song-container">
+					<h3>選択済みリスト</h3>
+					<div id="selected-song-div-list">
+					</div>
+				</div>
+					<br><a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_songnew_create' %}', 'subwin2', 'width=500,height=500');">+Song</a>
+				<input type="hidden" name="selected-song-list" id="selected-song-list" value="">
+			{% csrf_token %}
 			</div>
-			<div id="selected-song-container">
+			<div class="submit-banner">
+				<div class="submit-banner-inner">
+					<div class="submit-content">
+						<div class="submit-form-status">
+						</div>
+						<button onclick="submit();" class="submit-button">決定</button>
+					</div>
+				</div>
 			</div>
-				<br><a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_songnew_create' %}', 'subwin2', 'width=500,height=500');">+Song</a>
-			<input type="hidden" name="selected-song-list" id="selected-song-list" value="">
-		{% csrf_token %}
 		</div>
-		<button type="submit">決定</button>
 	</form>
 	<!-- 楽曲追加の子ウィンドウで使用 -->
 	<div id="is-song-setting"></div>
@@ -40,6 +57,16 @@
 					})
 				}
 			}
+
+			$(document).on('click', '.delete-button', function() {
+				div = $(this).parent('.selected-song')
+				div.hide();
+
+				val = div.data("id");
+				const new_selected_songs = selected_songs.filter(n => n !== String(val));
+				selected_songs = new_selected_songs
+				$('#selected-song-list').val(selected_songs);
+			})
 		}
 
 		function song_append(val) {
@@ -48,7 +75,7 @@
 
 			song = $('select#id_songnew option[value="'+val+'"]')
 			name = $(song).text();
-			$('#selected-song-container').append("<div class='selected-song' data-id='"+val+"'>"+name+"</div>");
+			$('#selected-song-div-list').append("<div class='selected-song' data-id='"+val+"'><p>"+name+"</p><a class='delete-button'><i class='fas fa-times'></i></a></div>");
 
 			console.log($('#selected-song-list').val())
 		}

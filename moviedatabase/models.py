@@ -1,11 +1,18 @@
+from django.conf import settings
+
 from django.db import models
 from stationdata.models import *
 from songdata.models import *
+from user.models import *
 
 # Create your models here.
 class Creator(models.Model):
 	name = models.CharField('作者名', max_length=200)
 	name_kana = models.CharField('読み', max_length=200)
+
+	class Meta:
+		ordering = ['name_kana', 'name']
+
 	def __str__(self):
 		return self.name
 
@@ -21,6 +28,10 @@ class YoutubeChannel(models.Model):
 	creator = models.ForeignKey(Creator, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='作者')
 	main_name = models.ForeignKey(Name, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='チャンネル名義')
 	is_main = models.BooleanField('メインチャンネル', default=True)
+	
+	class Meta:
+		ordering = ['creator', '-is_main']
+
 	def __str__(self):
 		return self.name
 
@@ -127,6 +138,9 @@ class Part(models.Model):
 	# vocal = models.ManyToManyField(Vocal, blank=True, verbose_name='使用ボーカル(パート)')
 	vocalnew = models.ManyToManyField(VocalNew, blank=True, verbose_name='使用ボーカル(パート)')
 	explanation = models.TextField('補足説明', null=True, blank=True)
+	def part_num(self):
+		return self.sort_by_movie + 1;
+
 	def __str__(self):
 		if self.name:
 			n = self.name
@@ -168,6 +182,7 @@ class MovieUpdateInformation(models.Model):
 		('U', '更新')
 	)
 	is_create = models.CharField('新規登録か更新か', max_length=1, choices=INFO_TYPE, default='C')
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='編集者')
 	reg_date = models.DateTimeField('登録・更新日時', blank=True)
 	class Meta:
 		ordering = ['-reg_date']
@@ -198,3 +213,19 @@ class NoticeInformation(models.Model):
 
 	def __str__(self):
 		return self.head
+
+class UpdateHistory(models.Model):
+	movie = models.ForeignKey(Movie, to_field='main_id', null=True, blank=True, on_delete=models.SET_NULL, verbose_name='動画')
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='編集者')
+	reg_date = models.DateTimeField('登録・更新日時', blank=True)
+	category = models.CharField('種別', null=True, blank=True, max_length=100)
+	class meta:
+		ordering = ['-reg_date']
+			
+	def __str__(self):
+		n = self.user.username if self.user else ""
+		c = "[" + self.category + "]" if self.category else ""
+		if self.movie:
+			return self.movie.title + " - " + n + c
+		else:
+			return "info"

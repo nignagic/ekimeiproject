@@ -46,6 +46,16 @@ ul, li {
 	margin: 0;
 }
 
+select, input {
+	font: inherit;
+	font-weight: normal;
+}
+
+input:focus {
+	border: 0;
+	outline: 0;
+}
+
 .movie-background {
 	background-color: #cc5c00;
 	color: #fff;
@@ -433,4 +443,53 @@ ul, li {
 		font-size: 0.8rem;
 		padding: 0.4rem;
 	}
+}
+
+.footer {
+	width: 100%;
+	margin: 0;
+	padding: 0;
+	background-color: #232323;
+	color: #fff;
+}
+
+.footer a {
+	color: inherit;
+}
+
+.footer a:hover {
+	opacity: 0.8;
+}
+
+.footer-inner {
+	width: 100%;
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 2rem;
+	display: flex;
+}
+
+.footer-inner > li {
+	flex: 1;
+	padding: 1rem;
+}
+
+.footer-inner > li > h5 {
+	margin: 0 0 0.5rem 0;
+	color: #ccc;
+}
+
+.footer-inner > li > ul {
+	padding-left: 1rem;
+	font-weight: normal;
+	border-left: #ccc 1px solid;
+}
+
+.footer-lower {
+	padding: 0.5rem;
+	text-align: center;
+	background-color: #333;
+	color: #ccc;
+	font-weight: normal;
+	font-size: 0.8rem;
 }

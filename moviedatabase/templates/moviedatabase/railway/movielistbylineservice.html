@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{% static 'moviedatabase/railway/movielistbyrailway.css' %}">
 <div class="background">
 	{% include 'moviedatabase/includes/header.html' %}
-	<div class="railway-header">
+	<div class="railway-header" {% if movie_list.0.youtube_id %}style="background: url(https://i.ytimg.com/vi/{{ movie_list.0.youtube_id }}/hqdefault.jpg) center; background-size: cover;"{% endif %}>
 		<div class="railway-header-content">
 			<span class="detail-category line-background">路線</span>
 			<!-- <span class="service-category">運行系統</span> -->
@@ -60,7 +60,7 @@
 			</div>
 			<div class="railway-side">
 				<h4 class="side-header">駅一覧</h4>
-				{% if can_edit %}
+				{% if admin %}
 				<a href="{% url 'stationdata:stationserviceregister' lineservice.pk %}">駅情報編集</a>
 				{% endif %}
 				<ul class="station-list-ul">
@@ -99,6 +99,6 @@
 			</div>
 		</div>
 	</div>
-	<small>&copy; 2020 nignagIC</small>
+	{% include 'moviedatabase/includes/footer.html' %}
 </div>
 {% endblock %}

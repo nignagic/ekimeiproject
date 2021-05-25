@@ -8,6 +8,9 @@ urlpatterns = [
 	path('', views.Top.as_view(), name='top'),
 	path('login/', views.Login.as_view(), name='login'),
 	path('logout/', views.Logout.as_view(), name='logout'),
+	path('mypage/', views.Mypage, name='mypage'),
+	path('terms/', views.Terms, name='terms'),
+
 	path('search/', views.FreeSearchView, name='freesearch'),
 
 	path('railway/', views.RailwayTopView.as_view(), name='railwaytop'),

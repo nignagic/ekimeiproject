@@ -6,6 +6,8 @@ from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
 from django.contrib.auth.base_user import BaseUserManager
 
+from moviedatabase.models import *
+
 class UserManager(BaseUserManager):
     use_in_migrations = True
 
@@ -74,6 +76,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
 
+    creator = models.ForeignKey(Creator, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='作者')
+    can_edit_creator = models.ManyToManyField(YoutubeChannel, blank=True, verbose_name='編集可能YouTubeチャンネル')
+    can_edit_all_channel = models.BooleanField(default=False)
+
     objects = UserManager()
 
     EMAIL_FIELD = 'email'
@@ -103,3 +109,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+    def all_can_edit_channel(self):
+        if self.can_edit_all_channel:
+            return YoutubeChannel.objects.all()
+        cs = YoutubeChannel.objects.filter(creator=self.creator)
+        cs |= self.can_edit_creator.all()
+        return cs

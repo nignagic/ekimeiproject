@@ -1,3 +1,7 @@
+.main-content {
+	background-color: #ffe3cb;
+}
+
 .main-content-inner {
 	display: block;
 }
@@ -12,31 +16,49 @@
 .movie-list {
 	width: 76%;
 	padding: 1rem;
+	background-color: #fff;
+	min-height: 200px;
+	margin: 0 1rem 1rem 0;
 }
 
 .creator-list {
 	width: 24%;
 	padding: 1rem;
-}
-
-.station-list {
-	width: 64%;
-	padding: 1rem;
+	background-color: #fff;
+	min-height: 200px;
+	margin: 0 0 1rem 0;
 }
 
 .line-list {
 	width: 36%;
 	padding: 1rem;
+	background-color: #fff;
+	min-height: 200px;
+	margin: 0 1rem 1rem 0;
+}
+
+.station-list {
+	width: 64%;
+	padding: 1rem;
+	background-color: #fff;
+	min-height: 200px;
+	margin: 0 0 1rem 0;
 }
 
 .artist-list {
 	width: 50%;
 	padding: 1rem;
+	background-color: #fff;
+	min-height: 200px;
+	margin: 0 1rem 1rem 0;
 }
 
 .song-list {
 	width: 50%;
 	padding: 1rem;
+	background-color: #fff;
+	min-height: 200px;
+	margin: 0 0 1rem 0;
 }
 
 .content-header {

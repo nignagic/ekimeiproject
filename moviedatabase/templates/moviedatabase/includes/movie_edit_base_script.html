@@ -42,7 +42,7 @@
 				n = ""
 				$.getJSON(s, function(data) {
 					for (var i in data) {
-						$("#selected_song_in_movie_name").append(data[i].__str__);
+						$("#selected_song_in_movie_name").append("<p>" + data[i].__str__ + "</p>");
 					}
 				})
 			})
@@ -64,7 +64,7 @@
 				n = ""
 				$.getJSON(m, function(data) {
 					for (var i in data) {
-						$("#selected_"+movie_type+"_movie_name").append(data[i].movie_name);
+						$("#selected_"+movie_type+"_movie_name").append("<p>" + data[i].movie_name + "</p>");
 					}
 				})
 			})

@@ -1,32 +1,51 @@
 {% extends 'moviedatabase/base.html' %}
+
+{% load static %}
+
 {% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/setting.css' %}">
 	<form action="" method="POST">
-		<div class="channel_movie_container" style="display: flex;">
-			<div class="channel">
-				<select name="channel" id="id_channel" size="18">
-					{% for channel in channels %}
-					<option value="{{ channel.pk }}" class="channel-option">{{ channel }}</option>
-					{% endfor %}
-				</select>
+		<div class="background">
+			<div class="channel_movie_container" style="display: flex;">
+				<div class="channel">
+					<h3>チャンネル一覧</h3>
+					<select name="channel" id="id_channel" size="18">
+						{% for channel in channels %}
+						<option value="{{ channel.pk }}" class="channel-option">{{ channel }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="movie">
+					<h3>動画</h3>
+					<select name="movie" id="id_movie" size="18">
+						{% for movie in movies %}
+						<option value="{{ movie.pk }}" class="movie-option" style="display: none;">{{ movie }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div id="selected-movie-container">
+					<h3>選択済みリスト</h3>
+					<div id="selected-movie-div-list">
+					</div>
+				</div>
+				<input type="hidden" name="selected-movie-list" id="selected-movie-list" value="">
+			{% csrf_token %}
 			</div>
-			<div class="movie">
-				<select name="movie" id="id_movie" size="18">
-					{% for movie in movies %}
-					<option value="{{ movie.pk }}" class="movie-option" style="display: none;">{{ movie }}</option>
-					{% endfor %}
-				</select>
+			{% if movie_type == "parent" %}
+				<input type="hidden" name="movie_type" value="parent">
+			{% else %}
+				<input type="hidden" name="movie_type" value="related">
+			{% endif %}
+			<div class="submit-banner">
+				<div class="submit-banner-inner">
+					<div class="submit-content">
+						<div class="submit-form-status">
+						</div>
+						<button onclick="submit();" class="submit-button">決定</button>
+					</div>
+				</div>
 			</div>
-			<div id="selected-movie-container">
-			</div>
-			<input type="hidden" name="selected-movie-list" id="selected-movie-list" value="">
-		{% csrf_token %}
 		</div>
-		{% if movie_type == "parent" %}
-			<input type="hidden" name="movie_type" value="parent">
-		{% else %}
-			<input type="hidden" name="movie_type" value="related">
-		{% endif %}
-		<button type="submit">決定</button>
 	</form>
 {% endblock %}
 {% block extrajs %}
@@ -57,16 +76,26 @@
 				movie_append($(this).val())
 			})
 
+			$(document).on('click', '.delete-button', function() {
+				div = $(this).parent('.selected-movie')
+				div.hide();
+
+				val = div.data("id");
+				const new_selected_movies = selected_movies.filter(n => n !== String(val));
+				selected_movies = new_selected_movies
+				$('#selected-movie-list').val(selected_movies);
+			})
+
 		}
 
-		//路線を選択した時の挙動
+		//チャンネル名を選択した時の挙動
 		$(document).on('click', '.channel-option', function() {
 			channel = $(this).val();
 			var s = "/api/channel/" + channel + "/movie/?format=json";
 			$('#id_movie').empty();
 			$.getJSON(s, function(data) {
 				for (var i in data) {
-					var op_movie = "<option value='" + data[i].movie_pk + "'  class='movie-option'>" + data[i].movie_name + " - " + data[i].channel_name + "</option>"
+					var op_movie = "<option value='" + data[i].movie_pk + "'  class='movie-option'>" + data[i].movie_name + "</option>"
 					$("#id_movie").append(op_movie);
 				}
 			})
@@ -78,7 +107,7 @@
 
 			movie = $('select#id_movie option[value="'+val+'"]')
 			name = $(movie).text();
-			$('#selected-movie-container').append("<div class='selected-movie' data-id='"+val+"'>"+name+"</div>");
+			$('#selected-movie-div-list').append("<div class='selected-movie' data-id='"+val+"'><p>"+name+"</p><a class='delete-button'><i class='fas fa-times'></i></a></div>");
 
 			console.log($('#selected-movie-list').val())
 		}
