@@ -71,6 +71,12 @@ class SongNew(models.Model):
 	def __str__(self):
 		return self.song_name + " - " + self.artist_name
 
+	def artist_name_all(self):
+		return self.artist_name.split('\n')
+
+	def tag_all(self):
+		return self.tag.split('\n')
+
 class VocalNew(models.Model):
 	name = models.CharField('ボーカル名', max_length=200)
 	name_kana = models.CharField('ボーカル名カナ', max_length=200, null=True, blank=True)

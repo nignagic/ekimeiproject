@@ -48,7 +48,7 @@
 					<ul class="object-list-ul">
 						{% for creator in creators %}
 							<li class="object-list-li">
-								<a href="{% url 'moviedatabase:movielistbycreator' creator.pk 'pub' 'n' %}" class="creator-color">{{ creator }}</a>
+								<a href="{% url 'moviedatabase:movielistbycreator' creator.pk %}" class="creator-color">{{ creator }}</a>
 							</li>
 						{% endfor %}
 					</ul>
@@ -65,7 +65,7 @@
 					<ul class="object-list-ul">
 						{% for lineservice in lineservices %}
 							<li class="object-list-li">
-								<a href="{% url 'moviedatabase:movielistbylineservice' lineservice.pk 'pub' 'n' %}" class="line-color">{{ lineservice }}</a>
+								<a href="{% url 'moviedatabase:movielistbylineservice' lineservice.pk %}" class="line-color">{{ lineservice }}</a>
 							</li>
 						{% endfor %}
 					</ul>
@@ -80,7 +80,7 @@
 					<ul class="object-list-ul">
 						{% for stationservice in stationservices %}
 							<li class="object-list-li">
-								<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.pk 'pub' 'n' %}" class="station-color">
+								<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.pk %}" class="station-color">
 									<div>{{ stationservice }}</div>
 									<div>{{ stationservice.line_service }}</div>
 								</a>
@@ -91,6 +91,60 @@
 						<p>該当する駅が見つかりませんでした。</p>
 					{% endif %}
 					<a href="{% url 'moviedatabase:stationservicesearch' %}?word={{ word }}">もっと見る</a>
+				</div>
+			</section>
+			<section class="list-container">
+				<div class="artist-list">
+					<h4 class="content-header station-border">歌唱駅名に {{ word }} を含む動画 <small>[{{ acount }}件]</small></h4>
+
+<ul class="movie-ul">
+	{% if movies_sungname %}
+	{% for movie in movies_sungname %}
+	<li class="movie-card">
+		<a href="{% url 'moviedatabase:detail' movie.main_id %}">
+			<img class="movie-img" src="https://i.ytimg.com/vi/{{ movie.youtube_id }}/hqdefault.jpg">
+			<div class="movie-info">
+	{% load tz %}
+				<p class="movie-published">{{ movie.published_at|timezone:'Asia/Tokyo'|date:"Y/n/j" }}<span class="movie-category">{{ movie.get_is_collab_display  }}</span>{% for c in movie.category %}<span class="movie-category">{{ c }}</span>{% endfor %}</p>
+				<p class="movie-title"><span>{{ movie.title }}</span></p>
+				<p><span class="movie-channel">{{ movie.channel }}</span><span class="movie-duration"> - {{ movie.get_duration }}</span></p>
+
+				<!-- <p>{% for s in movie.songnew.all %}{{ s }}{% endfor %}</p> -->
+			</div>
+		</a>
+	</li>
+	{% endfor %}
+	{% else %}
+	<p>該当する動画が見つかりませんでした。</p>
+	{% endif %}
+</ul>
+					<a href="{% url 'moviedatabase:movielistbystationinmoviesearch' %}?word={{ word }}">もっと見る</a>
+
+				</div>
+				<div class="song-list">
+					<h4 class="content-header song-border">楽曲タグに {{ word }} を含む動画 <small>[{{ songcount }}件]</small></h4>
+<ul class="movie-ul">
+	{% if movies_songtag %}
+	{% for movie in movies_songtag %}
+	<li class="movie-card">
+		<a href="{% url 'moviedatabase:detail' movie.main_id %}">
+			<img class="movie-img" src="https://i.ytimg.com/vi/{{ movie.youtube_id }}/hqdefault.jpg">
+			<div class="movie-info">
+	{% load tz %}
+				<p class="movie-published">{{ movie.published_at|timezone:'Asia/Tokyo'|date:"Y/n/j" }}<span class="movie-category">{{ movie.get_is_collab_display  }}</span>{% for c in movie.category %}<span class="movie-category">{{ c }}</span>{% endfor %}</p>
+				<p class="movie-title"><span>{{ movie.title }}</span></p>
+				<p><span class="movie-channel">{{ movie.channel }}</span><span class="movie-duration"> - {{ movie.get_duration }}</span></p>
+
+				<!-- <p>{% for s in movie.songnew.all %}{{ s }}{% endfor %}</p> -->
+			</div>
+		</a>
+	</li>
+	{% endfor %}
+	{% else %}
+	<p>該当する動画が見つかりませんでした。</p>
+	{% endif %}
+</ul>
+					<a href="{% url 'moviedatabase:songtagsearch' %}?word={{ word }}">もっと見る</a>
 				</div>
 			</section>
 			<section class="list-container">

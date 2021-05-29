@@ -153,20 +153,32 @@
 	font-size: 0.9em;
 }
 
-.song-table tr td,
-.vocal-table tr td {
-	padding: 4px;
-}
-
 .song-name,
 .vocal-name {
+	padding: 4px;
 	min-width: 50%;
-	border-bottom: 1px solid #ddd;
 }
 
 .artist-name {
+	padding: 4px;
 	font-weight: normal;
+}
+
+.song-tag-td {
+	padding: 0;
 	border-bottom: 1px solid #ddd;
+	text-align: right;
+}
+
+.song-tag-a {
+	display: inline-block;
+	font-weight: normal;
+	font-size: 0.7rem;
+	padding: 4px;
+	color: #fff;
+	background: #ee7f23;
+	margin: 1px;
+	white-space: nowrap;
 }
 
 .movie-ul {
@@ -286,6 +298,10 @@
 	border-collapse: collapse;
 	table-layout: fixed;
 	margin-bottom: 1.0rem;
+}
+
+.part-artist-name {
+	font-weight: normal;
 }
 
 .part-detail-table tr {

@@ -134,7 +134,7 @@ $(function() {
 							$('.station-list-' + id).append(parody_station_tail);
 						}
 					} else if (data[i].is_representative) {
-						rep_line = line_box_text(data[i].line_service_pk, data[i].get_color, data[i].get_color, data[i].station_service_name + " " + station_text, data[i].category, false)
+						rep_line = line_box_text(data[i].line_service_pk, data[i].get_color, data[i].get_color, station_text, data[i].category, false)
 						$('.station-list-' + id).append("<div class='parody-edge'></div>" + rep_line + "<div class='parody-edge parody-edge-end'></div>")
 					} else if (line != afterline && afterback == "0") {
 					// console.log(afterback);
