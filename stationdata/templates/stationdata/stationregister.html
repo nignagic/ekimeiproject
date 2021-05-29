@@ -160,7 +160,7 @@
 			list += "<tr><th><label for='id_station_set-" + currentFileCount + "-sort_by_line'>路線ごとの並び順:</label></th><td><input type='text' name='station_set-" + currentFileCount + "-sort_by_line' value='0' class='sort_by_line' id='id_station_set-" + currentFileCount + "-sort_by_line'></td></tr>"
 			list += "<tr><th><label for='id_station_set-" + currentFileCount + "-open_ymd'>開業年月日:</label></th><td><input type='text' name='station_set-" + currentFileCount + "-open_ymd' id='id_station_set-" + currentFileCount + "-open_ymd'></td></tr>"
 			list += "<tr><th><label for='id_station_set-" + currentFileCount + "-close_ymd'>廃止年月日:</label></th><td><input type='text' name='station_set-" + currentFileCount + "-close_ymd' id='id_station_set-" + currentFileCount + "-close_ymd'></td></tr>"
-			list += "<tr><th><label for='id_station_set-" + currentFileCount + "-pref'>所在地:</label></th><td><select name='station_set-" + currentFileCount + "-pref' id='id_station_set-" + currentFileCount + "-pref' class='pref'>"
+			list += "<tr><th><label for='id_station_set-" + currentFileCount + "-pref'>所在地:</label></th><td><select name='station_set-" + currentFileCount + "-pref' id='id_station_set-" + currentFileCount + "-pref' class='pref'><option value=''>---</option>"
 
 			$.each(prefs, function(name, prefid) {
 				list += "<option value='" + prefid + "'>" + name + "</option>"
@@ -169,6 +169,7 @@
 			list += "</select></td></tr>"
 			list += "<tr><th><label for='id_station_set-" + currentFileCount + "-status'>状態:</label></th><td><select name='station_set-" + currentFileCount + "-status' id='id_station_set-" + currentFileCount + "-status' class='status'>"
 
+			list += "<option value=''>---</option>"
 			list += "<option value='0' selected>運用中</option>"
 			list += "<option value='1'>運用前</option>"
 			list += "<option value='2'>廃止</option>"

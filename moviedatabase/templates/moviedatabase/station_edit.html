@@ -193,6 +193,7 @@
 							<li class="tab">事業者から</li>
 							<li class="tab">駅名検索</li>
 							<li class="tab tab-transfer">乗換駅</li>
+							<li class="tab tab-other">その他</li>
 						</ul>
 						<div class="station-list">
 							<div class="tab-content-group">
@@ -237,6 +238,16 @@
 										<h5>駅の乗り換え路線</h5>
 										<div name="s0" class="transfer-line-select line-select select-div">
 										</div>
+									</div>
+								</div>
+								<div class="station-other-list-tab tab-content">
+									<div class="list-container">
+										<h5>その他</h5>
+										<select name="other" id="other-select" class="select-div" multiple="">
+											{% for other in others %}
+												<option value="{{ other.pk }}" data-name="{{ other.name }}" data-line="{{ other.line_service.name }}" class="other-option">{{ other.name }}</option>
+											{% endfor %}
+										</select>
 									</div>
 								</div>
 							</div>

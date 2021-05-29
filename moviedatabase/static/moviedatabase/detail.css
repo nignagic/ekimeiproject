@@ -554,6 +554,7 @@
 	width: 100%;
 	background-color: white;
 	box-shadow: 0 -2px 8px 0px rgba(0, 0, 0, 0.4);
+	z-index: 1000;
 }
 
 .submit-banner-inner {

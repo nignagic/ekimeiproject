@@ -14,7 +14,7 @@
 			<!-- <span class="service-category">運行系統</span> -->
 			{% if stationservice.line_service.company.short_name_2 %}<a href="{% url 'moviedatabase:lineservicelistbycompany' stationservice.line_service.company.pk %}" class="company-link">{{ stationservice.line_service.company.short_name_2 }}</a>{% endif %}
 			<div class="main-name">{{ stationservice }}</div>
-			<div class="main-name-sub">{{ stationservice.station.name_kana }}
+			<div class="main-name-sub">{% if stationservice.station.name_kana %}{{ stationservice.station.name_kana }}{% endif %}
 			{% if stationservice.prev_group.get_numbering != " " and stationservice.next_group.get_numbering != " " %}
 				{% if stationservice.prev_group.get_numbering != stationservice.next_group.get_numbering %}
 					[ {{ stationservice.prev_group.get_numbering }} / {{stationservice.next_group.get_numbering }} ]
@@ -57,7 +57,9 @@
 			{% endif %}
 			</div>
 			<div class="pref-list">
-				<a href="{% url 'moviedatabase:lineservicelistbyprefecture' stationservice.station.pref.pk %}">{{ stationservice.station.pref }}</a>
+				{% if stationservice.station.pref %}
+					<a href="{% url 'moviedatabase:lineservicelistbyprefecture' stationservice.station.pref.pk %}">{{ stationservice.station.pref }}</a>
+				{% endif %}
 			</div>
 		</div>
 	</div>

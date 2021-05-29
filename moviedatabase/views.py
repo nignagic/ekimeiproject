@@ -24,6 +24,42 @@ import datetime
 
 # Create your views here.
 
+def categorytest(request):
+	categories = MovieCategory.objects.all()
+	movie = {}
+	for c in categories:
+		parts = Part.objects.filter(category=c)
+		m = Movie.objects.none()
+		for p in parts:
+			if (p.movie):
+				m |= Movie.objects.filter(pk=p.movie.pk)
+		movie[c.name] = m
+
+	context = {
+		'movie': movie
+	}
+
+	return render(request, 'moviedatabase/test.html', context)
+
+def test(request):
+	stationservices = StationService.objects.filter(id__gt=22636)
+	movie = {}
+	for s in stationservices:
+		stationinmovies = StationInMovie.objects.filter(station_service=s)
+		m = Movie.objects.none()
+		for sim in stationinmovies:
+			if (sim.part.movie):
+				m |= Movie.objects.filter(pk=sim.part.movie.pk)
+		movie[s.name] = m
+
+	parts = Part.objects.exclude(explanation="")
+	context = {
+		'movie': movie,
+		'parts': parts
+	}
+
+	return render(request, 'moviedatabase/test.html', context)
+
 def todaymovie():
 	JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')
 	now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
@@ -1296,6 +1332,7 @@ def movie_part_station_edit(request, main_id, sort_by_movie):
 		for line in lines:
 			lineinmovie = LineInMovie(part=part, line_service=line)
 			lineinmovies.append(lineinmovie)
+		LineInMovie.objects.filter(part=part).delete()
 		LineInMovie.objects.bulk_create(lineinmovies)
 
 		queryset = Part.objects.filter(movie=main_id, sort_by_movie=sort_by_movie+1)
@@ -1307,6 +1344,7 @@ def movie_part_station_edit(request, main_id, sort_by_movie):
 	partcount = Part.objects.filter(movie=main_id).count()
 	prefs = Prefecture.objects.all()
 	companies = Company.objects.all()
+	others = StationService.objects.filter(line_service__category__name='other_option')
 
 	context = {
 		'part': part,
@@ -1314,6 +1352,7 @@ def movie_part_station_edit(request, main_id, sort_by_movie):
 		'formset': formset,
 		'prefs': prefs,
 		'companies': companies,
+		'others': others,
 		'partcount': partcount
 	}
 

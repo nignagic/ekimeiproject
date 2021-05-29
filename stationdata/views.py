@@ -588,7 +588,7 @@ def LineRegisterView(request, company):
 	formset = forms.LineRegisterFormset(request.POST or None, instance=company)
 	if request.method == 'POST' and formset.is_valid():
 		formset.save()
-		return redirect('moviedatabase:movielistbycompany', company=company.pk)
+		return redirect('moviedatabase:lineservicelistbycompany', company=company.pk)
 
 	prefs = Prefecture.objects.all()
 	categories = BelongsCategory.objects.all()
@@ -618,7 +618,7 @@ def StationRegisterView(request, line):
 				prefs |= Prefecture.objects.filter(pk=station.pref.pk)
 		for pref in prefs:
 			line.prefs.add(pref)
-		return redirect('moviedatabase:movielistbyline', line=line.pk, sort='pub', order='n')
+		return redirect('moviedatabase:movielistbyline', line=line.pk)
 
 	prefs = Prefecture.objects.all()
 
@@ -725,13 +725,14 @@ def StationServiceRegisterView(request, line_service):
 			if stationservice.group_station_service == None:
 				stationservice.group_station_service = stationservice
 				stationservice.save()
-			prefs |= Prefecture.objects.filter(pk=stationservice.station.pref.pk)
+			if stationservice.station.pref:
+				prefs |= Prefecture.objects.filter(pk=stationservice.station.pref.pk)
 			lines |= Line.objects.filter(pk=stationservice.station.line.pk)
 		for pref in prefs:
 			lineservice.prefs.add(pref)
 		for line in lines:
 			lineservice.line.add(line)
-		return redirect('moviedatabase:movielistbylineservice', line_service=lineservice.pk, sort='pub', order='n')
+		return redirect('moviedatabase:movielistbylineservice', line_service=lineservice.pk)
 
 	context = {
 		'lineservice': lineservice,

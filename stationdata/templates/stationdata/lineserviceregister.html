@@ -93,6 +93,7 @@
 			list += "<tr><th><label for='id_lineservice_set-" + currentFileCount + "-sort_by_company'>事業者ごとの並び順:</label></th><td><input type='text' name='lineservice_set-" + currentFileCount + "-sort_by_company' value='999' class='sort_by_company' id='id_lineservice_set-" + currentFileCount + "-sort_by_company'></td></tr>"
 			list += "<tr><th><label for='id_lineservice_set-" + currentFileCount + "-status'>状態:</label></th><td><select name='lineservice_set-" + currentFileCount + "-status' id='id_lineservice_set-" + currentFileCount + "-status'>"
 
+			list += "<option value=''>---</option>"
 			list += "<option value='0' selected>運用中</option>"
 			list += "<option value='1'>運用前</option>"
 			list += "<option value='2'>廃止</option>"

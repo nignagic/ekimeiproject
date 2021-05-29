@@ -105,12 +105,15 @@ $(function() {
 				beforecolor = "";
 				j = 1;
 				color_view = true;
-				console.log(data.length)
 				for (var i in data) {
-					line = data[i].line_service_pk;
+					line = data[i].category == 'other_option' ? beforeline : data[i].line_service_pk;
 					station_text = data[i].sung_name;
 					if (data[j] != undefined) {
-						afterline = data[j].line_service_pk;
+						if (data[j+1] != undefined) {
+							afterline = data[j].category == 'other_option' ? data[j+1].line_service_pk : data[j].line_service_pk;
+						} else {
+							afterline = data[j].category == 'other_option' ? undefined : data[j].line_service_pk;
+						}
 						afterback = data[j].back_rel;
 					} else {
 						afterline = undefined;
@@ -131,7 +134,7 @@ $(function() {
 							$('.station-list-' + id).append(parody_station_tail);
 						}
 					} else if (data[i].is_representative) {
-						rep_line = line_box_text(data[i].line_service_pk, data[i].get_color, data[i].get_color, data[i].line_service_name, data[i].category, false)
+						rep_line = line_box_text(data[i].line_service_pk, data[i].get_color, data[i].get_color, data[i].station_service_name + " " + station_text, data[i].category, false)
 						$('.station-list-' + id).append("<div class='parody-edge'></div>" + rep_line + "<div class='parody-edge parody-edge-end'></div>")
 					} else if (line != afterline && afterback == "0") {
 					// console.log(afterback);
@@ -175,6 +178,8 @@ $(function() {
 					} else if (afterline != line || afterline == undefined || data[j].back_rel == "2") {
 						key_station = key_station_text(data[i].get_color, "none", data[i].station_service_pk, station_text, true)
 						$('.station-list-' + id).append(key_station);
+						console.log(afterline != line, afterline == undefined, data[j].back_rel == "2", station_text)
+						console.log(afterline, line)
 					} else if ((data[i].station_service_pk != data[j].station_service_pk) && (data[i].get_group_station == data[j].get_group_station)) {
 					 	station = station_text_f(data[i].get_color, data[j].get_color, data[i].station_service_pk, station_text)
 					 	$('.station-ul-' + id + "-" + ul).append(station)

@@ -41,7 +41,9 @@
 				{% endfor %}
 				</div>
 			<div class="pref-list">
+				{% if stationservice.station.pref %}
 				<a href="{% url 'moviedatabase:lineservicelistbyprefecture' station.pref.pk %}">{{ station.pref }}</a>
+				{% endif %}
 			</div>
 		</div>
 	</div>

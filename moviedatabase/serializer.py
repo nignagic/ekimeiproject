@@ -28,6 +28,7 @@ class LineServiceSerializer(serializers.ModelSerializer):
 
 class StationInMovieSerializer(serializers.ModelSerializer):
 	station_service_pk = serializers.IntegerField(source='station_service.id')
+	station_service_name = serializers.CharField(source='station_service.name')
 	get_group_station = serializers.IntegerField(source='station_service.station.get_group_station_id')
 	line_service_pk = serializers.IntegerField(source='station_service.line_service.pk')
 	line_service_name = serializers.CharField(source='station_service.line_service')
@@ -37,7 +38,7 @@ class StationInMovieSerializer(serializers.ModelSerializer):
 	category = serializers.CharField(source='station_service.line_service.category.icon')
 	class Meta:
 		model = StationInMovie
-		fields = ['sung_name', 'station_service_pk', 'get_group_station', 'line_service_pk', 'line_service_name', 'pref', 'get_color', 'back_rel', 'is_representative', 'category']
+		fields = ['station_service_name', 'sung_name', 'station_service_pk', 'get_group_station', 'line_service_pk', 'line_service_name', 'pref', 'get_color', 'back_rel', 'is_representative', 'category']
 
 class MovieSerializer(serializers.ModelSerializer):
 	movie_pk = serializers.IntegerField(source='id')

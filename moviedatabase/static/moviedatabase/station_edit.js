@@ -252,6 +252,15 @@ $(function() {
 		})
 	})
 
+	// その他オプションの選択
+	$(document).on('dblclick', '.other-option', function() {
+		station_append(this)
+
+		$('.station_form').each(function(i, form) {
+			$(form).find('.sort_by_part').val(i);
+		})
+	})
+
 	function station_append(station) {
 		val = $(station).attr("value");
 		name = $(station).data('name');

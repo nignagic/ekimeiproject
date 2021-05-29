@@ -7,9 +7,9 @@ class StationAdmin(admin.ModelAdmin):
 	search_fields = ['name']
 
 class StationServiceAdmin(admin.ModelAdmin):
- 	list_display = ('name', 'line_service', 'get_color')
-# 	list_editable = ['e_sort']
- 	search_fields = ('name', 'line_service__name')
+	list_display = ('name', 'line_service', 'get_color', 'is_representative')
+	list_editable = ('is_representative',)
+	search_fields = ('name', 'line_service__name')
 
 # class StationInMovieAdmin(admin.ModelAdmin):
 # 	list_display = ('id', 'id_in_movie', 'station_cd', 'station_name')

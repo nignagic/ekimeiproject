@@ -1,0 +1,15 @@
+<ul>
+{% for key, value in movie.items %}
+	<li>{{ key }}
+		<ul>
+		{% for v in value %}
+			<li><a href="{% url 'moviedatabase:part_edit' v.main_id %}" target="_blank">{{ v }}</a></li>
+		{% endfor %}
+	</ul>
+{% endfor %}
+</li>
+
+{% for p in parts %}
+	<div><a href="{% url 'moviedatabase:part_edit' p.movie.main_id %}" target="_blank">{{ p.movie }}</a></div>
+	<p>{{ p.explanation }}</p>
+{% endfor %}
