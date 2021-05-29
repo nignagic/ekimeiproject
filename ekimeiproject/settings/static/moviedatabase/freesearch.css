@@ -1,0 +1,207 @@
+.main-content {
+	background-color: #ffe3cb;
+}
+
+.main-content-inner {
+	display: block;
+}
+
+.list-container {
+	width: 100%;
+	max-width: 1280px;
+	margin: 0 auto;
+	display: flex;
+}
+
+.movie-list {
+	width: 76%;
+	padding: 1rem;
+	background-color: #fff;
+	min-height: 200px;
+	margin: 0 1rem 1rem 0;
+}
+
+.creator-list {
+	width: 24%;
+	padding: 1rem;
+	background-color: #fff;
+	min-height: 200px;
+	margin: 0 0 1rem 0;
+}
+
+.line-list {
+	width: 36%;
+	padding: 1rem;
+	background-color: #fff;
+	min-height: 200px;
+	margin: 0 1rem 1rem 0;
+}
+
+.station-list {
+	width: 64%;
+	padding: 1rem;
+	background-color: #fff;
+	min-height: 200px;
+	margin: 0 0 1rem 0;
+}
+
+.artist-list {
+	width: 50%;
+	padding: 1rem;
+	background-color: #fff;
+	min-height: 200px;
+	margin: 0 1rem 1rem 0;
+}
+
+.song-list {
+	width: 50%;
+	padding: 1rem;
+	background-color: #fff;
+	min-height: 200px;
+	margin: 0 0 1rem 0;
+}
+
+.content-header {
+	position: relative;
+	font-size: 1.1em;
+	overflow: hidden;
+	padding: 0.25rem 0.5rem;
+	margin: 0 0 0.25rem 0;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+.movie-ul {
+	margin: 0;
+	padding: 0;
+}
+
+.movie-card {
+	border-bottom: 1px solid #ccc;
+}
+
+.movie-card a {
+	display: flex;
+	align-items: flex-start;
+	justify-content: flex-start;
+	padding: 0.25rem 0;
+	color: #333;
+}
+
+.movie-img {
+	width: 128px;
+	height: calc(128px / 16 * 9 - 2px);
+	object-fit: cover;
+}
+
+.movie-info {
+	padding: 0.25rem 0 0 1rem;
+	overflow: hidden;
+}
+
+.movie-published,
+.movie-duration {
+	font-size: 0.7em;
+	font-weight: normal;
+	color: #666;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.movie-category {
+	margin-left: 0.5rem;
+	background: #cc5c00;
+	padding: 4px;
+	color: #fff;
+	border-radius: 8px;
+	font-size: 0.6rem;
+}
+
+.movie-title {
+	margin: 0.25rem 0;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 1;
+	overflow: hidden;
+	line-height: 1.0;
+}
+
+.movie-title span {
+	line-height: 1.0rem;
+}
+
+.movie-channel {
+	font-size: 0.7em;
+	color: #666;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.movie-category {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.movie-list-right {
+	width: 36%;
+	padding: 1.0rem;
+}
+
+.movie-list-right-inner {
+	text-align: center;
+	border: 1px solid #cc0;
+	padding: 1rem;
+	width: 100%;
+	height: 100%;
+}
+
+@media (max-width: 768px) {
+	.top-movie-list {
+		padding: 1rem;
+		width: 100%;
+		flex-wrap: wrap;
+	}
+
+	.movie-list-left,
+	.movie-list-right {
+		padding: 1rem 0;
+		width: 100%;
+	}
+
+	.movie-img {
+		width: 40vw;
+		height: calc(40vw / 16 * 9 - 2px);
+	}
+
+	.movie-info {
+		padding: 0 0 0 0.5rem;
+	}
+
+	.movie-published {
+		font-size: 0.7em;
+		margin: 0;
+	}
+
+	.movie-title {
+		margin: 0.25rem 0;
+		font-size: 0.75rem;
+		max-height: calc(0.8rem * 3);
+		-webkit-line-clamp: 2;
+	}
+
+	.movie-title span{
+		line-height: 1.0;
+	}
+
+	.movie-channel {
+		font-size: 0.7em;
+		margin: 0;
+	}
+
+	.movie-duration {
+		display: none;
+	}
+}
