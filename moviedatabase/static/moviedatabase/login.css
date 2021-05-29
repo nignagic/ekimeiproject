@@ -113,15 +113,16 @@ ul, li {
 }
 
 .login-form {
-	margin: 0;
-	padding: 0 2rem;
+	margin: 0 auto;
+	width: 256px;
+	padding: 0;
 }
 
 .login-form input {
 	font: inherit;
 	font-size: 1rem;
 	font-weight: normal;
-	width: 256px;
+	width: 100%;
 	padding: 0.5rem;
 	transition: 0.3s;
 	border: 1px solid #ccc;
@@ -156,4 +157,10 @@ ul, li {
 .button-container button:hover {
 	background-color: #fff;
 	color: #cc5c00;
+}
+
+.login-p {
+	margin: 1rem 0 0 0;
+	font-weight: normal;
+	font-size: 0.95rem;
 }

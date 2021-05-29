@@ -223,6 +223,27 @@
 	max-height: 500px;
 }
 
+.top-today-movie {
+	padding: 1rem;
+	width: 100%;
+}
+
+.today-movie-container {
+	padding: 1.5rem;
+	background-color: #80d4d4;
+	box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.today-movie-container>div {
+	background: #fff;
+}
+
+.today-movie-description {
+	font-weight: normal;
+	margin-top: 1rem;
+	font-size: 0.9rem;
+}
+
 .top-notice-container {
 	display: flex;
 	width: 86%;
@@ -334,6 +355,19 @@
 
 	.movie-duration {
 		display: none;
+	}
+
+	.today-movie-container > .movie-card > a {
+		display: block;
+		text-align: center;
+	}
+
+	.today-movie-description {
+		font-size: 0.75rem;
+	}
+
+	.today-movie-container > .movie-card > a > .movie-img {
+		margin: 0.5rem;
 	}
 
 	.top-notice-container {

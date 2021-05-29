@@ -35,7 +35,7 @@
 			<div class="line-bottom">
 				{% for line in lines %}
 				<div>
-					<a href="{% url 'moviedatabase:movielistbyline' line.pk sort order %}">{{ line }}</a>
+					<a href="{% url 'moviedatabase:movielistbyline' line.pk %}">{{ line }}</a>
 				</div>
 				{% endfor %}
 			</div>
@@ -68,7 +68,7 @@
 						{% if stationservice.prev_group != stationservice.next_group %}
 							{% if stationservice.prev_group == stationservice %}
 							<li class="station-list-li">
-								<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.pk sort order %}">
+								<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.pk %}">
 									<div class="li-station-info black-background">
 										<div class="li-station-prev-color" style="background: {{ stationservice.prev_group.get_color }};"></div>
 										<div class="li-station-next-color" style="background: {{ stationservice.next_group.get_color }};"></div>
@@ -84,7 +84,7 @@
 							{% endif %}
 						{% else %}
 							<li class="station-list-li">
-								<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.pk sort order %}">
+								<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.pk %}">
 									<div class="li-station-info black-background">
 										<div class="li-station-prev-color" style="background: {{ stationservice.prev_group.get_color }};"></div>
 										<div class="li-station-next-color" style="background: {{ stationservice.next_group.get_color }};"></div>

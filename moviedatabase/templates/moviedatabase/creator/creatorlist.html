@@ -39,7 +39,7 @@
 				<ul class="object-list-ul">
 				{% for creator in creator_list %}
 					<li class="object-list-li">
-						<a href="{% url 'moviedatabase:movielistbycreator' creator.pk 'pub' 'n' %}" class="creator-color">{{ creator }}</a>
+						<a href="{% url 'moviedatabase:movielistbycreator' creator.pk %}" class="creator-color">{{ creator }}</a>
 					</li>
 				{% endfor %}
 				</ul>
@@ -55,76 +55,76 @@
 
 {% block extrajs %}
 <script type="text/javascript">
-	$(function() {
-		rk = {
-			'a': ['ア', 'イ', 'ウ', 'エ', 'オ', ''],
-			'k': ['カ', 'キ', 'ク', 'ケ', 'コ', ''],
-			's': ['サ', 'シ', 'ス', 'セ', 'ソ', ''],
-			't': ['タ', 'チ', 'ツ', 'テ', 'ト', ''],
-			'n': ['ナ', 'ニ', 'ヌ', 'ネ', 'ノ', ''],
-			'h': ['ハ', 'ヒ', 'フ', 'ヘ', 'ホ', ''],
-			'm': ['マ', 'ミ', 'ム', 'メ', 'モ', ''],
-			'y': ['ヤ', '', 'ユ', '', 'ヨ', ''],
-			'r': ['ラ', 'リ', 'ル', 'レ', 'ロ', ''],
-			'w': ['ワ', '', '', '', 'ヲ', 'ン']
-		}
-		row_list = ['a', 'i', 'u', 'e', 'o', 'n']
+	// $(function() {
+	// 	rk = {
+	// 		'a': ['ア', 'イ', 'ウ', 'エ', 'オ', ''],
+	// 		'k': ['カ', 'キ', 'ク', 'ケ', 'コ', ''],
+	// 		's': ['サ', 'シ', 'ス', 'セ', 'ソ', ''],
+	// 		't': ['タ', 'チ', 'ツ', 'テ', 'ト', ''],
+	// 		'n': ['ナ', 'ニ', 'ヌ', 'ネ', 'ノ', ''],
+	// 		'h': ['ハ', 'ヒ', 'フ', 'ヘ', 'ホ', ''],
+	// 		'm': ['マ', 'ミ', 'ム', 'メ', 'モ', ''],
+	// 		'y': ['ヤ', '', 'ユ', '', 'ヨ', ''],
+	// 		'r': ['ラ', 'リ', 'ル', 'レ', 'ロ', ''],
+	// 		'w': ['ワ', '', '', '', 'ヲ', 'ン']
+	// 	}
+	// 	row_list = ['a', 'i', 'u', 'e', 'o', 'n']
 
-		kana = "{{ kana }}"
-		url = "{% url 'moviedatabase:creatortop' 'template' %}".replace("template\/", "")
-		object = "creator"
-		if (kana.length == 1) {
-			$.each(rk, function(index, value){
-				$.each(value, function(i, v) {
-					if (v == kana) {
-						col = index
-						row = i
-					}
-				})
-			})
-			$('.initial-col').append("<a href='" + url + "all" + "' class='initial-button " + object + "-background'>" + "すべて" + "</a>")
-			$.each(rk, function(i, v) {
-				$('.initial-col').append("<a href='" + url + i + "' class='initial-button " + object + "-background'>" + v[0] + "</a>")
-			})
-			$.each(row_list, function(i, v) {
-				if (!rk[col][i]) {
-					console.log(i, v)
-				} else if (i == row) {
-					$('.initial-row').append("<span class='initial-button'>" + rk[col][i] + "</span>")
-				} else {
-					$('.initial-row').append("<a href='" + url + col + v + "' class='initial-button " + object + "-background'>" + rk[col][i]  + "</a>")
-				}
-			})
-		} else if (kana == "すべて") {
-			$('.initial-col').append("<span class='initial-button " + object + "-background'>" + "すべて" + "</span>")
-			$.each(rk, function(i, v) {
-				$('.initial-col').append("<a href='" + url + i + "' class='initial-button " + object + "-background'>" + v[0] + "</a>")
-			})
-		} else {
-			kana = kana[0]
-			$.each(rk, function(index, value){
-				$.each(value, function(i, v) {
-					if (v == kana) {
-						col = index
-						row = i
-					}
-				})
-			})
-			$('.initial-col').append("<a href='" + url + "all" + "' class='initial-button " + object + "-background'>" + "すべて" + "</a>")
-			$.each(rk, function(i, v) {
-				if (i == col) {
-					$('.initial-col').append("<span class='initial-button'>" + v[0] + "</span>")
-				} else {
-					$('.initial-col').append("<a href='" + url + i + "' class='initial-button " + object + "-background'>" + v[0] + "</a>")
-				}
-			})
-			$.each(row_list, function(i, v) {
-				if (!rk[col][i]) {
-				} else {
-					$('.initial-row').append("<a href='" + url + col + v + "' class='initial-button " + object + "-background'>" + rk[col][i]  + "</a>")
-				}
-			})
-		}
-	})
+	// 	kana = "{{ kana }}"
+	// 	url = "{% url 'moviedatabase:creatortop' %}template".replace("template\/", "")
+	// 	object = "creator"
+	// 	if (kana.length == 1) {
+	// 		$.each(rk, function(index, value){
+	// 			$.each(value, function(i, v) {
+	// 				if (v == kana) {
+	// 					col = index
+	// 					row = i
+	// 				}
+	// 			})
+	// 		})
+	// 		$('.initial-col').append("<a href='" + url + "all" + "' class='initial-button " + object + "-background'>" + "すべて" + "</a>")
+	// 		$.each(rk, function(i, v) {
+	// 			$('.initial-col').append("<a href='" + url + i + "' class='initial-button " + object + "-background'>" + v[0] + "</a>")
+	// 		})
+	// 		$.each(row_list, function(i, v) {
+	// 			if (!rk[col][i]) {
+	// 				console.log(i, v)
+	// 			} else if (i == row) {
+	// 				$('.initial-row').append("<span class='initial-button'>" + rk[col][i] + "</span>")
+	// 			} else {
+	// 				$('.initial-row').append("<a href='" + url + col + v + "' class='initial-button " + object + "-background'>" + rk[col][i]  + "</a>")
+	// 			}
+	// 		})
+	// 	} else if (kana == "すべて") {
+	// 		$('.initial-col').append("<span class='initial-button " + object + "-background'>" + "すべて" + "</span>")
+	// 		$.each(rk, function(i, v) {
+	// 			$('.initial-col').append("<a href='" + url + i + "' class='initial-button " + object + "-background'>" + v[0] + "</a>")
+	// 		})
+	// 	} else {
+	// 		kana = kana[0]
+	// 		$.each(rk, function(index, value){
+	// 			$.each(value, function(i, v) {
+	// 				if (v == kana) {
+	// 					col = index
+	// 					row = i
+	// 				}
+	// 			})
+	// 		})
+	// 		$('.initial-col').append("<a href='" + url + "all" + "' class='initial-button " + object + "-background'>" + "すべて" + "</a>")
+	// 		$.each(rk, function(i, v) {
+	// 			if (i == col) {
+	// 				$('.initial-col').append("<span class='initial-button'>" + v[0] + "</span>")
+	// 			} else {
+	// 				$('.initial-col').append("<a href='" + url + i + "' class='initial-button " + object + "-background'>" + v[0] + "</a>")
+	// 			}
+	// 		})
+	// 		$.each(row_list, function(i, v) {
+	// 			if (!rk[col][i]) {
+	// 			} else {
+	// 				$('.initial-row').append("<a href='" + url + col + v + "' class='initial-button " + object + "-background'>" + rk[col][i]  + "</a>")
+	// 			}
+	// 		})
+	// 	}
+	// })
 </script>
 {% endblock %}

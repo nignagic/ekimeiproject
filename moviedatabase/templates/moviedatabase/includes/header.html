@@ -4,7 +4,8 @@
 		<div class="header">
 			<h1 class="header-title">
 				<a href="{% url 'moviedatabase:top' %}">
-					<img class="header-logo" src="{% static 'moviedatabase/img-top/logo.png' %}">
+					<img class="header-logo" src="{% static 'moviedatabase/base/logo.png' %}">
+					<img class="header-logo-sp" src="{% static 'moviedatabase/base/sp_banner.png' %}">
 				</a>
 			</h1>
 			<div class="header-content">
@@ -32,7 +33,7 @@
 						</a>
 					</li>
 					<li class="header-menu-li">
-						<a href="{% url 'moviedatabase:creatortop' 'all' %}" class="creator-background">
+						<a href="{% url 'moviedatabase:creatortop' %}" class="creator-background">
 							<div class="header-menu-li-a-inner">
 								<p class="creator-border">作者から探す</p>
 							</div>

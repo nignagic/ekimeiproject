@@ -18,7 +18,7 @@
 					<a href="{% url 'moviedatabase:railwaytop' %}">鉄道から探す</a>
 				</li>
 				<li>
-					<a href="{% url 'moviedatabase:creatortop' 'all' %}">作者から探す</a>
+					<a href="{% url 'moviedatabase:creatortop' %}">作者から探す</a>
 				</li>
 				<li>
 					<a href="{% url 'moviedatabase:musictop' %}">楽曲から探す</a>
@@ -43,7 +43,7 @@
 					<a href="{% url 'moviedatabase:terms' %}">利用規約</a>
 				</li>
 				<li>
-					<a href="">プライバシーポリシー</a>
+					<a href="{% url 'moviedatabase:privacy' %}">プライバシーポリシー</a>
 				</li>
 			</ul>
 		</li>

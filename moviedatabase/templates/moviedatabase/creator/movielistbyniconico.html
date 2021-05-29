@@ -36,7 +36,7 @@
 				{% if niconico.creator %}
 				<h4 class="side-header creator-border">作者</h4>
 				<li class="side-list-li">
-					<a href="{% url 'moviedatabase:movielistbycreator' niconico.creator.pk sort order %}" class="creator-color">{{ niconico.creator }}</a>
+					<a href="{% url 'moviedatabase:movielistbycreator' niconico.creator.pk %}" class="creator-color">{{ niconico.creator }}</a>
 				</li>
 				{% endif %}
 			</div>

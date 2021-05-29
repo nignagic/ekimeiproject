@@ -38,6 +38,13 @@
 						<button class="search-button" type="submit"><i class="fas fa-search"></i></button>
 					</form>
 				</div>
+				<h4 class="object-list-header station-border">歌唱名から動画を検索</h4>
+				<div class="search-container">
+					<form action="{% url 'moviedatabase:movielistbystationinmoviesearch' %}" method="get" class="search-form">
+						<input type="textbox" name="word" class="search-box" value="{{ word }}">
+						<button class="search-button" type="submit"><i class="fas fa-search"></i></button>
+					</form>
+				</div>
 				<h4 class="object-list-header railway-border">都道府県</h4>
 				<ul class="object-dict-outer">
 				{% for region in regions %}
@@ -55,22 +62,13 @@
 					</li>
 				{% endfor %}
 				</ul>
-				<h4 class="object-list-header railway-border">国・地域</h4>
-				<ul class="object-dict-inner object-dict-outer-li">
-					{% for country in countries %}
-					<li class="object-dict-inner-li">
-						<a href="{% url 'moviedatabase:lineservicelistbycountry' country.pk  %}" class="railway-color">{{ country }}</a>
-					</li>
-					{% endfor %}
-				</ul>
-				</ul>
 			</div>
 			<div class="detail-side">
 				<h4 class="side-header railway-border">カテゴリー</h4>
 				<ul class="side-list-ul">
 					{% for c in categories %}
 					<li class="side-list-li">
-						<a href="{% url 'moviedatabase:lineservicelistbycategory' c.pk %}" class="railway-color">{{ c }}</a>
+						<a href="" class="railway-color">{{ c }}</a>
 					</li>
 					{% endfor %}
 				</ul>

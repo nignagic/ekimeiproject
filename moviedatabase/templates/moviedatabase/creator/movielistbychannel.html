@@ -35,7 +35,7 @@
 				{% if channel.creator %}
 				<h4 class="side-header creator-border">作者</h4>
 				<li class="side-list-li">
-					<a href="{% url 'moviedatabase:movielistbycreator' channel.creator.pk sort order %}" class="creator-color">{{ channel.creator }}</a>
+					<a href="{% url 'moviedatabase:movielistbycreator' channel.creator.pk %}" class="creator-color">{{ channel.creator }}</a>
 				</li>
 				{% endif %}
 			</div>

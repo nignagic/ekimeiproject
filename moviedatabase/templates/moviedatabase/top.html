@@ -23,10 +23,10 @@
 		<nav class="top-menu">
 			<ul>
 				<li>
-					<a href="{% url 'moviedatabase:railwaytop' %}" class="railway-background">鉄道などから探す</a>
+					<a href="{% url 'moviedatabase:railwaytop' %}" class="railway-background">鉄道から探す</a>
 				</li>
 				<li>
-					<a href="{% url 'moviedatabase:creatortop' 'all' %}" class="creator-background">作者から探す</a>
+					<a href="{% url 'moviedatabase:creatortop' %}" class="creator-background">作者から探す</a>
 				</li>
 				<li>
 					<a href="{% url 'moviedatabase:musictop' %}" class="music-background">楽曲から探す</a>
@@ -52,6 +52,31 @@
 			</div>
 		</div>
 	</section>
+	<section class="top-movie-list">
+		<div class="top-today-movie">
+			<h5 class="content-header movie-border">今日の動画（{{ today|timezone:'Asia/Tokyo'|date:"n月j日" }}）</h5>
+			<div class="today-movie-container">
+			{% if todaymovie %}
+				<div class="movie-card">
+					<a href="{% url 'moviedatabase:detail' todaymovie.main_id %}">
+						<img class="movie-img" src="https://i.ytimg.com/vi/{{ todaymovie.youtube_id }}/hqdefault.jpg">
+						<div class="movie-info">
+				{% load tz %}
+							<p class="movie-published">{{ todaymovie.published_at|timezone:'Asia/Tokyo'|date:"Y/n/j" }}<span class="movie-category">{{ todaymovie.get_is_collab_display  }}</span>{% for c in todaymovie.category %}<span class="movie-category">{{ c }}</span>{% endfor %}</p>
+							<p class="movie-title"><span>{{ todaymovie.title }}</span></p>
+							<p><span class="movie-channel">{{ todaymovie.channel }}</span><span class="movie-duration"> - {{ todaymovie.get_duration }}</span></p>
+
+							<!-- <p>{% for s in todaymovie.songnew.all %}{{ s }}{% endfor %}</p> -->
+						</div>
+					</a>
+				</div>
+			{% else %}
+				<div>今日の動画はありません</div>
+			{% endif %}
+				<p class="today-movie-description">ここでは、データベースにある動画の中から、今日と同じ日付に投稿された動画をランダムに紹介しています。
+			</div>
+		</div>
+	</section>
 	<section class="top-notice-container">
 		<div class="top-notice">
 			<h5 class="content-header movie-border">お知らせ</h5>
@@ -74,7 +99,7 @@
 						<div class="update-bottom">「<a href="{% url 'moviedatabase:detail' info.movie.main_id %}">{{ info.movie }}</a>」を{{ info.get_is_create_display }}しました</div>
 					{% elif info.creator %}
 						<p class="update-top">{{ info.reg_date|timezone:'Asia/Tokyo'|date:"Y/n/j" }}　<span>作者{{ info.get_is_create_display }}</span></p>
-						<div class="update-bottom">「<a href="{% url 'moviedatabase:movielistbycreator' info.creator.pk 'pub' 'n' %}">{{ info.creator }}</a>」を{{ info.get_is_create_display }}しました</div>
+						<div class="update-bottom">「<a href="{% url 'moviedatabase:movielistbycreator' info.creator.pk %}">{{ info.creator }}</a>」を{{ info.get_is_create_display }}しました</div>
 					{% endif %}
 				</li>
 				{% endfor %}

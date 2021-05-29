@@ -18,7 +18,7 @@
 				{% endif %}
 			</div>
 			<div class="under-color station-background">
-				{{ count }}件
+				{{ paginator.count }}件
 			</div>
 			<div class="line-bottom">
 				<form action="" method="get" class="search-form">
@@ -35,7 +35,7 @@
 				<ul class="object-list-ul">
 				{% for s in stationservice_list %}
 					<li class="object-list-li">
-						<a href="{% url 'moviedatabase:movielistbystationservice' s.pk 'pub' 'n' %}" class="station-color">
+						<a href="{% url 'moviedatabase:movielistbystationservice' s.pk %}" class="station-color">
 							<div>{{ s }}</div>
 							<div>{{ s.line_service }}</div>
 						</a>

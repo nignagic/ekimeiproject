@@ -27,7 +27,7 @@
 				<ul class="object-list-ul">
 				{% for l in lineservice_list %}
 					<li class="object-list-li">
-						<a href="{% url 'moviedatabase:movielistbylineservice' l.pk 'pub' 'n' %}" class="line-color">{{ l }}</a>
+						<a href="{% url 'moviedatabase:movielistbylineservice' l.pk %}" class="line-color">{{ l }}</a>
 					</li>
 				{% endfor %}
 				{% include 'moviedatabase/includes/pagination.html' %}

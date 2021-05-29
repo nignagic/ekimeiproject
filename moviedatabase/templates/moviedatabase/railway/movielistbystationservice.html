@@ -26,16 +26,16 @@
 			<div class="sub-name black-background sub-name-station">
 				<div class="sub-name-inner">
 					<div class="sub-link">
-						<a href="{% url 'moviedatabase:movielistbylineservice' stationservice.line_service.pk sort order %}" class="white-color">{{ stationservice.line_service }}</a>
+						<a href="{% url 'moviedatabase:movielistbylineservice' stationservice.line_service.pk %}" class="white-color">{{ stationservice.line_service }}</a>
 					</div>
 					<div class="station-before">
 						{% if stationservice.prev_station %}
-							<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.prev_station.pk sort order %}" class="white-color">＜ {{ stationservice.prev_station }}</a>
+							<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.prev_station.pk %}" class="white-color">＜ {{ stationservice.prev_station }}</a>
 						{% endif %}
 					</div>
 					<div class="station-after">
 						{% if stationservice.next_station %}
-							<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.next_station.pk sort order %}" class="white-color">{{ stationservice.next_station }} ＞</a>
+							<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.next_station.pk %}" class="white-color">{{ stationservice.next_station }} ＞</a>
 						{% endif %}
 					</div>
 				</div>
@@ -46,12 +46,12 @@
 			</div>
 			<div class="line-bottom">
 				<div>
-					▶ <a href="{% url 'moviedatabase:movielistbystation' stationservice.station.pk sort order %}">{{ stationservice.station }}</a> - <a href="{% url 'moviedatabase:movielistbyline' stationservice.station.line.pk sort order %}">{{ stationservice.station.line }}</a>
+					▶ <a href="{% url 'moviedatabase:movielistbystation' stationservice.station.pk %}">{{ stationservice.station }}</a> - <a href="{% url 'moviedatabase:movielistbyline' stationservice.station.line.pk %}">{{ stationservice.station.line }}</a>
 				</div>
 			{% if stationservicegroup %}
 				{% if different_line == True %}
 					<div>
-						<a href="{% url 'moviedatabase:movielistbystationservice' stationservicegroup.pk sort order %}">{{ stationservicegroup }}</a> [<a href="{% url 'moviedatabase:movielistbystation' stationservicegroup.station.pk sort order %}">{{ stationservicegroup.station }}</a> - <a href="{% url 'moviedatabase:movielistbyline' stationservicegroup.station.line.pk sort order %}">{{ stationservicegroup.station.line }}</a>]
+						<a href="{% url 'moviedatabase:movielistbystationservice' stationservicegroup.pk %}">{{ stationservicegroup }}</a> [<a href="{% url 'moviedatabase:movielistbystation' stationservicegroup.station.pk %}">{{ stationservicegroup.station }}</a> - <a href="{% url 'moviedatabase:movielistbyline' stationservicegroup.station.line.pk %}">{{ stationservicegroup.station.line }}</a>]
 					</div>
 				{% endif %}
 			{% endif %}
@@ -76,7 +76,7 @@
 				{% for station, transferstations in transfers.items %}
 					<li class="station-li">
 						<div class="transfer-line-formal">
-							<a href="{% url 'moviedatabase:movielistbyline' station.line.pk sort order %}">{{ station.line }}</a>
+							<a href="{% url 'moviedatabase:movielistbyline' station.line.pk %}">{{ station.line }}</a>
 						</div>
 						<ul class="service-ul">
 						{% for transferstation in transferstations %}
@@ -94,8 +94,8 @@
 								<li class="service-li" style="border-color: transparent;">
 									<div class="transfer-station-prev-color" style="background: {{ transferstation.prev_group.get_color }}"></div>
 									<div class="transfer-station-next-color" style="background: {{ transferstation.next_group.get_color }}"></div>
-									<a class="transfer-station-name" href="{% url 'moviedatabase:movielistbystationservice' transferstation.pk sort order %}">{{ transferstation }}</a>
-									<a class="transfer-line-name" href="{% url 'moviedatabase:movielistbylineservice' transferstation.line_service.pk sort order %}">
+									<a class="transfer-station-name" href="{% url 'moviedatabase:movielistbystationservice' transferstation.pk %}">{{ transferstation }}</a>
+									<a class="transfer-line-name" href="{% url 'moviedatabase:movielistbylineservice' transferstation.line_service.pk %}">
 										<div class="line-service-name">{{ transferstation.line_service.with_company }}</div>
 										<div class="line-service-name-sub">{{ transferstation.line_service.line_service_name_sub }} {{ transferstation.line_service.f_or_s }}</div>
 									</a>
@@ -103,8 +103,8 @@
 								{% endif %}
 							{% else %}
 								<li class="service-li" style="border-color: {{ transferstation.get_color }};">
-									<a class="transfer-station-name" href="{% url 'moviedatabase:movielistbystationservice' transferstation.pk sort order %}">{{ transferstation }}</a>
-									<a class="transfer-line-name" href="{% url 'moviedatabase:movielistbylineservice' transferstation.line_service.pk sort order %}">
+									<a class="transfer-station-name" href="{% url 'moviedatabase:movielistbystationservice' transferstation.pk %}">{{ transferstation }}</a>
+									<a class="transfer-line-name" href="{% url 'moviedatabase:movielistbylineservice' transferstation.line_service.pk %}">
 										<div class="line-service-name">{{ transferstation.line_service.with_company }}</div>
 										<div class="line-service-name-sub">{{ transferstation.line_service.line_service_name_sub }} {{ transferstation.line_service.f_or_s }}</div>
 									</a>

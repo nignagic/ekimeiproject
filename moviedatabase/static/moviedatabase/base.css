@@ -297,8 +297,13 @@ input:focus {
 }
 
 .header-logo {
+	display: block;
 	height: 96px;
 	transition: all .3s;
+}
+
+.header-logo-sp {
+	display: none;
 }
 
 .header-logo:hover {
@@ -419,29 +424,46 @@ input:focus {
 @media (max-width: 768px) {
 	.header {
 		flex-wrap: wrap;
+		background: #cc5c00;
 	}
 
 	.header-title {
 		text-align: center;
 		width: 100%;
+		height: 48px;
+		padding: 0;
+		margin: 0;
 	}
 
-	.header-title a {
-		padding: 0.5rem;
+	.header-title > a {
+		height: 100%;
 	}
 
-	.header-menu {
-		width: 100%;
+	.header-logo {
+		display: none;
+	}
+
+	.header-logo-sp {
+		display: inline;
+		height: 100%;
+	}
+
+	.header-content-upper {
+		display: none;
 	}
 
 	.header-menu-li {
-		width: 100%;
+		flex: 1;
 		text-align: center;
 	}
 
-	.header-menu-li a {
+	.header-menu-li-a-inner {
+		padding: 4px;
 		font-size: 0.8rem;
-		padding: 0.4rem;
+	}
+
+	.header-menu-li-a-inner p {
+    	border-bottom-width: 2px;
 	}
 }
 
@@ -492,4 +514,11 @@ input:focus {
 	color: #ccc;
 	font-weight: normal;
 	font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+	.footer-inner {
+		font-size: 0.8rem;
+		display: block;
+	}
 }

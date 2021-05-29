@@ -22,7 +22,7 @@
 			<div class="line-bottom">
 				{% for lineservice in lineservices %}
 				<div>
-					<a href="{% url 'moviedatabase:movielistbylineservice' lineservice.pk sort order %}">{{ lineservice }}</a>
+					<a href="{% url 'moviedatabase:movielistbylineservice' lineservice.pk %}">{{ lineservice }}</a>
 				</div>
 				{% endfor %}
 			</div>
@@ -53,7 +53,7 @@
 				<ul class="station-list-ul">
 					{% for station in stations %}
 						<li class="station-list-li black-border-all">
-							<a href="{% url 'moviedatabase:movielistbystation' station.pk sort order %}">
+							<a href="{% url 'moviedatabase:movielistbystation' station.pk %}">
 								<div class="li-station-info white-background">
 									<div class="station-name">{{ station }}</div>
 								</div>

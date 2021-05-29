@@ -40,7 +40,7 @@
 				<ul class="side-list-ul">
 					{% for c in mainchannel %}
 					<li class="side-list-li">
-						<a href="{% url 'moviedatabase:movielistbychannel' c.pk sort order %}" class="channel-color">{{ c }}</a>
+						<a href="{% url 'moviedatabase:movielistbychannel' c.pk %}" class="channel-color">{{ c }}</a>
 					</li>
 					{% endfor %}
 				</ul>
@@ -50,7 +50,7 @@
 				<ul class="side-list-ul">
 					{% for c in subchannel %}
 					<li class="side-list-li">
-						<a href="{% url 'moviedatabase:movielistbychannel' c.pk sort order %}" class="channel-color">{{ c }}</a>
+						<a href="{% url 'moviedatabase:movielistbychannel' c.pk %}" class="channel-color">{{ c }}</a>
 					</li>
 					{% endfor %}
 				</ul>
@@ -60,7 +60,7 @@
 				<ul class="side-list-ul">
 					{% for c in mainniconico %}
 					<li class="side-list-li">
-						<a href="{% url 'moviedatabase:movielistbyniconico' c.pk sort order %}" class="black-color">{{ c }}</a>
+						<a href="{% url 'moviedatabase:movielistbyniconico' c.pk %}" class="black-color">{{ c }}</a>
 					</li>
 					{% endfor %}
 				</ul>
@@ -70,7 +70,7 @@
 				<ul class="side-list-ul">
 					{% for c in subniconico %}
 					<li class="side-list-li">
-						<a href="{% url 'moviedatabase:movielistbyniconico' c.pk sort order %}" class="black-color">{{ c }}</a>
+						<a href="{% url 'moviedatabase:movielistbyniconico' c.pk %}" class="black-color">{{ c }}</a>
 					</li>
 					{% endfor %}
 				</ul>

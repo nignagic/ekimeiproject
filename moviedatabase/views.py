@@ -18,12 +18,28 @@ from django.contrib.auth.views import (
 from . import forms
 from django.contrib.auth.decorators import permission_required
 
+import pytz
+from dateutil import relativedelta
 import datetime
 
 # Create your views here.
+
+def todaymovie():
+	JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')
+	now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
+	day = datetime.datetime(now.year, now.month, now.day, 0, 0, tzinfo=JST)
+	oldest = Movie.objects.earliest("published_at")
+	m = Movie.objects.none()
+	while day > oldest.published_at:
+		m |= Movie.objects.filter(published_at__range=(day, day + datetime.timedelta(hours=23, minutes=59)))
+		day = day - relativedelta.relativedelta(years=1)
+	
+	return m.order_by('-published_at')
+
 class Top(generic.ListView):
 	model = Movie
 	template_name = 'moviedatabase/top.html'
+
 
 	def get_context_data(self):
 		movies = Movie.objects.all().order_by('-published_at')[:6]
@@ -31,6 +47,8 @@ class Top(generic.ListView):
 		notice_list = NoticeInformation.objects.all()
 		context = {
 			'movie_list': movies,
+			'todaymovie': todaymovie().order_by("?")[0],
+			'today': timezone.now(),
 			'update_list': update_list,
 			'notice_list': notice_list
 		}
@@ -56,6 +74,9 @@ def Mypage(request):
 
 def Terms(request):
 	return render(request, 'moviedatabase/static-page/terms.html')
+
+def Privacy(request):
+	return render(request, 'moviedatabase/static-page/privacy.html')
 
 
 class MovieListView(generic.ListView):
@@ -83,17 +104,6 @@ class MovieListView(generic.ListView):
 		
 		word = self.request.GET.get('word')
 		context['word'] = word
-
-		queryset = Movie.objects.none()
-		if word:
-			parts = Part.objects.filter(Q(name__icontains=word) | Q(explanation__icontains=word))
-			for part in parts:
-				queryset |= Movie.objects.filter(pk=part.movie.pk)
-			queryset |= Movie.objects.filter(Q(title__icontains=word) | Q(main_id__icontains=word) | Q(description__icontains=word) | Q(explanation__icontains=word))
-		else:
-			queryset = Movie.objects.all()
-		
-		context['count'] = queryset.count()
 
 		return context
 
@@ -178,7 +188,7 @@ class RailwayTopView(generic.TemplateView):
 		context = super().get_context_data(**kwargs)
 
 		context['regions'] = Region.objects.filter(country__name__contains="日本")
-		context['countries'] = Country.objects.all()
+		# context['countries'] = Country.objects.all()
 		context['categories'] = BelongsCategory.objects.all()[:20]
 
 		return context
@@ -189,38 +199,38 @@ class BelongsCategoryListView(generic.ListView):
 	queryset = BelongsCategory.objects.all()
 	template_name = 'moviedatabase/railway/categorylist.html'
 
-class LineServiceListbyCountryView(generic.ListView):
-	model = LineService
-	paginate_by = 30
-	template_name = 'moviedatabase/railway/lineservicelistbycountry.html'
+# class LineServiceListbyCountryView(generic.ListView):
+# 	model = LineService
+# 	paginate_by = 30
+# 	template_name = 'moviedatabase/railway/lineservicelistbycountry.html'
 
-	def get_queryset(self):
-		queryset = super().get_queryset()
-		queryset = LineService.objects.none()
-		country = Country.objects.get(pk=self.kwargs['country'])
-		prefs = Prefecture.objects.filter(region__country=country)
-		for pref in prefs:
-			queryset |= LineService.objects.filter(prefs=pref)
-		return queryset
+# 	def get_queryset(self):
+# 		queryset = super().get_queryset()
+# 		queryset = LineService.objects.none()
+# 		country = Country.objects.get(pk=self.kwargs['country'])
+# 		prefs = Prefecture.objects.filter(region__country=country)
+# 		for pref in prefs:
+# 			queryset |= LineService.objects.filter(prefs=pref)
+# 		return queryset
 
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
+# 	def get_context_data(self, **kwargs):
+# 		context = super().get_context_data(**kwargs)
 		
-		country = Country.objects.get(pk=self.kwargs['country'])
+# 		country = Country.objects.get(pk=self.kwargs['country'])
 
-		queryset = LineService.objects.none()
-		country = Country.objects.get(pk=self.kwargs['country'])
-		prefs = Prefecture.objects.filter(region__country=country)
-		for pref in prefs:
-			queryset |= LineService.objects.filter(prefs=pref)
-		companies = Company.objects.none()
-		for q in queryset:
-			companies |= Company.objects.filter(pk=q.company.pk)
+# 		queryset = LineService.objects.none()
+# 		country = Country.objects.get(pk=self.kwargs['country'])
+# 		prefs = Prefecture.objects.filter(region__country=country)
+# 		for pref in prefs:
+# 			queryset |= LineService.objects.filter(prefs=pref)
+# 		companies = Company.objects.none()
+# 		for q in queryset:
+# 			companies |= Company.objects.filter(pk=q.company.pk)
 
-		context['country'] = country
-		context['companies'] = companies
+# 		context['country'] = country
+# 		context['companies'] = companies
 
-		return context
+# 		return context
 
 class CompanyListbyRegionView(generic.ListView):
 	model = Company
@@ -344,52 +354,52 @@ class LineServiceListbyCompanyandPrefectureView(generic.ListView):
 
 		return context
 
-class LineServiceListbyCategoryView(generic.ListView):
-	model = LineService
-	paginate_by = 30
-	template_name = 'moviedatabase/railway/lineservicelistbycategory.html'
+# class LineServiceListbyCategoryView(generic.ListView):
+# 	model = LineService
+# 	paginate_by = 30
+# 	template_name = 'moviedatabase/railway/lineservicelistbycategory.html'
 
-	def get_queryset(self):
-		queryset = super().get_queryset()
-		queryset = LineService.objects.none()
-		category = BelongsCategory.objects.get(pk=self.kwargs['category'])
-		queryset = LineService.objects.filter(category=category).order_by('company', 'sort_by_company')
-		return queryset
+# 	def get_queryset(self):
+# 		queryset = super().get_queryset()
+# 		queryset = LineService.objects.none()
+# 		category = BelongsCategory.objects.get(pk=self.kwargs['category'])
+# 		queryset = LineService.objects.filter(category=category).order_by('company', 'sort_by_company')
+# 		return queryset
 
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
+# 	def get_context_data(self, **kwargs):
+# 		context = super().get_context_data(**kwargs)
 		
-		category = BelongsCategory.objects.get(pk=self.kwargs['category'])
+# 		category = BelongsCategory.objects.get(pk=self.kwargs['category'])
 
-		context['category'] = category
-		context['japan_regions'] = Region.objects.filter(country__name__contains="日本")
-		context['foreign_regions'] = Region.objects.exclude(country__name__contains="日本")
+# 		context['category'] = category
+# 		context['japan_regions'] = Region.objects.filter(country__name__contains="日本")
+# 		context['foreign_regions'] = Region.objects.exclude(country__name__contains="日本")
 
-		return context
+# 		return context
 
-class LineServiceListbyCategoryandPrefectureView(generic.ListView):
-	model = LineService
-	paginate_by = 30
-	template_name = 'moviedatabase/railway/lineservicelistbycategoryandprefecture.html'
+# class LineServiceListbyCategoryandPrefectureView(generic.ListView):
+# 	model = LineService
+# 	paginate_by = 30
+# 	template_name = 'moviedatabase/railway/lineservicelistbycategoryandprefecture.html'
 
-	def get_queryset(self):
-		queryset = super().get_queryset()
-		queryset = LineService.objects.none()
-		category = BelongsCategory.objects.get(pk=self.kwargs['category'])
-		pref = Prefecture.objects.get(pk=self.kwargs['pref'])
-		queryset = LineService.objects.filter(category=category).filter(prefs=pref).order_by('company', 'sort_by_company')
-		return queryset
+# 	def get_queryset(self):
+# 		queryset = super().get_queryset()
+# 		queryset = LineService.objects.none()
+# 		category = BelongsCategory.objects.get(pk=self.kwargs['category'])
+# 		pref = Prefecture.objects.get(pk=self.kwargs['pref'])
+# 		queryset = LineService.objects.filter(category=category).filter(prefs=pref).order_by('company', 'sort_by_company')
+# 		return queryset
 
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
+# 	def get_context_data(self, **kwargs):
+# 		context = super().get_context_data(**kwargs)
 		
-		category = BelongsCategory.objects.get(pk=self.kwargs['category'])
-		pref = Prefecture.objects.get(pk=self.kwargs['pref'])
+# 		category = BelongsCategory.objects.get(pk=self.kwargs['category'])
+# 		pref = Prefecture.objects.get(pk=self.kwargs['pref'])
 
-		context['category'] = category
-		context['pref'] = pref
+# 		context['category'] = category
+# 		context['pref'] = pref
 
-		return context
+# 		return context
 
 class LineServiceSearchView(generic.ListView):
 	model = LineService
@@ -409,11 +419,6 @@ class LineServiceSearchView(generic.ListView):
 		
 		word = self.request.GET.get('word')
 		context['word'] = word
-		count = 0
-		if word:
-			count = LineService.objects.filter(Q(name__icontains=word) | Q(name_sub__icontains=word)).order_by('company').count()
-
-		context['count'] = count
 
 		return context
 
@@ -435,11 +440,6 @@ class StationServiceSearchView(generic.ListView):
 		
 		word = self.request.GET.get('word')
 		context['word'] = word
-		count = 0
-		if word:
-			count = StationService.objects.filter(name__icontains=word).order_by('line_service').count()
-
-		context['count'] = count
 
 		return context
 
@@ -453,6 +453,34 @@ def moviequery(q, sort, order):
 		elif order == "n":
 			q = q.order_by('n_view')
 	return q
+
+class MovieListbyStationInMovieSearchView(generic.ListView):
+	model = Movie
+	paginate_by = 15
+	template_name = 'moviedatabase/railway/movielistbystationinmoviesearch.html'
+
+	def get_queryset(self):
+		queryset = super().get_queryset()
+		queryset = Movie.objects.none()
+		word = self.request.GET.get('word')
+		if word:
+			stationinmovies = StationInMovie.objects.filter(sung_name__icontains=word)
+			for s in stationinmovies:
+				if (s.part):
+					queryset |= Movie.objects.filter(pk=s.part.movie.pk)
+
+		queryset = queryset.exclude(is_active=False).order_by('-published_at')
+		sort = self.request.GET.get('sort')
+		order = self.request.GET.get('order')
+		return moviequery(queryset, sort, order)
+
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		
+		word = self.request.GET.get('word')
+		context['word'] = word
+
+		return context
 
 class MovieListbyLineView(generic.ListView):
 	model = Movie
@@ -473,8 +501,8 @@ class MovieListbyLineView(generic.ListView):
 						queryset |= Movie.objects.filter(pk=stationinmovie.part.movie.pk)
 			
 		queryset = queryset.exclude(is_active=False).order_by('-published_at')
-		sort = self.kwargs['sort']
-		order = self.kwargs['order']
+		sort = self.request.GET.get('sort')
+		order = self.request.GET.get('order')
 		return moviequery(queryset, sort, order)
 
 	def get_context_data(self, **kwargs):
@@ -492,8 +520,8 @@ class MovieListbyLineView(generic.ListView):
 		context['stations'] = stations
 		context['lineservices'] = lineservices
 
-		context['sort'] = self.kwargs['sort']
-		context['order'] = self.kwargs['order']
+		context['sort'] = self.request.GET.get('sort')
+		context['order'] = self.request.GET.get('order')
 
 		context['admin'] = self.request.user.groups.filter(name='admin').exists()
 
@@ -516,8 +544,8 @@ class MovieListbyStationView(generic.ListView):
 					queryset |= Movie.objects.filter(pk=stationinmovie.part.movie.pk)
 			
 		queryset = queryset.exclude(is_active=False).order_by('-published_at')
-		sort = self.kwargs['sort']
-		order = self.kwargs['order']
+		sort = self.request.GET.get('sort')
+		order = self.request.GET.get('order')
 		return moviequery(queryset, sort, order)
 
 	def get_context_data(self, **kwargs):
@@ -531,8 +559,8 @@ class MovieListbyStationView(generic.ListView):
 		context['stationservices'] = stationservices
 		context['transfers'] = transfers
 
-		context['sort'] = self.kwargs['sort']
-		context['order'] = self.kwargs['order']
+		context['sort'] = self.request.GET.get('sort')
+		context['order'] = self.request.GET.get('order')
 
 		return context
 
@@ -551,8 +579,8 @@ class MovieListbyLineServiceView(generic.ListView):
 				queryset |= Movie.objects.filter(pk=lineinmovie.part.movie.pk)
 
 		queryset = queryset.exclude(is_active=False).order_by('-published_at')
-		sort = self.kwargs['sort']
-		order = self.kwargs['order']
+		sort = self.request.GET.get('sort')
+		order = self.request.GET.get('order')
 		return moviequery(queryset, sort, order)
 
 	def get_context_data(self, **kwargs):
@@ -566,8 +594,8 @@ class MovieListbyLineServiceView(generic.ListView):
 		context['stationservices'] = stationservices.exclude(is_representative=True).order_by('sort_by_line_service')
 		context['lines'] = lines
 
-		context['sort'] = self.kwargs['sort']
-		context['order'] = self.kwargs['order']
+		context['sort'] = self.request.GET.get('sort')
+		context['order'] = self.request.GET.get('order')
 
 		context['admin'] = self.request.user.groups.filter(name='admin').exists()
 
@@ -596,8 +624,8 @@ class MovieListbyStationServiceView(generic.ListView):
 						queryset |= Movie.objects.filter(pk=stationinmovie.part.movie.pk)
 
 		queryset = queryset.exclude(is_active=False).order_by('-published_at')
-		sort = self.kwargs['sort']
-		order = self.kwargs['order']
+		sort = self.request.GET.get('sort')
+		order = self.request.GET.get('order')
 		return moviequery(queryset, sort, order)
 
 	def get_context_data(self, **kwargs):
@@ -621,8 +649,8 @@ class MovieListbyStationServiceView(generic.ListView):
 		context['stationservicegroup'] = stationservicegroup
 		context['different_line'] = different_line
 
-		context['sort'] = self.kwargs['sort']
-		context['order'] = self.kwargs['order']
+		context['sort'] = self.request.GET.get('sort')
+		context['order'] = self.request.GET.get('order')
 		
 		return context
 
@@ -701,94 +729,94 @@ def initial_query(q, kana):
 					q2 |= q.filter(name_kana__istartswith=d)
 		return q2.order_by('name_kana')
 
-class ArtistListView(generic.ListView):
-	model = Artist
-	paginate_by = 30
-	template_name = 'moviedatabase/music/artistlist.html'
+# class ArtistListView(generic.ListView):
+# 	model = Artist
+# 	paginate_by = 30
+# 	template_name = 'moviedatabase/music/artistlist.html'
 
-	def get_queryset(self):
-		kana = self.kwargs['kana']
-		queryset = Artist.objects.all().order_by('name_kana')
-		if kana != "all":
-			queryset = initial_query(queryset, kana)
-		return queryset
+# 	def get_queryset(self):
+# 		kana = self.kwargs['kana']
+# 		queryset = Artist.objects.all().order_by('name_kana')
+# 		if kana != "all":
+# 			queryset = initial_query(queryset, kana)
+# 		return queryset
 
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
+# 	def get_context_data(self, **kwargs):
+# 		context = super().get_context_data(**kwargs)
 
-		kana = self.kwargs['kana']
-		if kana == "all":
-			kana = "すべて"
-		else:
-			kana = r2k(kana)
-			if len(kana) != 1:
-				kana = kana[0] + "行"
+# 		kana = self.kwargs['kana']
+# 		if kana == "all":
+# 			kana = "すべて"
+# 		else:
+# 			kana = r2k(kana)
+# 			if len(kana) != 1:
+# 				kana = kana[0] + "行"
 		
-		context['kana'] = kana
+# 		context['kana'] = kana
 
-		return context
+# 		return context
 
-class SongListView(generic.ListView):
-	model = Song
-	paginate_by = 30
-	template_name = 'moviedatabase/music/songlist.html'
+# class SongListView(generic.ListView):
+# 	model = Song
+# 	paginate_by = 30
+# 	template_name = 'moviedatabase/music/songlist.html'
 
-	def get_queryset(self):
-		kana = self.kwargs['kana']
-		queryset = Song.objects.all().order_by('name_kana')
-		if kana != "all":
-			queryset = initial_query(queryset, kana)
-		return queryset
+# 	def get_queryset(self):
+# 		kana = self.kwargs['kana']
+# 		queryset = Song.objects.all().order_by('name_kana')
+# 		if kana != "all":
+# 			queryset = initial_query(queryset, kana)
+# 		return queryset
 
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
+# 	def get_context_data(self, **kwargs):
+# 		context = super().get_context_data(**kwargs)
 
-		kana = self.kwargs['kana']
-		if kana == "all":
-			kana = "すべて"
-		else:
-			kana = r2k(kana)
-			if len(kana) != 1:
-				kana = kana[0] + "行"
+# 		kana = self.kwargs['kana']
+# 		if kana == "all":
+# 			kana = "すべて"
+# 		else:
+# 			kana = r2k(kana)
+# 			if len(kana) != 1:
+# 				kana = kana[0] + "行"
 		
-		context['kana'] = kana
+# 		context['kana'] = kana
 
-		return context
+# 		return context
 
-class SongListbyArtistView(generic.ListView):
-	model = Song
-	paginate_by = 30
-	template_name = 'moviedatabase/music/songlistbyartist.html'
+# class SongListbyArtistView(generic.ListView):
+# 	model = Song
+# 	paginate_by = 30
+# 	template_name = 'moviedatabase/music/songlistbyartist.html'
 
-	def get_queryset(self):
-		kana = self.kwargs['kana']
-		queryset = Song.objects.filter(artist=self.kwargs['artist']).order_by('name_kana')
-		if kana != "all":
-			queryset = initial_query(queryset, kana)
-		return queryset
+# 	def get_queryset(self):
+# 		kana = self.kwargs['kana']
+# 		queryset = Song.objects.filter(artist=self.kwargs['artist']).order_by('name_kana')
+# 		if kana != "all":
+# 			queryset = initial_query(queryset, kana)
+# 		return queryset
 
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
+# 	def get_context_data(self, **kwargs):
+# 		context = super().get_context_data(**kwargs)
 
-		artist = Artist.objects.get(pk=self.kwargs['artist'])
+# 		artist = Artist.objects.get(pk=self.kwargs['artist'])
 
-		kana = self.kwargs['kana']
-		if kana == "all":
-			kana = "すべて"
-		else:
-			kana = r2k(kana)
-			if len(kana) != 1:
-				kana = kana[0] + "行"
+# 		kana = self.kwargs['kana']
+# 		if kana == "all":
+# 			kana = "すべて"
+# 		else:
+# 			kana = r2k(kana)
+# 			if len(kana) != 1:
+# 				kana = kana[0] + "行"
 		
-		context['artist'] = artist
-		context['kana'] = kana
+# 		context['artist'] = artist
+# 		context['kana'] = kana
 
-		return context
+# 		return context
 
-class VocalListView(generic.ListView):
-	model = VocalNew
-	paginate_by = 30
-	template_name = 'moviedatabase/music/vocallist.html'
+# class VocalListView(generic.ListView):
+# 	model = VocalNew
+# 	paginate_by = 30
+# 	template_name = 'moviedatabase/music/vocallist.html'
 
 class ArtistSearchView(generic.ListView):
 	model = Movie
@@ -831,7 +859,7 @@ class SongSearchView(generic.ListView):
 		queryset = Movie.objects.none()
 		word = self.request.GET.get('word')
 		if word:
-			songnews = SongNew.objects.filter(Q(song_name__icontains=word) | Q(song_name_kana__icontains=word) | Q(tag__icontains=word)).order_by('song_name_kana')
+			songnews = SongNew.objects.filter(Q(song_name__icontains=word) | Q(song_name_kana__icontains=word)).order_by('song_name_kana')
 			
 			for song in songnews:
 				queryset |= Movie.objects.filter(songnew=song)
@@ -852,119 +880,84 @@ class SongSearchView(generic.ListView):
 
 		return context
 
-class MovieListbyArtistView(generic.ListView):
+class SongTagSearchView(generic.ListView):
 	model = Movie
 	paginate_by = 15
-	template_name = 'moviedatabase/music/movielistbyartist.html'
+	template_name = 'moviedatabase/music/songtagsearch.html'
 
 	def get_queryset(self):
 		queryset = super().get_queryset()
 		queryset = Movie.objects.none()
-		artist = Artist.objects.get(pk=self.kwargs['artist'])
-		songs = Song.objects.filter(artist=artist)
-		for song in songs:
-			queryset |= Movie.objects.filter(song=song)
-			parts = Part.objects.filter(song=song)
-			for part in parts:
-				queryset |= Movie.objects.filter(pk=part.movie.pk)
+		word = self.request.GET.get('word')
+		if word:
+			songnews = SongNew.objects.filter(Q(tag__icontains=word)).order_by('song_name_kana')
 			
-		queryset = queryset.exclude(is_active=False).order_by('-published_at')
-		sort = self.kwargs['sort']
-		order = self.kwargs['order']
-		return moviequery(queryset, sort, order)
-
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-
-		artist = Artist.objects.get(pk=self.kwargs['artist'])
-		songs = Song.objects.filter(artist=artist)[:8]
-
-		context['artist'] = artist
-		context['songs'] = songs
-
-		context['sort'] = self.kwargs['sort']
-		context['order'] = self.kwargs['order']
-
-		return context
-
-class MovieListbySongView(generic.ListView):
-	model = Movie
-	paginate_by = 15
-	template_name = 'moviedatabase/music/movielistbysong.html'
-
-	def get_queryset(self):
-		queryset = super().get_queryset()
-		queryset = Movie.objects.none()
-		queryset |= Movie.objects.filter(song=self.kwargs['song'])
-		parts = Part.objects.filter(song=self.kwargs['song'])
-		for part in parts:
-			queryset |= Movie.objects.filter(pk=part.movie.pk)
-			
-		queryset = queryset.exclude(is_active=False).order_by('-published_at')
-		sort = self.kwargs['sort']
-		order = self.kwargs['order']
-		return moviequery(queryset, sort, order)
-
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-
-		song = Song.objects.get(pk=self.kwargs['song'])
+			for song in songnews:
+				queryset |= Movie.objects.filter(songnew=song)
+				parts = Part.objects.filter(songnew=song)
+				for part in parts:
+					queryset |= Movie.objects.filter(pk=part.movie.pk)
 		
-		context['song'] = song
-		context['artist'] = song.artist.all()
-
-		context['sort'] = self.kwargs['sort']
-		context['order'] = self.kwargs['order']
-
-		return context
-
-class MovieListbyVocalView(generic.ListView):
-	model = Movie
-	paginate_by = 15
-	template_name = 'moviedatabase/music/movielistbyvocal.html'
-
-	def get_queryset(self):
-		queryset = super().get_queryset()
-		queryset = Movie.objects.none()
-		queryset |= Movie.objects.filter(vocalnew=self.kwargs['vocal'])
-		parts = Part.objects.filter(vocalnew=self.kwargs['vocal'])
-		for part in parts:
-			queryset |= Movie.objects.filter(pk=part.movie.pk)
-			
-		queryset = queryset.exclude(is_active=False).order_by('-published_at')
-		sort = self.kwargs['sort']
-		order = self.kwargs['order']
+		queryset = queryset.exclude(is_active=False).order_by('-published_at').distinct()
+		sort = "pub"
+		order = "n"
 		return moviequery(queryset, sort, order)
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
-
-		vocal = VocalNew.objects.get(pk=self.kwargs['vocal'])
 		
-		context['vocal'] = vocal
-
-		context['sort'] = self.kwargs['sort']
-		context['order'] = self.kwargs['order']
+		word = self.request.GET.get('word')
+		context['word'] = word
 
 		return context
 
-class CreatorListView(generic.ListView):
+# class MovieListbyVocalView(generic.ListView):
+# 	model = Movie
+# 	paginate_by = 15
+# 	template_name = 'moviedatabase/music/movielistbyvocal.html'
+
+# 	def get_queryset(self):
+# 		queryset = super().get_queryset()
+# 		queryset = Movie.objects.none()
+# 		queryset |= Movie.objects.filter(vocalnew=self.kwargs['vocal'])
+# 		parts = Part.objects.filter(vocalnew=self.kwargs['vocal'])
+# 		for part in parts:
+# 			queryset |= Movie.objects.filter(pk=part.movie.pk)
+			
+# 		queryset = queryset.exclude(is_active=False).order_by('-published_at')
+# 		sort = self.request.GET.get('sort')
+# 		order = self.request.GET.get('order')
+# 		return moviequery(queryset, sort, order)
+
+# 	def get_context_data(self, **kwargs):
+# 		context = super().get_context_data(**kwargs)
+
+# 		vocal = VocalNew.objects.get(pk=self.kwargs['vocal'])
+		
+# 		context['vocal'] = vocal
+
+# 		context['sort'] = self.request.GET.get('sort')
+# 		context['order'] = self.request.GET.get('order')
+
+# 		return context
+
+class CreatorTopView(generic.ListView):
 	model = Creator
 	paginate_by = 200
 	template_name = 'moviedatabase/creator/creatorlist.html'
 
 	def get_queryset(self):
-		kana = self.kwargs['kana']
+		kana = self.request.GET.get('kana')
 		queryset = Creator.objects.all().order_by('name_kana')
-		if kana != "all":
+		if kana:
 			queryset = initial_query(queryset, kana)
 		return queryset
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 
-		kana = self.kwargs['kana']
-		if kana == "all":
+		kana = self.request.GET.get('kana')
+		if not kana:
 			kana = "すべて"
 		else:
 			kana = r2k(kana)
@@ -1017,8 +1010,8 @@ class MovieListbyCreatorView(generic.ListView):
 				queryset |= Movie.objects.filter(pk=part.movie.pk)
 			
 		queryset = queryset.exclude(is_active=False).order_by('-published_at')
-		sort = self.kwargs['sort']
-		order = self.kwargs['order']
+		sort = self.request.GET.get('sort')
+		order = self.request.GET.get('order')
 		return moviequery(queryset, sort, order)
 
 	def get_context_data(self, **kwargs):
@@ -1044,8 +1037,8 @@ class MovieListbyCreatorView(generic.ListView):
 		context['subtwitter'] = subtwitter
 		context['pagelink'] = pagelink
 
-		context['sort'] = self.kwargs['sort']
-		context['order'] = self.kwargs['order']
+		context['sort'] = self.request.GET.get('sort')
+		context['order'] = self.request.GET.get('order')
 
 		admin = self.request.user.groups.filter(name='admin').exists()
 
@@ -1067,8 +1060,8 @@ class MovieListbyNameView(generic.ListView):
 			queryset |= Movie.objects.filter(pk=part.movie.pk)
 			
 		queryset = queryset.exclude(is_active=False).order_by('-published_at')
-		sort = self.kwargs['sort']
-		order = self.kwargs['order']
+		sort = self.request.GET.get('sort')
+		order = self.request.GET.get('order')
 		return moviequery(queryset, sort, order)
 
 	def get_context_data(self, **kwargs):
@@ -1078,8 +1071,8 @@ class MovieListbyNameView(generic.ListView):
 
 		context['name'] = name
 
-		context['sort'] = self.kwargs['sort']
-		context['order'] = self.kwargs['order']
+		context['sort'] = self.request.GET.get('sort')
+		context['order'] = self.request.GET.get('order')
 
 		return context
 
@@ -1090,8 +1083,8 @@ class MovieListbyChannelView(generic.ListView):
 
 	def get_queryset(self):
 		queryset = Movie.objects.filter(channel=self.kwargs['channel_id']).exclude(is_active=False).order_by('-published_at')
-		sort = self.kwargs['sort']
-		order = self.kwargs['order']
+		sort = self.request.GET.get('sort')
+		order = self.request.GET.get('order')
 		return moviequery(queryset, sort, order)
 
 	def get_context_data(self, **kwargs):
@@ -1101,8 +1094,8 @@ class MovieListbyChannelView(generic.ListView):
 		
 		context['channel'] = channel
 
-		context['sort'] = self.kwargs['sort']
-		context['order'] = self.kwargs['order']
+		context['sort'] = self.request.GET.get('sort')
+		context['order'] = self.request.GET.get('order')
 
 		return context
 
@@ -1113,8 +1106,8 @@ class MovieListbyNiconicoView(generic.ListView):
 
 	def get_queryset(self):
 		queryset = Movie.objects.filter(niconico_account=self.kwargs['niconico_account']).exclude(is_active=False).order_by('-published_at')
-		sort = self.kwargs['sort']
-		order = self.kwargs['order']
+		sort = self.request.GET.get('sort')
+		order = self.request.GET.get('order')
 		return moviequery(queryset, sort, order)
 
 	def get_context_data(self, **kwargs):
@@ -1124,8 +1117,8 @@ class MovieListbyNiconicoView(generic.ListView):
 		
 		context['niconico'] = niconico
 
-		context['sort'] = self.kwargs['sort']
-		context['order'] = self.kwargs['order']
+		context['sort'] = self.request.GET.get('sort')
+		context['order'] = self.request.GET.get('order')
 
 		return context
 

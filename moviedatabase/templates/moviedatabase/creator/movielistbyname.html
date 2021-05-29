@@ -34,7 +34,7 @@
 				{% if name.creator %}
 				<h4 class="side-header creator-border">作者</h4>
 				<li class="side-list-li">
-					<a href="{% url 'moviedatabase:movielistbycreator' name.creator.pk sort order %}" class="creator-color">{{ name.creator }}</a>
+					<a href="{% url 'moviedatabase:movielistbycreator' name.creator.pk %}" class="creator-color">{{ name.creator }}</a>
 				</li>
 				{% endif %}
 			</div>

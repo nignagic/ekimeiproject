@@ -38,6 +38,13 @@
 						<button class="search-button" type="submit"><i class="fas fa-search"></i></button>
 					</form>
 				</div>
+				<h4 class="object-list-header song-border">楽曲タグ</h4>
+				<div class="search-container">
+					<form action="{% url 'moviedatabase:songtagsearch' %}" method="get" class="search-form">
+						<input type="textbox" name="word" class="search-box" value="{{ word }}">
+						<button class="search-button" type="submit"><i class="fas fa-search"></i></button>
+					</form>
+				</div>
 			</div>
 			<div class="detail-side">
 			</div>

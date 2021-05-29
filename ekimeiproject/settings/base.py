@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'social_django',
     'rest_framework',
+    'maintenance_mode',
     'user',
     'stationdata',
     'songdata',
@@ -45,6 +46,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'maintenance_mode.middleware.MaintenanceModeMiddleware',
 ]
 
 ROOT_URLCONF = 'ekimeiproject.urls'
@@ -52,7 +54,7 @@ ROOT_URLCONF = 'ekimeiproject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,3 +123,5 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 100000000
 LOGIN_URL = 'moviedatabase:login'
 LOGIN_REDIRECT_URL = 'moviedatabase:top'
 
+MAINTENANCE_MODE_IGNORE_ADMIN_SITE = True #adminページ使用可
+MAINTENANCE_MODE_IGNORE_SUPERUSER = True  #スーパユーザは通常ページ使用可

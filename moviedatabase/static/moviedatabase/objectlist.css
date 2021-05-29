@@ -155,6 +155,20 @@ a.initial-button:hover {
 		margin-bottom: 2rem;
 	}
 
+	.object-list-header {
+		font-size: 1.1rem;
+		margin: 0 0 0.5rem 0;
+		padding: 0.1rem 0.5rem;
+	}
+
+	.object-dict-inner-li {
+		padding: 0.8rem;
+	}
+
+	.object-list-li a {
+		font-size: 0.9rem;
+	}
+
 	.detail-side {
 		width: 100%;
 	}
