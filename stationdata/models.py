@@ -31,6 +31,8 @@ class Company(models.Model):
 	color = models.CharField('会社カラー', max_length=100, null=True, blank=True)
 	category = models.ForeignKey(CompanyCategory, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='事業者区分')
 	sort_by_category = models.IntegerField('区分ごとの並び順', default=0)
+
+	other_option = models.BooleanField('その他の選択肢', default=False)
 	def __str__(self):
 		return self.name
 

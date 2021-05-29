@@ -24,8 +24,15 @@ import datetime
 
 # Create your views here.
 
-def categorytest(request):
-	categories = MovieCategory.objects.all()
+def test(request):
+	categories = MovieCategory.objects.exclude(name="駅名記憶").exclude(name="駅名替え歌")
+	for c in categories:
+		parts = Part.objects.filter(category=c)
+		for p in parts:
+			p.category = MovieCategory.objects.get(name="駅名記憶")
+			p.save()
+
+	categories = MovieCategory.objects.exclude(name="駅名記憶").exclude(name="駅名替え歌")
 	movie = {}
 	for c in categories:
 		parts = Part.objects.filter(category=c)
@@ -40,129 +47,6 @@ def categorytest(request):
 	}
 
 	return render(request, 'moviedatabase/test.html', context)
-
-def test(request):
-	categories = BelongsCategory.objects.exclude(name="鉄道")
-	movie = {}
-	for c in categories:
-		stationservices = StationService.objects.filter(line_service__category=c)
-		for s in stationservices:
-			stationinmovies = StationInMovie.objects.filter(station_service=s)
-			m = Movie.objects.none()
-			for sim in stationinmovies:
-				if (sim.part.movie):
-					m |= Movie.objects.filter(pk=sim.part.movie.pk)
-			movie[s.name + " " + str(s.pk)] = m
-
-
-	stationservices = StationService.objects.filter(id__gt=22636)
-	movie2 = {}
-	for s in stationservices:
-		stationinmovies = StationInMovie.objects.filter(station_service=s)
-		m = Movie.objects.none()
-		for sim in stationinmovies:
-			if (sim.part.movie):
-				m |= Movie.objects.filter(pk=sim.part.movie.pk)
-		movie2[s.name + str(s.pk)] = m
-
-	parts = Part.objects.exclude(explanation="")
-
-
-	context = {
-		'movie': movie,
-		'movie2': movie2,
-		'parts': parts
-	}
-
-	return render(request, 'moviedatabase/test.html', context)
-
-def songupdate(request):
-	movies = Movie.objects.all()
-	for m in movies:
-		songs = m.song.all()
-		for song in songs:
-			song_name = song.name
-			if (song.description):
-				song_name += "(" + song.description + ")"
-			song_name_kana = song.name_kana
-
-			artist_name = ""
-			artist_name_kana = ""
-			i = 0
-			artists = song.artist.all()
-			for artist in artists:
-				if artist.name:
-					artist_name += artist.name
-				if artist.name_kana:
-					artist_name_kana += artist.name_kana
-				if (artist.cv):
-					if artist.cv.name:
-						artist_name += "(" + artist.cv.name + ")"
-					if artist.cv.name_kana:
-						artist_name_kana += "(" + artist.cv.name_kana + ")"
-				if (i != artists.count() - 1):
-					artist_name += "\n"
-					artist_name_kana += "\n"
-				i = i + 1
-			tag = song.tieup
-
-			songnew = SongNew(
-				song_name=song_name,
-				song_name_kana=song_name_kana,
-				artist_name=artist_name,
-				artist_name_kana=artist_name_kana,
-				tag=tag
-			)
-			songnew.save()
-			m.songnew.add(songnew)
-
-	parts = Part.objects.all()
-	for m in parts:
-		songs = m.song.all()
-		for song in songs:
-			song_name = song.name
-			if (song.description):
-				song_name += "(" + song.description + ")"
-			song_name_kana = song.name_kana
-
-			artist_name = ""
-			artist_name_kana = ""
-			i = 0
-			artists = song.artist.all()
-			for artist in artists:
-				if artist.name:
-					artist_name += artist.name
-				if artist.name_kana:
-					artist_name_kana += artist.name_kana
-				if (artist.cv):
-					if artist.cv.name:
-						artist_name += "(" + artist.cv.name + ")"
-					if artist.cv.name_kana:
-						artist_name_kana += "(" + artist.cv.name_kana + ")"
-				if (i != artists.count() - 1):
-					artist_name += "\n"
-					artist_name_kana += "\n"
-				i = i + 1
-			tag = song.tieup
-
-			songnew = SongNew(
-				song_name=song_name,
-				song_name_kana=song_name_kana,
-				artist_name=artist_name,
-				artist_name_kana=artist_name_kana,
-				tag=tag
-			)
-			songnew.save()
-			m.songnew.add(songnew)
-
-	Song.objects.all().delete()
-
-	context = {
-		'songnews': SongNew.objects.all()
-	}
-
-	return render(request, 'moviedatabase/songupdate.html', context)
-
 
 def todaymovie():
 	JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')

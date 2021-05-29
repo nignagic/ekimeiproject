@@ -106,13 +106,13 @@ $(function() {
 				j = 1;
 				color_view = true;
 				for (var i in data) {
-					line = data[i].category == 'other_option' ? beforeline : data[i].line_service_pk;
+					line = data[i].other_option ? beforeline : data[i].line_service_pk;
 					station_text = data[i].sung_name;
 					if (data[j] != undefined) {
 						if (data[j+1] != undefined) {
-							afterline = data[j].category == 'other_option' ? data[j+1].line_service_pk : data[j].line_service_pk;
+							afterline = data[j].other_option ? data[j+1].line_service_pk : data[j].line_service_pk;
 						} else {
-							afterline = data[j].category == 'other_option' ? undefined : data[j].line_service_pk;
+							afterline = data[j].other_option ? undefined : data[j].line_service_pk;
 						}
 						afterback = data[j].back_rel;
 					} else {

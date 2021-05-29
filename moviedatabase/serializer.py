@@ -36,9 +36,10 @@ class StationInMovieSerializer(serializers.ModelSerializer):
 	get_color = serializers.CharField(source='station_service.get_color')
 	is_representative = serializers.BooleanField(source='station_service.is_representative')
 	category = serializers.CharField(source='station_service.line_service.category.icon')
+	other_option = serializers.BooleanField(source='station_service.line_service.company.other_option')
 	class Meta:
 		model = StationInMovie
-		fields = ['station_service_name', 'sung_name', 'station_service_pk', 'get_group_station', 'line_service_pk', 'line_service_name', 'pref', 'get_color', 'back_rel', 'is_representative', 'category']
+		fields = ['station_service_name', 'sung_name', 'station_service_pk', 'get_group_station', 'line_service_pk', 'line_service_name', 'pref', 'get_color', 'back_rel', 'is_representative', 'category', 'other_option']
 
 class MovieSerializer(serializers.ModelSerializer):
 	movie_pk = serializers.IntegerField(source='id')

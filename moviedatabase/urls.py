@@ -12,7 +12,6 @@ urlpatterns = [
 	path('terms/', views.Terms, name='terms'),
 	path('privacy/', views.Privacy, name='privacy'),
 	path('test/', views.test, name='test'),
-	path('songupdate/', views.songupdate, name='songupdate'),
 
 	path('search/', views.FreeSearchView, name='freesearch'),
 
