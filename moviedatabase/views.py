@@ -77,83 +77,83 @@ def test(request):
 	return render(request, 'moviedatabase/test.html', context)
 
 def songupdate(request):
-	# movies = Movie.objects.all()
-	# for m in movies:
-	# 	songs = m.song.all()
-	# 	for song in songs:
-	# 		song_name = song.name
-	# 		if (song.description):
-	# 			song_name += "(" + song.description + ")"
-	# 		song_name_kana = song.name_kana
+	movies = Movie.objects.all()
+	for m in movies:
+		songs = m.song.all()
+		for song in songs:
+			song_name = song.name
+			if (song.description):
+				song_name += "(" + song.description + ")"
+			song_name_kana = song.name_kana
 
-	# 		artist_name = ""
-	# 		artist_name_kana = ""
-	# 		i = 0
-	# 		artists = song.artist.all()
-	# 		for artist in artists:
-	# 			if artist.name:
-	# 				artist_name += artist.name
-	# 			if artist.name_kana:
-	# 				artist_name_kana += artist.name_kana
-	# 			if (artist.cv):
-	# 				if artist.cv.name:
-	# 					artist_name += "(" + artist.cv.name + ")"
-	# 				if artist.cv.name_kana:
-	# 					artist_name_kana += "(" + artist.cv.name_kana + ")"
-	# 			if (i != artists.count() - 1):
-	# 				artist_name += "\n"
-	# 				artist_name_kana += "\n"
-	# 			i = i + 1
-	# 		tag = song.tieup
+			artist_name = ""
+			artist_name_kana = ""
+			i = 0
+			artists = song.artist.all()
+			for artist in artists:
+				if artist.name:
+					artist_name += artist.name
+				if artist.name_kana:
+					artist_name_kana += artist.name_kana
+				if (artist.cv):
+					if artist.cv.name:
+						artist_name += "(" + artist.cv.name + ")"
+					if artist.cv.name_kana:
+						artist_name_kana += "(" + artist.cv.name_kana + ")"
+				if (i != artists.count() - 1):
+					artist_name += "\n"
+					artist_name_kana += "\n"
+				i = i + 1
+			tag = song.tieup
 
-	# 		songnew = SongNew(
-	# 			song_name=song_name,
-	# 			song_name_kana=song_name_kana,
-	# 			artist_name=artist_name,
-	# 			artist_name_kana=artist_name_kana,
-	# 			tag=tag
-	# 		)
-	# 		songnew.save()
-	# 		m.songnew.add(songnew)
+			songnew = SongNew(
+				song_name=song_name,
+				song_name_kana=song_name_kana,
+				artist_name=artist_name,
+				artist_name_kana=artist_name_kana,
+				tag=tag
+			)
+			songnew.save()
+			m.songnew.add(songnew)
 
-	# parts = Part.objects.all()
-	# for m in parts:
-	# 	songs = m.song.all()
-	# 	for song in songs:
-	# 		song_name = song.name
-	# 		if (song.description):
-	# 			song_name += "(" + song.description + ")"
-	# 		song_name_kana = song.name_kana
+	parts = Part.objects.all()
+	for m in parts:
+		songs = m.song.all()
+		for song in songs:
+			song_name = song.name
+			if (song.description):
+				song_name += "(" + song.description + ")"
+			song_name_kana = song.name_kana
 
-	# 		artist_name = ""
-	# 		artist_name_kana = ""
-	# 		i = 0
-	# 		artists = song.artist.all()
-	# 		for artist in artists:
-	# 			if artist.name:
-	# 				artist_name += artist.name
-	# 			if artist.name_kana:
-	# 				artist_name_kana += artist.name_kana
-	# 			if (artist.cv):
-	# 				if artist.cv.name:
-	# 					artist_name += "(" + artist.cv.name + ")"
-	# 				if artist.cv.name_kana:
-	# 					artist_name_kana += "(" + artist.cv.name_kana + ")"
-	# 			if (i != artists.count() - 1):
-	# 				artist_name += "\n"
-	# 				artist_name_kana += "\n"
-	# 			i = i + 1
-	# 		tag = song.tieup
+			artist_name = ""
+			artist_name_kana = ""
+			i = 0
+			artists = song.artist.all()
+			for artist in artists:
+				if artist.name:
+					artist_name += artist.name
+				if artist.name_kana:
+					artist_name_kana += artist.name_kana
+				if (artist.cv):
+					if artist.cv.name:
+						artist_name += "(" + artist.cv.name + ")"
+					if artist.cv.name_kana:
+						artist_name_kana += "(" + artist.cv.name_kana + ")"
+				if (i != artists.count() - 1):
+					artist_name += "\n"
+					artist_name_kana += "\n"
+				i = i + 1
+			tag = song.tieup
 
-	# 		songnew = SongNew(
-	# 			song_name=song_name,
-	# 			song_name_kana=song_name_kana,
-	# 			artist_name=artist_name,
-	# 			artist_name_kana=artist_name_kana,
-	# 			tag=tag
-	# 		)
-	# 		songnew.save()
-	# 		m.songnew.add(songnew)
+			songnew = SongNew(
+				song_name=song_name,
+				song_name_kana=song_name_kana,
+				artist_name=artist_name,
+				artist_name_kana=artist_name_kana,
+				tag=tag
+			)
+			songnew.save()
+			m.songnew.add(songnew)
 
 	Song.objects.all().delete()
 
