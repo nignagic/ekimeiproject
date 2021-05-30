@@ -1,0 +1,26 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}アカウント・作者紐づけ申請{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/login.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="login-main-container">
+		<h2 class="login-header">アカウント・作者紐づけ申請</h2>
+		<div class="login-box">
+			ユーザー<span class="railway-color">「{{ user.get_full_name }} ({{ user.username }})」</span>と、<span class="creator-color">{{ creator }}</span>の紐づけ申請を送信します。
+			<p class="login-p">申請から3日以内に、本人確認のため本人宛（参入申請で登録したTwitterアカウントのDMまたはメールアドレス）に確認の連絡を送信します。この連絡への確認をもって、申請を受理します。</p>
+			<form method="post">
+				{% csrf_token %}
+				<div class="login-border"></div>
+				<div class="button-container">
+					<button type="submit">申請</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	{% include 'moviedatabase/includes/footer.html' %}
+</div>
+{% endblock %}

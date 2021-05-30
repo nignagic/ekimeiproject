@@ -95,7 +95,7 @@
 			</section>
 			<section class="list-container">
 				<div class="artist-list">
-					<h4 class="content-header station-border">歌唱駅名に {{ word }} を含む動画 <small>[{{ acount }}件]</small></h4>
+					<h4 class="content-header station-border">歌唱駅名に {{ word }} を含む動画 <small>[{{ sncount }}件]</small></h4>
 
 <ul class="movie-ul">
 	{% if movies_sungname %}
@@ -122,7 +122,7 @@
 
 				</div>
 				<div class="song-list">
-					<h4 class="content-header song-border">楽曲タグに {{ word }} を含む動画 <small>[{{ songcount }}件]</small></h4>
+					<h4 class="content-header song-border">楽曲タグに {{ word }} を含む動画 <small>[{{ tcount }}件]</small></h4>
 <ul class="movie-ul">
 	{% if movies_songtag %}
 	{% for movie in movies_songtag %}

@@ -16,14 +16,12 @@ urlpatterns = [
 	path('search/', views.FreeSearchView, name='freesearch'),
 
 	path('railway/', views.RailwayTopView.as_view(), name='railwaytop'),
-	path('railway/category/', views.BelongsCategoryListView.as_view(), name='categorylist'),
-	# path('railway/country/<int:country>/', views.LineServiceListbyCountryView.as_view(), name='lineservicelistbycountry'),
-	path('railway/region/<int:region>/category/<slug:category>', views.CompanyListbyRegionView.as_view(), name='companylistbyregion'),
+	path('railway/belongs_category/<int:category>/', views.MovieListbyBelongsCategoryView.as_view(), name='movielistbybelongscategory'),
+	path('railway/movie_category/<int:category>/', views.MovieListbyMovieCategoryView.as_view(), name='movielistbymoviecategory'),
+	path('railway/region/<int:region>/', views.CompanyListbyRegionView.as_view(), name='companylistbyregion'),
 	path('railway/pref/<int:pref>/line/', views.LineServiceListbyPrefectureView.as_view(), name='lineservicelistbyprefecture'),
 	path('railway/company/<int:company>/line/', views.LineServiceListbyCompanyView.as_view(), name='lineservicelistbycompany'),
 	path('railway/company/<int:company>/pref/<int:pref>/line/', views.LineServiceListbyCompanyandPrefectureView.as_view(), name='lineservicelistbycompanyandprefecture'),
-	# path('railway/category/<int:category>/line/', views.LineServiceListbyCategoryView.as_view(), name='lineservicelistbycategory'),
-	# path('railway/category/<int:category>/pref/<int:pref>/line/', views.LineServiceListbyCategoryandPrefectureView.as_view(), name='lineservicelistbycategoryandprefecture'),
 	path('railway/search/line/', views.LineServiceSearchView.as_view(), name='lineservicesearch'),
 	path('railway/search/station/', views.StationServiceSearchView.as_view(), name='stationservicesearch'),
 
@@ -60,6 +58,9 @@ urlpatterns = [
 
 	path('updateinformation/<slug:main_id>/', views.UpdateInformation, name='updateinformation'),
 	path('updateinformationforuser/<int:creator>/', views.UpdateInformationforCreator, name='updateinformationforcreator'),
+
+	path('application/account_and_creator/', views.AccountAndCreatorApplicationView, name='accountandcreatorapplication'),
+	path('application/account_and_creator/confirm/<int:creator>/', views.AccountAndCreatorApplicationConfirmView, name='accountandcreatorapplicationconfirm'),
 
 	url('^api/lineservice/(?P<line_service>.+)/stationservice/', views.StationServicebyLineServiceViewSet.as_view(), name='stationservicebylineserviceapi'),
 	url('^api/pref/(?P<pref>.+)/lineservice/', views.LineServicebyPrefectureViewSet.as_view(), name='lineservicebyprefectureapi'),

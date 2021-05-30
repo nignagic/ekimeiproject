@@ -159,6 +159,14 @@
 }
 
 @media (max-width: 768px) {
+	.list-container {
+		display: block;
+	}
+
+	.list-container>div {
+		width: 100%;
+	}
+	
 	.top-movie-list {
 		padding: 1rem;
 		width: 100%;

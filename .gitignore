@@ -5,3 +5,4 @@ db.sqlite3
 *.py[co]
 backup_db_local.py
 *.env
+maintenance_mode_state.txt

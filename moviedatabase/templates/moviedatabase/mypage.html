@@ -23,9 +23,11 @@
 				<th>作者情報</th>
 				<td>
 					{% if user.creator %}
-						<a href="{% url 'moviedatabase:movielistbycreator' user.creator.pk 'pub' 'n' %}">{{ user.creator.name }}</a>
+						<a href="{% url 'moviedatabase:movielistbycreator' user.creator.pk %}">{{ user.creator.name }}</a>
+					{% elif user.creator_applied %}
+						申請済み
 					{% else %}
-						登録なし
+						登録なし <a href="{% url 'moviedatabase:accountandcreatorapplication' %}">＜申請はこちら＞</a>
 					{% endif %}
 				</td>
 			</tr>
@@ -35,7 +37,7 @@
 					{% if user.all_can_edit_channel.all %}
 						<ul class="channel-list">
 							{% for c in user.all_can_edit_channel.all %}
-								<li class="weight-normal"><a href="{% url 'moviedatabase:movielistbychannel' c.pk 'pub' 'n' %}">{{ c.name }}</a></li>
+								<li class="weight-normal"><a href="{% url 'moviedatabase:movielistbychannel' c.pk %}">{{ c.name }}</a></li>
 							{% endfor %}
 						</ul>
 					{% else %}

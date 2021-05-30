@@ -229,3 +229,18 @@ class UpdateHistory(models.Model):
 			return self.movie.title + " - " + n + c
 		else:
 			return "info"
+
+class AccountAndCreatorApplication(models.Model):
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='編集者')
+	creator = models.ForeignKey(Creator, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='作者')
+	reg_date = models.DateTimeField('登録・更新日時', blank=True)
+	class meta:
+		ordering = ['-reg_date']
+
+	def __str__(self):
+		n = ""
+		if self.user:
+			n += self.user.username
+		if self.creator:
+			n += " " + self.creator.name
+		return n

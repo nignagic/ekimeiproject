@@ -102,6 +102,11 @@
 				<div class="detail-content">
 					{{ form.explanation }}
 				</div>
+				<h3 class="detail-header">動画の状態</h3>
+				<div class="detail-content">
+					{{ form.is_active }} 有効
+					<p class="active-notice"><span>YouTubeで一般的に公開されている動画は原則有効としてください。</span>無効にすると、データベースの検索対象から外れ、非公開となります。動画をYouTube上で削除・非公開にした場合や、合作等で参加者全員がデータベースの登録対象となっていない時など、やむを得ない場合に無効にしてください。</p>
+				</div>
 				<h3 class="movie-detail-header">概要</h3>
 				<div class="detail-content movie-description">
 					{{ movie.description | urlize | linebreaksbr }}

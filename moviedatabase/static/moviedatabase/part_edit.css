@@ -146,6 +146,16 @@ ul, li {
 	padding: 0 0 1.0rem 1.0rem;
 }
 
+.active-notice {
+	font-size: 0.75rem;
+	font-weight: normal;
+	padding-left: 1rem;
+}
+
+.active-notice span {
+	color: #cc0000;
+}
+
 #selected_song_in_movie_name p,
 #selected_parent_movie_name p,
 #selected_related_movie_name p {

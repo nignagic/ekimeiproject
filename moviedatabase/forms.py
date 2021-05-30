@@ -104,7 +104,7 @@ class MovieRegisterForm(forms.ModelForm):
 class MovieUpdateForm(forms.ModelForm):
 	class Meta:
 		model = Movie
-		fields = ('title', 'channel', 'main_id', 'youtube_id', 'niconico_id', 'published_at', 'duration', 'n_view', 'n_like', 'n_dislike', 'n_dislike', 'n_comment', 'description', 'reg_date', 'songnew', 'is_collab', 'parent', 'related', 'explanation')
+		fields = ('title', 'channel', 'main_id', 'youtube_id', 'niconico_id', 'published_at', 'duration', 'n_view', 'n_like', 'n_dislike', 'n_dislike', 'n_comment', 'description', 'reg_date', 'songnew', 'is_collab', 'parent', 'related', 'explanation', 'is_active')
 		widgets = {
 			'title': forms.HiddenInput(attrs={
 				'class': 'title',

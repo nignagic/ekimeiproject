@@ -50,7 +50,7 @@
 				{% for region in regions %}
 					<li class="object-dict-outer-li">
 						<h5 class="object-dict-header">
-							<a href="{% url 'moviedatabase:companylistbyregion' region.pk 'all' %}">{{ region }}</a>
+							<a href="{% url 'moviedatabase:companylistbyregion' region.pk %}">{{ region }}</a>
 						</h5>
 						<ul class="object-dict-inner">
 							{% for pref in region.prefecture_set.all %}
@@ -64,15 +64,22 @@
 				</ul>
 			</div>
 			<div class="detail-side">
-				<h4 class="side-header railway-border">カテゴリー</h4>
+				<h4 class="side-header railway-border">歌唱名カテゴリー</h4>
 				<ul class="side-list-ul">
-					{% for c in categories %}
+					{% for c in belongscategories %}
 					<li class="side-list-li">
-						<a href="" class="railway-color">{{ c }}</a>
+						<a href="{% url 'moviedatabase:movielistbybelongscategory' c.pk %}" class="railway-color">{{ c }}</a>
 					</li>
 					{% endfor %}
 				</ul>
-				<div style="text-align: right;"><a href="{% url 'moviedatabase:categorylist' %}" class="side-right-a railway-background railway-color railway-border">＞ すべて見る</a></div>
+				<h4 class="side-header movie-border">動画カテゴリー</h4>
+				<ul class="side-list-ul">
+					{% for c in moviecategories %}
+					<li class="side-list-li">
+						<a href="{% url 'moviedatabase:movielistbymoviecategory' c.pk %}" class="movie-color">{{ c }}</a>
+					</li>
+					{% endfor %}
+				</ul>
 			</div>
 		</div>
 	</div>

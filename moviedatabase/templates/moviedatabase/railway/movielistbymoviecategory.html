@@ -1,0 +1,46 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}{{ category }}{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="detail-header">
+		<div class="detail-header-content">
+			<span class="detail-category movie-background">動画カテゴリー</span>
+			<div class="detail-name">{{ category }}</div>
+			<div class="detail-name-sub">
+			</div>
+			<div class="sub-name">
+			</div>
+			<div class="under-color movie-background">
+			</div>
+			<div class="line-bottom">
+			</div>
+		</div>
+	</div>
+
+	<div class="main-content">
+		<div class="main-content-inner">
+			<div class="detail-movie-list">
+				<h4 class="movie-list-header name-border">動画一覧</h4>
+				{% include 'moviedatabase/includes/movielist.html' %}
+				{% include 'moviedatabase/includes/pagination.html' %}
+			</div>
+			<div class="detail-side">
+				<h4 class="side-header movie-border">カテゴリー</h4>
+				<ul class="side-list-ul">
+					{% for c in categories %}
+					<li class="side-list-li">
+						<a href="{% url 'moviedatabase:movielistbymoviecategory' c.pk %}" class="movie-color">{{ c }}</a>
+					</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+	{% include 'moviedatabase/includes/footer.html' %}
+</div>
+{% endblock %}

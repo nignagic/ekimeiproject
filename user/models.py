@@ -80,6 +80,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     can_edit_creator = models.ManyToManyField(YoutubeChannel, blank=True, verbose_name='編集可能YouTubeチャンネル')
     can_edit_all_channel = models.BooleanField(default=False)
 
+    creator_applied = models.BooleanField('作者情報申請済み', default=False)
+
     objects = UserManager()
 
     EMAIL_FIELD = 'email'
