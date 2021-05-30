@@ -12,43 +12,53 @@
 			{% include 'moviedatabase/includes/movie_edit_base.html' %}
 			<div class="movie-part-list">
 				{% if partcount != 0 %}
-					<div class="part-container">
 					{% for part in parts %}
-						<div class="part-header" {% if onlyonepart %}style="display: none;"{% endif %}>
-							<div class="part-name-short"><span>{% if part.short_name %}{{ part.short_name }}{% endif %}</span></div>
-							<div class="part-name">
-								<table>
-									<tr>
-										<td>{{ part.name }}</td>
-									</tr>
-									<tr>
-										<td>
-											{% if part.participant.all %}
-												{% for participant in part.participant.all %}
-													{{ participant }}
-													{% if forloop.last %}
-													{% else %}
-														<span>/</span>
-													{% endif %}
-												{% endfor %}
-												{% endif %}
-											{% if part.song.all %}
-											 - 
-												{% for song in part.song.all %}
-													{{ song }}
-													{% if forloop.last %}
-													{% else %}
-														<span>/</span>
-													{% endif %}
-												{% endfor %}
-											{% endif %}
-										</td>
-									</tr>
-								</table>
+					<div class="part-container">
+						<div class="simple-part-header" {% if onlyonepart %}style="display: none;"{% endif %}>
+							<div class="simple-part-name-short">
+								<span>
+								{% if part.short_name %}
+									{{ part.short_name }}
+								{% endif %}
+								</span>
 							</div>
+							<table class="simple-part-table" data-part_id="{{ part.id }}" data-category="{{ part.category }}">
+								<tr>
+									<td class="part-header-up">
+										{% if part.name %}
+											{{ part.name }}
+										{% else %}
+										　
+										{% endif %}
+									</td>
+								</tr>
+								<tr class="row-2">
+									<td>
+										{% if part.participant.all %}
+											{% for participant in part.participant.all %}
+												{{ participant }}
+												{% if forloop.last %}
+												{% else %}
+													<span>/</span>
+												{% endif %}
+											{% endfor %}
+											{% endif %}
+										{% if part.songnew.all %}
+										 - 
+											{% for song in part.songnew.all %}
+												{{ song }}
+												{% if forloop.last %}
+												{% else %}
+													<span>/</span>
+												{% endif %}
+											{% endfor %}
+										{% endif %}
+									</td>
+								</tr>
+							</table>
 						</div>
-					{% endfor %}
 					</div>
+					{% endfor %}
 				{% endif %}
 			</div>
 		</div>

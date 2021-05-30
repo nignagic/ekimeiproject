@@ -1,11 +1,36 @@
 {% extends 'moviedatabase/base.html' %}
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/setting.css' %}">
 	<form action="" method="POST">
-		<table>
-			{{ form.as_table }}
-		</table>
-		{% csrf_token %}
-		<button type="submit">送信</button>
+		<div class="background">
+			<table class="name-table">
+				<tr>
+					<th></th>
+					<th>名称</th>
+				</tr>
+				<tr>
+					<th class="right">名義</th>
+					<td>{{ form.name }}</td>
+				</tr>
+				<tr>
+					<th class="right">
+						作者</span>
+					</th>
+					<td>{{ form.creator }}</td>
+				</tr>
+			</table>
+			{% csrf_token %}
+			<div class="submit-banner">
+				<div class="submit-banner-inner">
+					<div class="submit-content">
+						<div class="submit-form-status">
+						</div>
+						<button onclick="submit();" class="submit-button">登録</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	</form>
 {% endblock %}
 {% block extrajs %}

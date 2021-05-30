@@ -159,7 +159,8 @@
 				data_append();
 			};
 		}).fail(function() {
-			console.log("Error!");
+			text = "情報取得に失敗しました。URLに間違いがない場合は、不具合の可能性があります。運営に問い合わせてください。"
+			$('.register-form-status').append("<p>" + text + "</p>")
 			return false;
 		}).always(function() {
 		});

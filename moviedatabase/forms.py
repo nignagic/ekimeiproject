@@ -204,7 +204,7 @@ PartEditFormset = forms.inlineformset_factory(
 class PartEditForm(forms.ModelForm):
 	class Meta:
 		model = Part
-		fields = ('name', 'movie', 'participant', 'category', 'start_time', 'songnew', 'vocalnew', 'explanation')
+		fields = ('name', 'movie', 'participant', 'category', 'start_time', 'songnew', 'vocalnew', 'explanation', 'incomplete')
 		widgets = {
 			'name': forms.TextInput(attrs={
 				'class': 'name',

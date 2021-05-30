@@ -58,6 +58,16 @@ input, select {
 	flex-direction: column;
 }
 
+.add_button {
+	display: inline-block;
+	color: #fff;
+	padding: 0.2rem 0.4rem;
+}
+
+.add_button:hover {
+	background-color: #ccc;
+}
+
 .creator_name_container,
 .channel_movie_container,
 .artist_song_container,
@@ -138,6 +148,41 @@ option {
     padding: 2px;
     border-radius: 4px;
     cursor: pointer;
+}
+
+.song-table,
+.name-table {
+	padding: 1rem;
+}
+
+.song-table td,
+.song-table th {
+	padding: 0.4rem;
+}
+
+.name-table td,
+.name-table th {
+	padding: 1rem;
+}
+
+.song-table td,
+.name-table td {
+	background-color: #f7f7f7;
+}
+
+.right {
+	text-align: right;
+}
+
+.song-table input[type='text'],
+.song-table textarea,
+.name-table select {
+	width: 16rem;
+}
+
+.form-notice {
+	font-size: 0.8rem;
+	font-weight: normal;
 }
 
 /*送信ボタン*/

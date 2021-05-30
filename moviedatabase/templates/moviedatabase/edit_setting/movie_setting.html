@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{% static 'moviedatabase/setting.css' %}">
 	<form action="" method="POST">
 		<div class="background">
-			<div class="channel_movie_container" style="display: flex;">
+			<div class="channel_movie_container" style="display: flex; height: 50%;">
 				<div class="channel">
 					<h3>チャンネル一覧</h3>
 					<select name="channel" id="id_channel" size="18">
@@ -23,8 +23,10 @@
 						{% endfor %}
 					</select>
 				</div>
+			</div>
+			<div class="channel_movie_container" style="display: flex; height:50%;">
 				<div id="selected-movie-container">
-					<h3>選択済みリスト</h3>
+					<h3>選択済みリスト[{% if movie_type == "parent" %}親作品{% else %}関連作品{% endif %}]</h3>
 					<div id="selected-movie-div-list">
 					</div>
 				</div>

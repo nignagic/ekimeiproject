@@ -52,7 +52,9 @@ class Top(generic.ListView):
 		movies = Movie.objects.all().order_by('-published_at')[:6]
 		update_list = MovieUpdateInformation.objects.all()
 		notice_list = NoticeInformation.objects.all()
+		top_img = TopImage.objects.all().order_by("?")[0]
 		context = {
+			'top_img': top_img,
 			'movie_list': movies,
 			'todaymovie': todaymovie().order_by("?")[0],
 			'today': timezone.now(),
@@ -293,18 +295,11 @@ class CompanyListbyRegionView(generic.ListView):
 		queryset = Company.objects.none()
 		region = Region.objects.get(pk=self.kwargs['region'])
 		prefs = Prefecture.objects.filter(region=region)
-
-		if self.kwargs['category'] != "all":
-			category = BelongsCategory.objects.get(pk=self.kwargs['category'])
-			for pref in prefs:
-				lineservices = LineService.objects.filter(prefs=pref).filter(category=category)
-				for lineservice in lineservices:
-					queryset |= Company.objects.filter(pk=lineservice.company.pk)
-		else:
-			for pref in prefs:
-				lineservices = LineService.objects.filter(prefs=pref)
-				for lineservice in lineservices:
-					queryset |= Company.objects.filter(pk=lineservice.company.pk)
+	
+		for pref in prefs:
+			lineservices = LineService.objects.filter(prefs=pref)
+			for lineservice in lineservices:
+				queryset |= Company.objects.filter(pk=lineservice.company.pk)
 
 		return queryset
 
@@ -316,12 +311,6 @@ class CompanyListbyRegionView(generic.ListView):
 
 		context['region'] = region
 		context['prefs'] = prefs
-		if self.kwargs['category'] == "all":
-			context['category'] = "すべて"
-		else:
-			context['category'] = BelongsCategory.objects.get(pk=self.kwargs['category'])
-		context['categories'] = BelongsCategory.objects.all()[:20]
-
 		return context
 
 class LineServiceListbyPrefectureView(generic.ListView):
@@ -1244,6 +1233,7 @@ class NameCreate(PermissionRequiredMixin, generic.CreateView):
 	model = Name
 	fields = '__all__'
 	permission_required = ('moviedatabase.add_name')
+	template_name = "moviedatabase/edit_setting/name_form.html"
 	success_url = reverse_lazy('moviedatabase:top')
 
 class PopupNameCreate(NameCreate):
@@ -1254,7 +1244,7 @@ class PopupNameCreate(NameCreate):
 			'object_pk': name.pk,
 			'function_name': 'add_name'
 		}
-		return render(self.request, 'moviedatabase/close_name.html', context)
+		return render(self.request, 'moviedatabase/edit_setting/close_name.html', context)
 
 
 @permission_required('moviedatabase.add_movie')
@@ -1264,7 +1254,7 @@ def popup_parent_movie_setting(request):
 			'movie_list': request.POST['selected-movie-list'],
 			'movie_type': "parent"
 		}
-		return render(request, 'moviedatabase/close_movie_setting.html', context)
+		return render(request, 'moviedatabase/edit_setting/close_movie_setting.html', context)
 
 	channels = YoutubeChannel.objects.all()
 	movies = Movie.objects.all()
@@ -1275,7 +1265,7 @@ def popup_parent_movie_setting(request):
 		'movie_type': "parent"
 	}
 
-	return render(request, 'moviedatabase/movie_setting.html', context)
+	return render(request, 'moviedatabase/edit_setting/movie_setting.html', context)
 
 @permission_required('moviedatabase.add_movie')
 def popup_related_movie_setting(request):
@@ -1285,7 +1275,7 @@ def popup_related_movie_setting(request):
 			'movie_list': request.POST['selected-movie-list'],
 			'movie_type': "related"
 		}
-		return render(request, 'moviedatabase/close_movie_setting.html', context)
+		return render(request, 'moviedatabase/edit_setting/close_movie_setting.html', context)
 
 	channels = YoutubeChannel.objects.all()
 	movies = Movie.objects.all()
@@ -1296,7 +1286,7 @@ def popup_related_movie_setting(request):
 		'movie_type': "related"
 	}
 
-	return render(request, 'moviedatabase/movie_setting.html', context)
+	return render(request, 'moviedatabase/edit_setting/movie_setting.html', context)
 
 @permission_required('moviedatabase.add_movie')
 def popup_participant_setting(request):
@@ -1305,7 +1295,7 @@ def popup_participant_setting(request):
 		context = {
 			'participant_list': request.POST['selected-participant-list'],
 		}
-		return render(request, 'moviedatabase/close_participant_setting.html', context)
+		return render(request, 'moviedatabase/edit_setting/close_participant_setting.html', context)
 
 	creators = Creator.objects.all()
 	names = Name.objects.all()
@@ -1315,7 +1305,7 @@ def popup_participant_setting(request):
 		'names': names,
 	}
 
-	return render(request, 'moviedatabase/participant_setting.html', context)
+	return render(request, 'moviedatabase/edit_setting/participant_setting.html', context)
 
 @permission_required('moviedatabase.add_movieupdateinformation')
 def UpdateInformation(request, main_id):

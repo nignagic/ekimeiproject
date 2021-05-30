@@ -160,8 +160,8 @@
 			</div>
 			{% if can_edit and type == "detail" %}
 			<div class="update-container">
-				<p>※編集権限を持つユーザーでログインしている場合のみ表示されています。この動画の情報を更新した際は下のボタンを押してください。トップページなどの更新情報に反映されます。</p>
-				<a href="{% url 'moviedatabase:updateinformation' movie.main_id %}">更新情報登録</a>
+				<p>※編集権限を持つユーザーでログインしている場合のみ表示されています。</p>
+				<a href="{% url 'moviedatabase:movie_edit' movie.main_id %}">編集</a>
 			</div>
 			{% endif %}
 		</div>

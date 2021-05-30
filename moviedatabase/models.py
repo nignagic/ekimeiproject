@@ -141,6 +141,7 @@ class Part(models.Model):
 	# vocal = models.ManyToManyField(Vocal, blank=True, verbose_name='使用ボーカル(パート)')
 	vocalnew = models.ManyToManyField(VocalNew, blank=True, verbose_name='使用ボーカル(パート)')
 	explanation = models.TextField('補足説明', null=True, blank=True)
+	incomplete = models.BooleanField('情報が不完全', default=False)
 	def part_num(self):
 		return self.sort_by_movie + 1;
 
@@ -151,8 +152,9 @@ class Part(models.Model):
 			categories |= BelongsCategory.objects.filter(pk=l.line_service.category.pk)
 		text = []
 		for c in categories:
-			if c.object_name and self.category.object_name:
-				text.append(c.object_name + self.category.object_name)
+			if c.object_name and self.category:
+				if self.category.object_name:
+					text.append(c.object_name + self.category.object_name)
 		return text
 
 	def __str__(self):
@@ -258,3 +260,10 @@ class AccountAndCreatorApplication(models.Model):
 		if self.creator:
 			n += " " + self.creator.name
 		return n
+
+class TopImage(models.Model):
+	file_name = models.CharField('ファイル名', null=True, blank=True, max_length=200)
+	text = models.TextField('説明', null=True, blank=True)
+	is_active = models.BooleanField('active', default=True)
+	def __str__(self):
+		return self.file_name

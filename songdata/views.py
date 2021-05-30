@@ -33,7 +33,10 @@ class PopupSongCreate(SongCreate):
 
 class SongNewCreate(PermissionRequiredMixin, generic.CreateView):
 	model = SongNew
-	fields = '__all__'
+	fields = ('song_name', 'song_name_kana', 'artist_name', 'artist_name_kana', 'tag')
+	initial_data = {
+		'song_name': 'aa'
+	}
 	permission_required = ('songdata.add_songnew')
 	success_url = reverse_lazy('songdata:songlist')
 
@@ -43,7 +46,7 @@ class PopupSongNewCreate(SongNewCreate):
 		songnew.user = self.request.user
 		songnew.save()
 		context = {
-			'object_name': str(songnew),
+			'object_name': str(songnew) + " [" + songnew.tag + "]",
 			'object_pk': songnew.pk,
 			'function_name': 'add_songnew'
 		}
