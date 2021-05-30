@@ -60,6 +60,7 @@ class PageLink(models.Model):
 
 class MovieCategory(models.Model):
 	name = models.CharField('動画カテゴリー', max_length=200)
+	object_name = models.CharField('歌唱オブジェクト名', max_length=200, null=True, blank=True)
 	def __str__(self):
 		return self.name
 
@@ -104,11 +105,13 @@ class Movie(models.Model):
 
 	def category(self):
 		parts = Part.objects.filter(movie=self.main_id)
-		categories = MovieCategory.objects.none()
+		text = []
 		for part in parts:
-			if part.category:
-				categories |= MovieCategory.objects.filter(pk=part.category.id)
-		return categories
+			categories = part.complex_category()
+			if categories:
+				for c in categories:
+					text.append(c)
+		return text
 
 	def get_duration(self):
 		d = self.duration
@@ -140,6 +143,17 @@ class Part(models.Model):
 	explanation = models.TextField('補足説明', null=True, blank=True)
 	def part_num(self):
 		return self.sort_by_movie + 1;
+
+	def complex_category(self):
+		lineinmovies = LineInMovie.objects.filter(part=self.pk)
+		categories = BelongsCategory.objects.none()
+		for l in lineinmovies:
+			categories |= BelongsCategory.objects.filter(pk=l.line_service.category.pk)
+		text = []
+		for c in categories:
+			if c.object_name and self.category.object_name:
+				text.append(c.object_name + self.category.object_name)
+		return text
 
 	def __str__(self):
 		if self.name:
