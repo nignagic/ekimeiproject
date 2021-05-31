@@ -69,7 +69,7 @@ class SongNew(models.Model):
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='登録者')
 
 	def __str__(self):
-		return self.song_name + " - " + self.artist_name
+		return self.song_name + " - " + self.artist_name.replace('\r', ' ')
 
 	def artist_name_all(self):
 		return self.artist_name.split('\n')
