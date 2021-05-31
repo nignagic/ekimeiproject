@@ -45,8 +45,8 @@ class PopupSongNewCreate(SongNewCreate):
 		songnew = form.save()
 		songnew.user = self.request.user
 		songnew.save()
-		tag = songnew.tag if " [" + songnew.tag + "]" else ""
-		object_name = str(songnew).replace('\n', ' ') + tag
+		tag = songnew.tag if " [" + str(songnew.tag).replace('\t', ' ') + "]" else ""
+		object_name = str(songnew).replace('\t', ' ') + tag
 		context = {
 			'object_name': object_name,
 			'object_pk': songnew.pk,

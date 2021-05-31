@@ -150,7 +150,7 @@ $(function() {
 						line_box_after = line_box_text(data[j].line_service_pk, data[j].get_color, data[j].get_color, data[j].line_service_name, data[i].category, false)
 						station_ul = station_ul_text(id, ul);
 						$('.station-list-' + id).append(key_station + line_box_before + line_box_after + station_ul);
-					} else if (line != beforeline && data[i].get_group_station == beforestationgroup) {
+					} else if (line != beforeline && data[i].get_group_station == beforestationgroup && !(data[i].back_rel == "2")) {
 						ul++;
 						$('.station-list-' + id + ' .key-station:last').remove();
 						// $('.station-list-' + id).append("<h4 class='movie-line-name'>" + data[i].line_service_name + "</h4><ul class='station-ul station-ul-" + forloop + "'></ul>")
@@ -178,8 +178,6 @@ $(function() {
 					} else if (afterline != line || afterline == undefined || data[j].back_rel == "2") {
 						key_station = key_station_text(data[i].get_color, "none", data[i].station_service_pk, station_text, true)
 						$('.station-list-' + id).append(key_station);
-						console.log(afterline != line, afterline == undefined, data[j].back_rel == "2", station_text)
-						console.log(afterline, line)
 					} else if ((data[i].station_service_pk != data[j].station_service_pk) && (data[i].get_group_station == data[j].get_group_station)) {
 					 	station = station_text_f(data[i].get_color, data[j].get_color, data[i].station_service_pk, station_text)
 					 	$('.station-ul-' + id + "-" + ul).append(station)
