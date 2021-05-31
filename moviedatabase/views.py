@@ -1215,7 +1215,7 @@ def movie_part_station_edit(request, main_id, sort_by_movie):
 	partcount = Part.objects.filter(movie=main_id).count()
 	prefs = Prefecture.objects.all()
 	companies = Company.objects.all()
-	others = StationService.objects.filter(line_service__category__name='other_option')
+	others = StationService.objects.filter(line_service__company__other_option=True)
 
 	context = {
 		'part': part,

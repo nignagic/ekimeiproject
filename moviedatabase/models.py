@@ -111,7 +111,7 @@ class Movie(models.Model):
 			if categories:
 				for c in categories:
 					text.append(c)
-		return text
+		return list(set(text))
 
 	def get_duration(self):
 		d = self.duration
