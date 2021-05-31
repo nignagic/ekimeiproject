@@ -10,7 +10,7 @@
 				<div class="song">
 					<select name="song" id="id_songnew" size="18" style="display: none;">
 						{% for songnew in songnews %}
-						<option value="{{ songnew.pk }}" class="songnew-option">{{ songnew }} [{{ songnew.tag }}]</option>
+						<option value="{{ songnew.pk }}" class="songnew-option">{{ songnew }} {% if songnew.tag %}[{{ songnew.tag }}]{% endif %}</option>
 						{% endfor %}
 					</select>
 				</div>
