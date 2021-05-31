@@ -23,7 +23,8 @@
 				<th>作者情報</th>
 				<td>
 					{% if user.creator %}
-						<a href="{% url 'moviedatabase:movielistbycreator' user.creator.pk %}">{{ user.creator.name }}</a>
+						<a href="{% url 'moviedatabase:movielistbycreator' user.creator.pk %}" class="creator-color">{{ user.creator.name }}</a>
+						<br><a href="{% url 'moviedatabase:register' %}">＜動画登録＞</a>
 					{% elif user.creator_applied %}
 						申請済み
 					{% else %}
@@ -61,7 +62,13 @@
 				{% for i in updateinformations %}
 				<li class="updateinformation">
 					<p class="updateinformation-upper">{{ i.reg_date|timezone:'Asia/Tokyo'|date:"Y/n/j - H:i:s" }}　<span>動画{{ i.get_is_create_display }}</span></p>
-					<p class="updateinformation-lower"><a href="{% url 'moviedatabase:detail' i.movie.main_id %}">{{ i.movie }}</a></p>
+					<p class="updateinformation-lower">
+						{% if i.movie.main_id %}
+						<a href="{% url 'moviedatabase:detail' i.movie.main_id %}">{{ i.movie }}</a>
+						{% else %}
+						{{ i.movie }}
+						{% endif %}
+					</p>
 				</li>
 				{% endfor %}
 			</ul>

@@ -1359,7 +1359,8 @@ def AccountAndCreatorApplicationConfirmView(request, creator):
 	if request.method == 'POST':
 		request.user.creator_applied = True
 		request.user.save()
-		ac = AccountAndCreatorApplication(user=request.user, creator=creator, reg_date=timezone.now())
+		dealing = request.POST['dealing']
+		ac = AccountAndCreatorApplication(user=request.user, creator=creator, reg_date=timezone.now(), dealing=dealing)
 		ac.save()
 		return render(request, 'moviedatabase/application/account_and_creator_complete.html', context)
 

@@ -250,6 +250,7 @@ class AccountAndCreatorApplication(models.Model):
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='編集者')
 	creator = models.ForeignKey(Creator, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='作者')
 	reg_date = models.DateTimeField('登録・更新日時', blank=True)
+	dealing = models.CharField('動画の扱い', null=True, blank=True, max_length=200)
 	class meta:
 		ordering = ['-reg_date']
 
