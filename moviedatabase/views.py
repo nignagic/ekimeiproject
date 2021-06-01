@@ -87,6 +87,12 @@ def Terms(request):
 def Privacy(request):
 	return render(request, 'moviedatabase/static-page/privacy.html')
 
+def Update(request):
+	return render(request, 'moviedatabase/static-page/update.html')
+
+def GuideAccountCreator(request):
+	return render(request, 'moviedatabase/static-page/guide-account-creator.html')
+
 
 class MovieListView(generic.ListView):
 	model = Movie

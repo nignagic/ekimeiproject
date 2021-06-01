@@ -11,7 +11,8 @@ urlpatterns = [
 	path('mypage/', views.Mypage, name='mypage'),
 	path('terms/', views.Terms, name='terms'),
 	path('privacy/', views.Privacy, name='privacy'),
-	path('test/', views.test, name='test'),
+	path('update/', views.Update, name='update'),
+	path('guide_account_creator/', views.GuideAccountCreator, name='guideaccountcreator'),
 
 	path('search/', views.FreeSearchView, name='freesearch'),
 

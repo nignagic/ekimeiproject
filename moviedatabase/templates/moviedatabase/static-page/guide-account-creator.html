@@ -1,0 +1,82 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}アカウント・作者情報紐づけガイド{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
+<link rel="stylesheet" href="{% static 'moviedatabase/update.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="detail-header">
+		<div class="detail-header-content">
+			<div class="detail-name">アカウント・作者情報紐づけガイド</div>
+			<div class="detail-name-sub"></div>
+			<div class="sub-name">
+			</div>
+			<div class="under-color movie-background">
+			</div>
+			<div class="line-bottom">
+			</div>
+		</div>
+	</div>
+
+	<div class="main-content">
+		<div class="main-content-inner">
+			<div class="guide">
+				<ol class="article">
+					<li>
+						<h2>アカウント・作者情報の紐づけ</h2>
+						<p>ログイン中のアカウントと、データベースに登録済みの作者の情報を紐づける手順を説明します。これにより、紐づけた作者のYouTubeちゃんねるにて投稿された動画の情報を、データベースにおいて登録・編集できるようになります。</p>
+						<p>なお、現在は申請のみ受け付けています。実際に動画の登録作業ができるようになるのは、2021年6月5日以降となります。ご了承ください。<br>　</p>
+						<p>まだデータベースへの参入がお済みでない方は、<a href="https://forms.gle/BKwdW4PfLDXaMZy56" target="_blank">こちらのフォーム</a>にて申請を受け付けています。<br>　</p>
+						<p>以下、手順を説明します。なお、PCでの操作のみ対応しています。</p>
+					</li>
+					<li>
+						<h2>Googleアカウントでログイン</h2>
+						<p>ページ最上部のヘッダー内の右上にある「ログイン」のボタンをクリックし、ログイン画面へ進みます。</p>
+						<div class="guide-img">
+							<img src="{% static 'moviedatabase/base/guide_account_creator/1-login-button.png' %}">
+						</div>
+						<p>ログイン画面で、「Sign in with Google」を押し、データベース上でログインしたいGoogleアカウントを選択します。</p>
+						<div class="guide-img">
+							<img src="{% static 'moviedatabase/base/guide_account_creator/2-login.png' %}">
+						</div>
+					</li>
+					<li>
+						<h2>マイページから申請開始</h2>
+						<p>先ほどのヘッダーで「ログイン」ボタンのあった箇所に、「マイページ」というボタンが表示されるようになります。これをクリックし、マイページへ進みます。</p>
+						<div class="guide-img">
+							<img src="{% static 'moviedatabase/base/guide_account_creator/3-mypage-button.png' %}">
+						</div>
+						<p>作者情報の欄が「登録なし」となっており、「＜申請はこちら＞」というボタンがあります。これをクリックします。</p>
+						<div class="guide-img">
+							<img src="{% static 'moviedatabase/base/guide_account_creator/4-mypage.png' %}">
+						</div>
+					</li>
+					<li>
+						<h2>申請</h2>
+						<p>申請画面にて、作者一覧から自分自身の作者名を選びます。</p>
+						<p>確認画面が出てきますので、ログイン中のアカウントの名前と、紐づけたい作者名に間違いがないことを確認します。</p>
+						<p>また、これからのデータベース上での動画登録の扱いについて、ご希望の選択肢をお選びください。</p>
+						<div class="guide-img">
+							<img src="{% static 'moviedatabase/base/guide_account_creator/5-application.png' %}">
+						</div>
+					</li>
+					<li>
+						<h2>申請完了</h2>
+						<p>「申請」ボタンを押すと、申請が完了します。</p>
+						<div class="guide-img">
+							<img src="{% static 'moviedatabase/base/guide_account_creator/6-confirm.png' %}">
+						</div>
+						<p>運営が情報を確認し次第、参入時にご入力いただいた連絡先（TwitterのDMもしくはメールアドレス）にて本人確認を行います。</p>
+						<p>一度申請を行うと、やり直しはできませんのでご注意ください。</p>
+					</li>
+				</ol>
+				<p class="terms-p">2021年6月1日 運営：にぐなぐIC</p>
+			</div>
+		</div>
+	</div>
+	{% include 'moviedatabase/includes/footer.html' %}
+</div>
+{% endblock %}

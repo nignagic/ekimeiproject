@@ -1,0 +1,140 @@
+ol, ul {
+	counter-reset: item;
+	list-style-type: none;
+	padding-left: 0;
+}
+
+ol ol, ul ul {
+	padding-left: 2em;
+	margin: 0.5rem 0;
+}
+
+.article > li {
+	margin-bottom: 2rem;
+	background-color: #fafafa;
+	border-radius: 1rem;
+	padding: 2rem 2rem;
+}
+
+.article > li > h2 {
+	font-size: 1.1rem;
+	margin-bottom: 0.8rem;
+	color: #cc5c00;
+}
+
+.article > li > h3 {
+	font-size: 0.95rem;
+	margin-bottom: 0.8rem;
+}
+
+.article p {
+	font-weight: normal;
+	text-indent: 1.0em;
+	padding-left: 1.3em;
+
+}
+
+.article > li > ol > li,
+.article > li > ul > li {
+	font-weight: normal;
+	text-indent: -1.5em;
+	padding-left: 1.5em;
+}
+
+.article > li > ol > li:before {
+	counter-increment: item;
+	content: counter(item)'.';
+	/* 以下は自由に装飾... */
+	padding-right: .5em;
+	font-weight: normal;
+	color: #cc5c00;
+}
+
+.article > li > ul > li:before {
+	counter-increment: item;
+	content: '・';
+	/* 以下は自由に装飾... */
+	padding-right: .5em;
+	font-weight: normal;
+	color: #cc5c00;
+}
+
+.article > li > ol > li > ol > li {
+	font-weight: normal;
+	text-indent: -1.5em;
+	padding-left: 1.5em;
+}
+
+.article > li > ol > li > ol > li:before {
+	counter-increment: item;
+	content: '('counter(item)')';
+	/* 以下は自由に装飾... */
+	padding-right: .5em;
+	font-weight: normal;
+	color: #cc5c00;
+}
+
+.terms-p {
+	font-weight: normal;
+}
+
+.station-update {
+	padding: 1rem 2rem;
+	overflow-x: scroll;
+}
+
+.station-update tr th,
+.station-update tr td {
+	padding: 0.1rem 0.5rem;
+	background-color: #fff;
+}
+
+.station-update tr th {
+	text-align: right;
+	white-space: nowrap;
+}
+
+.station-update tr td:nth-child(2) {
+	font-weight: normal;
+}
+
+.station-update tr td:nth-child(3) {
+	text-align: center;
+	white-space: nowrap;
+}
+
+.station-update tr td:nth-child(4) {
+	font-weight: normal;
+}
+
+
+@media (max-width: 768px) {
+	body {
+		font-size: 0.8rem;
+	}
+
+	.station-update-container {
+		width: 100%;
+		overflow-x: scroll;
+	}
+
+	.station-update {
+		padding: 1rem 0;
+	}
+
+	.station-update tr th,
+	.station-update tr td {
+		white-space: nowrap;
+	}
+}
+
+.guide-img {
+	text-align: center;
+	padding: 1rem;
+}
+
+.guide-img img {
+	max-width: 100%;
+	max-height: 400px;
+	box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+}
