@@ -23,7 +23,7 @@
 				<div class="main-movie-channel">
 					<a href="{% url 'moviedatabase:movielistbychannel' movie.channel.pk %}">
 						<div class="main-movie-channel-img">
-							<img src="url">
+							<img id="img" class="style-scope yt-img-shadow" width="80" alt="" src="https://yt3.ggpht.com/{{ movie.channel.icon }}=s88-c-k-c0x00ffffff-no-rj">
 						</div>
 						<div class="main-movie-channel-name">{{ movie.channel }}</div>
 					</a>

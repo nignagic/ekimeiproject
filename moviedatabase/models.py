@@ -25,6 +25,7 @@ class Name(models.Model):
 class YoutubeChannel(models.Model):
 	name = models.CharField('YouTubeチャンネル名', max_length=200)
 	channel_id = models.CharField(max_length=200, primary_key=True)
+	icon = models.CharField(max_length=200, blank=True, null=True)
 	creator = models.ForeignKey(Creator, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='作者')
 	main_name = models.ForeignKey(Name, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='チャンネル名義')
 	is_main = models.BooleanField('メインチャンネル', default=True)
