@@ -1173,6 +1173,12 @@ def movie_statistics_update(request, main_id):
 	if not can_statistics_update:
 		return render(request, '403.html')	
 
+	movies = Movie.objects.all()
+	for m in movies:
+		m.reg_date = m.reg_date + datetime.timedelta(hours=-9)
+		m.statistics_update_date = m.reg_date
+		m.save()
+
 	form = forms.MovieStatisticsUpdateForm(request.POST or None, instance=movie)
 	if request.method == 'POST' and form.is_valid():
 		form.save()
