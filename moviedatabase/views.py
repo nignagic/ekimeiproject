@@ -1407,7 +1407,8 @@ def AccountAndCreatorApplicationConfirmView(request, creator):
 def ChannelMovieIsExist(request, channel_id):
 	channel = get_object_or_404(YoutubeChannel, channel_id=channel_id)
 	context = {
-		'channel': channel
+		'channel': channel,
+		'movies': Movie.objects.filter(channel=channel)
 	}
 	return render(request, 'moviedatabase/channel_movie_is_exist.html', context)
 

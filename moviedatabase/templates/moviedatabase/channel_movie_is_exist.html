@@ -9,7 +9,12 @@
 </ul>
 <a id="next-button">+次へ</a>
 <div id="error"></div>
-<div id="detail-url" data-detail="{% url 'moviedatabase:detail' '0' %}" data-movie-exist="{% url 'moviedatabase:movieisexistapi' '0' %}">
+<div id="detail-url" data-detail="{% url 'moviedatabase:detail' '0' %}" data-movie-exist="{% url 'moviedatabase:movieisexistapi' '0' %}"></div>
+<div id="channel-movies">
+	{% for m in movies %}
+	<div id="exist-{{ m.main_id }}"></div>
+	{% endfor %}
+</div>
 {% endblock %}
 
 {% block extrajs %}
@@ -87,16 +92,13 @@
 
 			if (dataError != 1) {
 				for (const ele of movies) {
-					var s = exist_url + ele.videoId + "/?format=json";
 					$('#movie-list').append("<li id='" + ele.videoId + "'></li>");
-					$.getJSON(s, function(data) {
-						if (data[0]) {
-						// if (ele.position % 2 == 0) {
-							$('li#' + ele.videoId).html("<a href='" + detail_url + ele.videoId + "'>" + ele.position + " - " + ele.title + "</a>");
-						} else {
-							$('li#' + ele.videoId).html(ele.position + " - " + ele.title);
-						}
-					})
+					if ($('div#exist-' + ele.videoId).length) {
+					// if (ele.position % 2 == 0) {
+						$('li#' + ele.videoId).html("<a href='" + detail_url + ele.videoId + "'>" + ele.position + " - " + ele.title + "</a>");
+					} else {
+						$('li#' + ele.videoId).html(ele.position + " - " + ele.title);
+					}
 				}
 			}
 		}
