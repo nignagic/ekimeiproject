@@ -6,32 +6,84 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'moviedatabase/register.css' %}">
 <div class="background">
-	{% include 'moviedatabase/includes/header.html' %}
 	<div class="main-container">
-		<h2 class="register-header">動画登録</h2>
+		<h2 class="register-header">動画基本情報の更新</h2>
 		<div class="title-line"></div>
-		<p class="register-notice">動画の登録を開始します。下の欄に動画のURLまたはIDを入力し、「動画情報取得」をクリックしてください。成功すると、取得した動画の情報が下部に表示されます。</p>
+		<p class="register-notice">動画のYouTube情報（タイトル、概要欄、再生回数など）を更新します。YouTubeからの情報取得回数に制限があるため、1動画につき1日1回まで更新が可能です。</p>
 		<div class="register-form-container">
-			<div class="register-form-info">URLまたは動画IDを入力</div>
-			<div class="register-form-area">
-				<form name="y_idForm">
-					<input class="search-input" type="textbox" name="y_idtextbox">
-				</form>
-			</div>
-			<div class="register-form-lower">
-				<div class="register-form-status"></div>
-				<button class="search-button" onclick="youtube_json()">
-					動画情報取得
-				</button>
-			</div>
+			<form name="y_idForm">
+				<input class="search-input" type="hidden" name="y_idtextbox" value="{{ movie.main_id }}">
+			</form>
 		</div>
 
+<div id="list-area-before" class="list-area">
+	<section class="video-item-section">
+		<div class="video-item">
+			<article class="videoTile">
+				<div class="video-number"></div>
+				<div class="videoTile-inner">
+					<div class="videoTile-head">
+						<a href="https://www.youtube.com/watch?v=t_b4WYAbvvA" target="_blank" class="video-link">
+							<div class="videoTile-img-box">
+								<div class="videoTile-img" style="background-image:url(https://i.ytimg.com/vi/{{ movie.youtube_id }}/hqdefault.jpg)"></div>
+							</div>
+							<div class="videoTile-content">
+								<h2 class="video-title">{{ movie.title }}</h2>
+								<div class="video-channel">
+									<span>{{ movie.channel.name }}</span>
+								</div>
+							</div>
+						</a>
+					</div>
+					<div class="video-middle">
+						<div class="video-middle-1">
+							<div class="video-statistics">
+								<div class="video-statistics-item">
+									<div class="video-statistics-num">{{ movie.n_view }}</div>
+									<div class="video-statistics-name">再生回数</div>
+								</div>
+								<div class="video-statistics-item">
+									<div class="video-statistics-num">{{ movie.n_like }}</div>
+									<div class="video-statistics-name">高評価数</div>
+								</div>
+								<div class="video-statistics-item">
+									<div class="video-statistics-num">{{ movie.n_dislike }}</div>
+									<div class="video-statistics-name">低評価数</div>
+								</div>
+								<div class="video-statistics-item">
+									<div class="video-statistics-num">{{ movie.n_comment }}</div>
+									<div class="video-statistics-name">コメント数</div>
+								</div>
+							</div>
+							<div class="video-time">
+								<h3 class="video-time-head">投稿日時</h3>
+								<table class="video-time-content">
+									<tbody>{% load tz %}
+										<tr>
+											<td>世界標準時</td>
+											<td class="video-time-iso">{{ movie.published_at|date:"Y-m-d H:i:s" }}</td>
+										</tr>
+										<tr>
+											<td>日本時間</td>
+											<td class="video-time-jpn">{{ movie.published_at|timezone:'Asia/Tokyo'|date:"Y-m-d H:i:s" }}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="video-description">
+							<p>{{ movie.description | urlize | linebreaksbr }}</p>
+						</div>
+					</div>
+				</div>
+			</article>
+		</div>
+	</section>
+</div>
+		<div class="before-after-arrow">
+			<p><i class="fas fa-arrow-down"></i></p>
+		</div>
 		<div id="list-area"></div>
-		<!-- <div class="youtube-frame">
-			<div class="youtube-container">
-				<div class="youtube"></div>
-			</div>
-		</div> -->
 
 		<form action="" method="POST" id="main-form">
 			{% for f in form %}
@@ -50,17 +102,21 @@
 						{% endfor %}
 					{% endfor %}
 				</div>
-				<button class="submit-button" form="main-form" disabled="true">送信</button>
+				<button class="submit-button" form="main-form" disabled="true">更新</button>
 			</div>
 		</div>
 	</div>
-	{% include 'moviedatabase/includes/footer.html' %}
 </div>
 {% endblock %}
 
 {% block extrajs %}
 <script type="text/javascript">
 	var xml = {}
+	$(function () {
+		d = $('.video-description>p').text().replace(/<br>/g, '<br>');
+		$('.video-description>p').html(d)
+		youtube_json();
+	})
 	function youtube_json() {
 		videoId = y_idForm.y_idtextbox.value;
 
@@ -229,7 +285,6 @@
 			$('input.n_like').val(like);
 			$('input.n_dislike').val(dislike);
 			$('input.n_comment').val(comment);
-			$('input.reg_date').val(nowtext);
 			$('input.statistics_update_date').val(nowtext);
 			$('input.description').val(descriptionreplaced);
 

@@ -85,6 +85,7 @@ class Movie(models.Model):
 
 	reg_date = models.DateTimeField('データベース登録日時', null=True, blank=True)
 	update_date = models.DateTimeField('データベース更新日時', null=True, blank=True)
+	statistics_update_date = models.DateTimeField('統計情報更新日時', null=True, blank=True)
 
 	song = models.ManyToManyField(Song, blank=True, verbose_name='使用楽曲(動画全体)(旧)')
 	songnew = models.ManyToManyField(SongNew, blank=True, verbose_name='使用楽曲(楽曲全体)')

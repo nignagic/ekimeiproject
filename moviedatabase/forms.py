@@ -14,7 +14,7 @@ class LoginForm(AuthenticationForm):
 class MovieRegisterForm(forms.ModelForm):
 	class Meta:
 		model = Movie
-		fields = ('title', 'channel', 'main_id', 'youtube_id', 'niconico_id', 'published_at', 'duration', 'n_view', 'n_like', 'n_dislike', 'n_comment', 'description', 'reg_date')
+		fields = ('title', 'channel', 'main_id', 'youtube_id', 'niconico_id', 'published_at', 'duration', 'n_view', 'n_like', 'n_dislike', 'n_comment', 'description', 'reg_date', 'statistics_update_date')
 		widgets = {
 			'title': forms.HiddenInput(attrs={
 				'class': 'title',
@@ -55,6 +55,9 @@ class MovieRegisterForm(forms.ModelForm):
 			'reg_date': forms.HiddenInput(attrs={
 				'class': 'reg_date',
 			}),
+			'statistics_update_date': forms.HiddenInput(attrs={
+				'class': 'statistics_update_date',
+			}),
 		}
 		labels = {
 			'title': '',
@@ -70,6 +73,7 @@ class MovieRegisterForm(forms.ModelForm):
 			'n_comment': '',
 			'description': '',
 			'reg_date': '',
+			'statistics_update_date': '',
 		}
 		error_messages = {
 			'title': {
@@ -100,6 +104,78 @@ class MovieRegisterForm(forms.ModelForm):
 
 		if Movie.objects.filter(main_id=self.cleaned_data['main_id']).exists():
 			raise forms.ValidationError("この動画は既にデータベース上に存在しています。")
+
+class MovieStatisticsUpdateForm(forms.ModelForm):
+	class Meta:
+		model = Movie
+		fields = ('title', 'channel', 'main_id', 'youtube_id', 'niconico_id', 'published_at', 'duration', 'n_view', 'n_like', 'n_dislike', 'n_comment', 'description', 'statistics_update_date')
+		widgets = {
+			'title': forms.HiddenInput(attrs={
+				'class': 'title',
+			}),
+			'channel': forms.HiddenInput(attrs={
+				'id': 'channel',
+			}),
+			'main_id': forms.HiddenInput(attrs={
+				'class': 'main_id',
+			}),
+			'youtube_id': forms.HiddenInput(attrs={
+				'class': 'youtube_id',
+			}),
+			'niconico_id': forms.HiddenInput(attrs={
+				'class': 'niconico_id',
+			}),
+			'published_at': forms.HiddenInput(attrs={
+				'class': 'published_at',
+			}),
+			'duration': forms.HiddenInput(attrs={
+				'class': 'duration',
+			}),
+			'n_view': forms.HiddenInput(attrs={
+				'class': 'n_view',
+			}),
+			'n_like': forms.HiddenInput(attrs={
+				'class': 'n_like',
+			}),
+			'n_dislike': forms.HiddenInput(attrs={
+				'class': 'n_dislike',
+			}),
+			'n_comment': forms.HiddenInput(attrs={
+				'class': 'n_comment',
+			}),
+			'description': forms.HiddenInput(attrs={
+				'class': 'description',
+			}),
+			'statistics_update_date': forms.HiddenInput(attrs={
+				'class': 'statistics_update_date',
+			}),
+		}
+		labels = {
+			'title': '',
+			'channel': '',
+			'main_id': '',
+			'youtube_id': '',
+			'niconico_id': '',
+			'published_at': '',
+			'duration': '',
+			'n_view': '',
+			'n_like': '',
+			'n_dislike': '',
+			'n_comment': '',
+			'description': '',
+			'statistics_update_date': '',
+		}
+		error_messages = {
+			'title': {
+				'required': 'タイトルが適切に入力されていません'
+			},
+			'main_id': {
+				'required': '動画IDが適切に入力されていません',
+			},
+			'channel': {
+				'invalid_choice': 'この動画のチャンネルはデータベース上の登録対象外です'
+			}
+		}
 
 class MovieUpdateForm(forms.ModelForm):
 	class Meta:

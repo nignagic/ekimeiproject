@@ -152,7 +152,7 @@ ul, li {
 	margin: 0 auto;
 }
 
-#list-area {
+#list-area, .list-area {
 	width: 100%;
 	max-width: 1200px;
 	margin: 0 auto;
@@ -387,6 +387,12 @@ ul, li {
 .video-description > p::-webkit-scrollbar-thumb{
 	background: #aaa;
 	border-radius: 10px;
+}
+
+.before-after-arrow {
+	text-align: center;
+	font-size: 2rem;
+	padding: 1rem;
 }
 
 /*送信ボタン*/

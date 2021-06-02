@@ -1037,6 +1037,13 @@ def add_updatehistory(request, main_id, category):
 	i = UpdateHistory(movie=movie, user=request.user, reg_date=timezone.now(), category=category)
 	i.save()
 
+def is_can_statistics_update(movie):
+	JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')
+	now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
+	day = datetime.datetime(now.year, now.month, now.day, 0, 0, tzinfo=JST)
+	return day > movie.statistics_update_date
+	# trueなら更新可能
+
 @permission_required('moviedatabase.add_movie')
 def confirm_movie(request, main_id):
 	if not can_edit_channel(request, main_id):
@@ -1094,6 +1101,7 @@ def detail_movie(request, main_id):
 		'parts': parts,
 		'onlyonepart': onlyonepart,
 		'can_edit': can_edit,
+		'can_statistics_update': is_can_statistics_update(movie),
 		'type': "detail"
 	}
 
@@ -1156,6 +1164,33 @@ def movie_edit(request, main_id):
 	}
 
 	return render(request, 'moviedatabase/movie_edit.html', context)
+
+@permission_required('moviedatabase.add_movie')
+def movie_statistics_update(request, main_id):
+	movie = get_object_or_404(Movie, main_id=main_id)
+
+	can_statistics_update = is_can_statistics_update(movie)
+	if not can_statistics_update:
+		return render(request, '403.html')	
+
+	movies = Movie.objects.all()
+	for m in movies:
+		m.reg_date = m.reg_date + datetime.timedelta(hours=-9)
+		m.statistics_update_date = m.reg_date
+		m.save()
+
+	form = forms.MovieStatisticsUpdateForm(request.POST or None, instance=movie)
+	if request.method == 'POST' and form.is_valid():
+		form.save()
+		return redirect('moviedatabase:detail', main_id=main_id)
+
+	context = {
+		'movie': movie,
+		'form': form
+	}
+
+	return render(request, 'moviedatabase/movie_statistics_update.html', context)
+
 
 @permission_required('moviedatabase.add_part')
 def movie_part_edit(request, main_id):

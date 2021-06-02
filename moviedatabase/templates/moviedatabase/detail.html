@@ -157,6 +157,7 @@
 			{% endif %}
 			<div class="update-date">
 				<p>最終更新日時：{{ movie.update_date|timezone:'Asia/Tokyo'|date:"Y年n月j日 H:i:s" }}</p>
+				<p>YouTube取得情報：{{ movie.statistics_update_date|timezone:'Asia/Tokyo'|date:"Y年n月j日 H:i:s" }}{% if can_statistics_update and can_edit %} <a href="{% url 'moviedatabase:movie_statistics_update' movie.main_id %}">更新(1日1回まで)</a>{% endif %}</p>
 			</div>
 			{% if can_edit and type == "detail" %}
 			<div class="update-container">
