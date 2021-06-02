@@ -1,0 +1,105 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}動画 - 登録{% endblock %}
+
+{% load static %}
+{% block content %}
+<h3>{{ channel.name }}</h3>
+<ul id="movie-list">
+</ul>
+<a id="next-button">+次へ</a>
+<div id="error"></div>
+<div id="detail-url" data-detail="{% url 'moviedatabase:detail' '0' %}" data-movie-exist="{% url 'moviedatabase:movieisexistapi' '0' %}">
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+	var APIKEY = "AIzaSyCmUf6ZZ6qGrdXTu3RnxCcoll7acMsr9L4"
+	var channelId = "{{ channel.channel_id }}";
+
+	UCstartnum = channelId.indexOf("UC");
+	playlistId = "UU" + channelId.substr(UCstartnum+2, 22)
+
+	detail_url = $('#detail-url').data('detail').split('0')[0]
+	exist_url = $('#detail-url').data('movie-exist').split('0')[0]
+
+	var maxResults = 50;
+	var pageToken = "";
+
+	var dataError = 0;
+
+	var movies = []
+
+	$(function () {
+		console.log(pageToken)
+		playlistDisplay(playlistId);
+
+		$(document).on('click', '#next-button', function() {
+			console.log(pageToken)
+			playlistDisplay(playlistId);
+		})
+	})
+
+	function playlistDisplay(playlistId) {
+		if (playlistId == "") {
+
+		} else {
+			movies = [];
+
+			$.ajax({
+				"timeout": 5000,
+				"url": "https://www.googleapis.com/youtube/v3/playlistItems",
+				"type": "GET", 
+				"dataType": "json",
+				"async": false,
+				"data": {
+					"part": "id, snippet, contentDetails",
+					"key": APIKEY,
+					"playlistId": playlistId,
+					"maxResults": maxResults,
+					"pageToken": pageToken
+				}
+			}).done(function(res) {
+				if(!res || !res.items || !res.items[0] || !res.items[0].snippet || !res.items[0].snippet.resourceId || !res.items[0].snippet.resourceId.videoId) {
+					//error処理
+					alert("error!1");
+					return "";
+				}
+
+				for (i = 0; i < res.items.length; i++) {
+					videoId = res.items[i].snippet.resourceId.videoId;
+					position = res.items[i].snippet.position + 1;
+					title = res.items[i].snippet.title;
+					movies.push({'videoId': videoId, 'position': position, 'title': title})
+				};
+
+				pageToken = res.nextPageToken;
+			}).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+				$('#error').append("プレイリストが見つかりませんでした");
+				console.log("ajax通信に失敗しました");
+				console.log("XMLHttpRequest : " + XMLHttpRequest.status);
+				console.log("textStatus     : " + textStatus);
+				console.log("errorThrown    : " + errorThrown.message);
+				pageToken = null;
+				dataError = 1;
+			}).always(function() {
+			});
+
+			if (dataError != 1) {
+				for (const ele of movies) {
+					var s = exist_url + ele.videoId + "/?format=json";
+					$('#movie-list').append("<li id='" + ele.videoId + "'></li>");
+					$.getJSON(s, function(data) {
+						if (data[0]) {
+						// if (ele.position % 2 == 0) {
+							$('li#' + ele.videoId).html("<a href='" + detail_url + ele.videoId + "'>" + ele.position + " - " + ele.title + "</a>");
+						} else {
+							$('li#' + ele.videoId).html(ele.position + " - " + ele.title);
+						}
+					})
+				}
+			}
+		}
+	}
+</script>
+{% endblock %}

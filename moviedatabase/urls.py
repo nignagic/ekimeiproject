@@ -65,6 +65,8 @@ urlpatterns = [
 	path('application/account_and_creator/', views.AccountAndCreatorApplicationView, name='accountandcreatorapplication'),
 	path('application/account_and_creator/confirm/<int:creator>/', views.AccountAndCreatorApplicationConfirmView, name='accountandcreatorapplicationconfirm'),
 
+	path('check/channel_movie_is_exist/<slug:channel_id>/', views.ChannelMovieIsExist, name='channel_movie_is_exist'),
+
 	url('^api/lineservice/(?P<line_service>.+)/stationservice/', views.StationServicebyLineServiceViewSet.as_view(), name='stationservicebylineserviceapi'),
 	url('^api/pref/(?P<pref>.+)/lineservice/', views.LineServicebyPrefectureViewSet.as_view(), name='lineservicebyprefectureapi'),
 	url('^api/company/(?P<company>.+)/lineservice/', views.LineServicebyCompanyViewSet.as_view(), name='lineservicebycompanyapi'),
@@ -77,4 +79,5 @@ urlpatterns = [
 	url('^api/movie/(?P<movie>.+)/', views.MovieViewSet.as_view(), name='movieapi'),
 	url('^api/creator/(?P<creator>.+)/name/', views.NamebyCreatorViewSet.as_view(), name='namebycreatorapi'),
 	url('^api/name/(?P<name>.+)/', views.NameViewSet.as_view(), name='nameapi'),
+	url('^api/movie_is_exist/(?P<main_id>.+)/', views.MovieIsExistViewSet.as_view(), name='movieisexistapi'),
 ]

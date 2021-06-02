@@ -56,3 +56,8 @@ class NameSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = LineService
 		fields = ('name_pk', 'name', 'creator_name')
+		
+class MovieIsExistSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Movie
+		fields = ['main_id']

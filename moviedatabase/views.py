@@ -1007,6 +1007,8 @@ class MovieListbyChannelView(generic.ListView):
 		context['sort'] = self.request.GET.get('sort')
 		context['order'] = self.request.GET.get('order')
 
+		context['admin'] = self.request.user.groups.filter(name='admin').exists()
+
 		return context
 
 class MovieListbyNiconicoView(generic.ListView):
@@ -1401,6 +1403,14 @@ def AccountAndCreatorApplicationConfirmView(request, creator):
 
 	return render(request, 'moviedatabase/application/account_and_creator_confirm.html', context)
 
+@permission_required('moviedatabase.add_youtubechannel')
+def ChannelMovieIsExist(request, channel_id):
+	channel = get_object_or_404(YoutubeChannel, channel_id=channel_id)
+	context = {
+		'channel': channel
+	}
+	return render(request, 'moviedatabase/channel_movie_is_exist.html', context)
+
 class StationServicebyLineServiceViewSet(generics.ListAPIView):
 	serializer_class = serializer.StationServiceSerializer
 	def get_queryset(self):
@@ -1478,3 +1488,8 @@ class NameViewSet(generics.ListAPIView):
 	serializer_class = serializer.NameSerializer
 	def get_queryset(self):
 		return Name.objects.filter(id=self.kwargs['name'])
+
+class MovieIsExistViewSet(generics.ListAPIView):
+	serializer_class = serializer.MovieIsExistSerializer
+	def get_queryset(self):
+		return Movie.objects.filter(main_id=self.kwargs['main_id'])
