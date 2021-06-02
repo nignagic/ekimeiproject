@@ -1175,7 +1175,7 @@ def movie_statistics_update(request, main_id):
 
 	movies = Movie.objects.all()
 	for m in movies:
-		m.reg_date = m.reg_date + datetime.timedelta(hours=-9)
+		m.reg_date = m.reg_date + datetime.timedelta(hours=9)
 		m.statistics_update_date = m.reg_date
 		m.save()
 
