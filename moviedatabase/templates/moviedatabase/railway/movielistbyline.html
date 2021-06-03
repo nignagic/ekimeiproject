@@ -4,6 +4,7 @@
 
 {% load static %}
 {% block content %}
+<script src="http://maps.google.com/maps/api/js?key=AIzaSyBzjlCVxEuCDOb0sgC__Xvp733WlAJIYpE&language=ja"></script>
 <link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
 <link rel="stylesheet" href="{% static 'moviedatabase/railway/movielistbyrailway.css' %}">
 <div class="background">
@@ -52,7 +53,7 @@
 				{% endif %}
 				<ul class="station-list-ul">
 					{% for station in stations %}
-						<li class="station-list-li black-border-all">
+						<li class="station-list-li black-border-all" data-lon="{{ station.lon }}" data-lat="{{ station.lat }}">
 							<a href="{% url 'moviedatabase:movielistbystation' station.pk %}">
 								<div class="li-station-info white-background">
 									<div class="station-name">{{ station }}</div>

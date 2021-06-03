@@ -1,0 +1,8 @@
+<ul>
+{% for s in stations %}
+	<li>
+		<div>{{ s.name }} - {{ s.line_service }}</div>
+		<div>{{ s.station.lon }} / {{ s.station.lat }}</div>
+	</li>
+{% endfor %}
+</ul>

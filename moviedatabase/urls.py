@@ -14,6 +14,8 @@ urlpatterns = [
 	path('update/', views.Update, name='update'),
 	path('guide_account_creator/', views.GuideAccountCreator, name='guideaccountcreator'),
 
+	path('test/', views.test, name='test'),
+
 	path('search/', views.FreeSearchView, name='freesearch'),
 
 	path('railway/', views.RailwayTopView.as_view(), name='railwaytop'),

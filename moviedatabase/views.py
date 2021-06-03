@@ -25,8 +25,10 @@ import datetime
 # Create your views here.
 
 def test(request):
+	stations = StationService.objects.all()
 
 	context = {
+		'stations': stations
 	}
 
 	return render(request, 'moviedatabase/test.html', context)
