@@ -54,11 +54,11 @@ class Top(generic.ListView):
 		movies = Movie.objects.all().order_by('-published_at')[:6]
 		update_list = MovieUpdateInformation.objects.all()
 		notice_list = NoticeInformation.objects.all()
-		top_img = TopImage.objects.all().order_by("?")[0]
+		top_img = TopImage.objects.all().order_by("?").first()
 		context = {
 			'top_img': top_img,
 			'movie_list': movies,
-			'todaymovie': todaymovie().order_by("?")[0],
+			'todaymovie': todaymovie().order_by("?").first(),
 			'today': timezone.now(),
 			'update_list': update_list,
 			'notice_list': notice_list
@@ -95,6 +95,8 @@ def Update(request):
 def GuideAccountCreator(request):
 	return render(request, 'moviedatabase/static-page/guide-account-creator.html')
 
+def StartUpGuide(request):
+	return render(request, 'moviedatabase/static-page/startup-guide.html')
 
 class MovieListView(generic.ListView):
 	model = Movie

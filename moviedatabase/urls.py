@@ -13,6 +13,7 @@ urlpatterns = [
 	path('privacy/', views.Privacy, name='privacy'),
 	path('update/', views.Update, name='update'),
 	path('guide_account_creator/', views.GuideAccountCreator, name='guideaccountcreator'),
+	path('startup_guide/', views.StartUpGuide, name='startupguide'),
 
 	path('test/', views.test, name='test'),
 
