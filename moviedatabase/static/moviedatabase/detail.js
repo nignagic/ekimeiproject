@@ -120,7 +120,7 @@ $(function() {
 						afterback = undefined;
 					}
 
-					if (category == "駅名替え歌") {
+					if (category == "駅名替え歌" || category == "その他") {
 						if (beforeline == 0) {
 							ul++;
 							parody_station_head = line_box_text(undefined, "#333", "#333", "駅名替え歌", data[i].category, true)
