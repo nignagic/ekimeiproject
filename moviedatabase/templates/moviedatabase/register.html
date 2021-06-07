@@ -69,6 +69,11 @@
 			videoId = videoId.substr(Idstartnum+2, 11);
 		};
 
+		Idstartnum = videoId.indexOf("youtu.be/");
+		if (Idstartnum != -1) {
+			videoId = videoId.substr(Idstartnum+9, 11);
+		};
+
 		function toDoubleDigits(num) {
 			num += "";
 			if (num.length === 1) {

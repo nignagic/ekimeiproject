@@ -1,0 +1,142 @@
+ol, ul {
+	counter-reset: item;
+	list-style-type: none;
+	padding-left: 0;
+}
+
+ol ol, ul ul {
+	padding-left: 2em;
+	margin: 0.5rem 0;
+}
+
+.article > li {
+	margin-bottom: 2rem;
+	background-color: #fafafa;
+	border-radius: 1rem;
+	padding: 2rem 2rem;
+}
+
+.article > li > h2 {
+	font-size: 1.1rem;
+	margin-bottom: 0.8rem;
+	color: #cc5c00;
+}
+
+.article > li > div {
+	margin-bottom: 0.8rem;
+	padding-left: 1.0rem;
+}
+
+.article > li h3 {
+	font-size: 0.95rem;
+	margin-bottom: 0.8rem;
+	border-bottom: 1px solid #cc0000;
+}
+
+.article > li h4 {
+	font-size: 0.95rem;
+	margin: 0.8rem 0;
+	background-color: #cc5c00;
+	padding: 2px 0 2px 1rem;
+	color: #fff;
+}
+
+.article > li > div > div {
+	margin-bottom: 0.8rem;
+	padding-left: 1.0rem;
+}
+
+.article > li > div ol {
+	margin: 1rem 0 1rem 1rem;
+}
+
+.article > li > div ul > li,
+.article > li > div ol > li {
+	font-weight: normal;
+	text-indent: -1.5em;
+	padding-left: 1.5em;
+}
+
+.article > li > div ol > li:before {
+	counter-increment: item;
+	content: counter(item)'.';
+	/* 以下は自由に装飾... */
+	padding-right: .5em;
+	font-weight: normal;
+	color: #cc5c00;
+}
+
+.article > li > div ol > li > div,
+.article > li > div ul > li > div {
+	font-weight: normal;
+	text-indent: 1em;
+	padding-left: 1em;
+	margin: 0.5rem 0 1rem 0;
+}
+
+.article p {
+	font-weight: normal;
+	text-indent: 1.0em;
+	padding-left: 1.0rem;
+	margin-bottom: 0.4rem;
+}
+
+.supplement {
+	background-color: #eee;
+	padding: 1rem;
+	margin: 0.5rem;
+	font-size: 0.85rem;
+}
+
+.supplement p {
+	margin: 0;
+	padding: 0;
+}
+
+.supplement ul {
+	padding-left: 2rem;
+	margin: 0.5rem 0;
+}
+
+.supplement h5 {
+	padding-left: 1rem;
+}
+
+.supplement div {
+	padding-left: 2rem;
+	margin: 0.5rem 0;	
+}
+
+.article > li > ul > li:before {
+	counter-increment: item;
+	content: '・';
+	/* 以下は自由に装飾... */
+	padding-right: .5em;
+	font-weight: normal;
+	color: #cc5c00;
+}
+
+.article > li > ol > li > ol > li {
+	font-weight: normal;
+	text-indent: -1.5em;
+	padding-left: 1.5em;
+}
+
+.article > li > ol > li > ol > li:before {
+	counter-increment: item;
+	content: '('counter(item)')';
+	/* 以下は自由に装飾... */
+	padding-right: .5em;
+	font-weight: normal;
+	color: #cc5c00;
+}
+
+.out-center-header {
+	font-size: 1.3rem;
+	margin: 3rem 0 1rem 0;
+	text-align: center;
+}
+
+.terms-p {
+	font-weight: normal;
+}
