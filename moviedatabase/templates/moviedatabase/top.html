@@ -65,7 +65,7 @@
 						<img class="movie-img" src="https://i.ytimg.com/vi/{{ todaymovie.youtube_id }}/hqdefault.jpg">
 						<div class="movie-info">
 				{% load tz %}
-							<p class="movie-published">{{ todaymovie.published_at|timezone:'Asia/Tokyo'|date:"Y/n/j" }}<span class="movie-category">{{ todaymovie.get_is_collab_display  }}</span></p>
+							<p class="movie-published">{{ todaymovie.published_at|timezone:'Asia/Tokyo'|date:"Y/n/j" }}<span class="movie-category">{{ todaymovie.get_is_collab_display  }}</span>{% for c in movie.category %}{% if c %}<span class="movie-category">{{ c }}</span>{% endif %}{% endfor %}</p>
 							<p class="movie-title"><span>{{ todaymovie.title }}</span></p>
 							<p><span class="movie-channel">{{ todaymovie.channel }}</span><span class="movie-duration"> - {{ todaymovie.get_duration }}</span></p>
 						</div>

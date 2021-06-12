@@ -24,7 +24,7 @@ ol ol, ul ul {
 
 .article > li > h3 {
 	font-size: 0.95rem;
-	margin-bottom: 0.8rem;
+	margin: 1rem 0 0.8rem 0;
 }
 
 .article p {
@@ -72,6 +72,11 @@ ol ol, ul ul {
 	padding-right: .5em;
 	font-weight: normal;
 	color: #cc5c00;
+}
+
+.notice-ul {
+	padding-left: 3rem;
+	margin: 1rem 0;
 }
 
 .terms-p {

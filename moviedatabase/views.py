@@ -79,8 +79,8 @@ class Top(generic.ListView):
 
 	def get_context_data(self):
 		movies = Movie.objects.all().exclude(is_active=False)[:6]
-		update_list = MovieUpdateInformation.objects.all()[:5]
-		notice_list = NoticeInformation.objects.all()
+		update_list = MovieUpdateInformation.objects.all()[:10]
+		notice_list = NoticeInformation.objects.all()[:10]
 		top_img = TopImage.objects.all().order_by("?").first()
 		context = {
 			'top_img': top_img,

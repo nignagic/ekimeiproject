@@ -151,3 +151,7 @@ ol ol, ul ul {
 	max-height: 400px;
 	box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
 }
+
+.station-dup {
+	display: flex;
+}

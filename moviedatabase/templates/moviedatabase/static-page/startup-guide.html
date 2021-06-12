@@ -43,6 +43,32 @@
 					</li>
 					<li>
 						<h2>大まかな流れ</h2>
+						<div style="display: flex;">
+							<div style="flex: 1;">
+								<p>事前確認</p>
+								<div class="guide-img">
+									<img src="{% static 'moviedatabase/base/movie_edit_guide/1-mypage.png' %}">
+								</div>
+							</div>
+							<div style="flex: 1;">
+								<p>動画登録フォーム</p>
+								<div class="guide-img">
+									<img src="{% static 'moviedatabase/base/movie_edit_guide/2-register.png' %}">
+								</div>
+							</div>
+							<div style="flex: 1;">
+								<p>動画情報編集フォーム</p>
+								<div class="guide-img">
+									<img src="{% static 'moviedatabase/base/movie_edit_guide/5-movie-edit.png' %}">
+								</div>
+							</div>
+							<div style="flex: 1;">
+								<p>駅情報編集フォーム</p>
+								<div class="guide-img">
+									<img src="{% static 'moviedatabase/base/movie_edit_guide/15-station-edit.png' %}">
+								</div>
+							</div>
+						</div>
 					</li>
 				</ol>
 				<h2 class="out-center-header">具体的な手順</h2>
@@ -291,7 +317,27 @@
 									<div class="supplement">
 										<p>もし下ではなく上に向かって歌われている駅が並んでいる場合は、「逆順」を押して、下に向かって選択できるように変更してください。</p>
 										<p>途中に廃駅や通過駅が存在するなどで、最初から最後まで歌われている駅と選択した駅が一致しない場合は、キーボードの「Ctrl」(Windowsの場合)を押しながら駅を選ぶことで、個別に選択/解除することができます。</p>
-										<p>路線によっては、駅一覧に同じ駅が連続して並ぶ箇所がある場合があります。この場合は、以下のようにしてください。</p>
+										<p>路線によっては、駅一覧に同じ駅が連続して並ぶ箇所がある場合があります。この場合は、以下のようにしてください。（山陽本線の岡山駅を例に説明します。）</p>
+										<div class="station-dup">
+											<div>
+												<div class="guide-img">
+													<img src="{% static 'moviedatabase/base/movie_edit_guide/23-station-select.png' %}">
+												</div>
+												<p>もし姫路方面から岡山を通り、そのまま山陽本線を倉敷方面へ歌っている場合は、岡山を2つとも選択してください。</p>
+											</div>
+											<div>
+												<div class="guide-img">
+													<img src="{% static 'moviedatabase/base/movie_edit_guide/24-station-select.png' %}">
+												</div>
+												<p>もし姫路方面から岡山まで歌い、ここで歌唱区間が終了する場合、来た方向と同じ側の岡山のみを選択してください。</p>
+											</div>
+											<div>
+												<div class="guide-img">
+													<img src="{% static 'moviedatabase/base/movie_edit_guide/25-station-select.png' %}">
+												</div>
+												<p>もし岡山から歌唱区間が始まり、倉敷方面へ歌っている場合、進む方向と同じ側の岡山のみを選択してください。</p>
+											</div>
+										</div>
 									</div>
 								</li>
 								<li>
@@ -299,11 +345,28 @@
 								</li>
 								<li>登録した駅の中で、「歌唱名」に入力されている名前が、動画で実際に歌われている駅名と異なる場合には、歌われている駅名に変更します。
 									<div class="supplement">
-										<p>明治神宮前＜原宿＞</p>
-										<p>獨協大学前（草加松原）</p>
+										<p>例</p>
+										<ul>
+											<li>動画投稿当時と駅名が変わっていて、改称前の駅名で歌っている場合</li>
+											<li>時期を指定した内容の動画で、その当時の駅名で歌っている場合</li>
+											<li>開業前に仮称で歌わせていたが、その後正式な駅名が決定し、その名前が異なっていた場合。</li>
+										</ul>
+									</div>
+									なお、以下のような場合は任意です。
+									<div class="supplement">
+										<p>例</p>
+										<ul>
+											<li>DB上での登録名は「明治神宮前＜原宿＞」だが、「明治神宮前」と歌っている場合</li>
+											<li>DB上での登録名は「西鉄福岡（天神）」だが、「西鉄福岡」と歌っている場合</li>
+										</ul>
 									</div>
 								</li>
-								<li>次に歌われている路線を探し、同じ手順を繰り返します。
+								<li>次に歌われている路線を探し、同じ手順を繰り返します。<br>このとき、駅をまたいで路線が変わるとき（この場合、神戸駅をまたいで東海道本線から山陽本線へ変わる）、前後両方の路線の駅を、下の画像のように連続して登録してください。<div>
+										<div class="guide-img">
+											<img src="{% static 'moviedatabase/base/movie_edit_guide/26-station-combine.png' %}">
+										</div>
+									</div>
+									
 									<div class="supplement">
 										登録駅リストの各駅についている、「路線検索」ボタンを押すと、その駅が所属する路線が「駅検索ブロック」に表示されます。ご活用ください。
 										<div class="guide-img">
@@ -321,11 +384,13 @@
 					<li>
 						<h2>登録確認フォーム</h2>
 						<p>動画情報のプレビューが表示されます。不備や不具合がないかを確認します。</p>
-						<div class="guide-img">
-							<img src="{% static 'moviedatabase/base/movie_edit_guide/28-confirm.png' %}">
-						</div>
-						<div class="guide-img">
-							<img src="{% static 'moviedatabase/base/movie_edit_guide/29-station-result.png' %}">
+						<div style="display: flex;">
+							<div class="guide-img">
+								<img src="{% static 'moviedatabase/base/movie_edit_guide/28-confirm.png' %}">
+							</div>
+							<div class="guide-img">
+								<img src="{% static 'moviedatabase/base/movie_edit_guide/29-station-result.png' %}">
+							</div>
 						</div>
 						<p>もし、楽曲情報や駅情報などに間違いや抜けがあったら、「パート編集に戻る」を押し、「パート情報編集フォーム」へ移り、再度登録し直します。</p>
 						<div class="supplement">
@@ -338,5 +403,6 @@
 			</div>
 		</div>
 	</div>
+	{% include 'moviedatabase/includes/footer.html' %}
 </div>
 {% endblock %}
