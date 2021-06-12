@@ -866,35 +866,31 @@ class SongTagSearchView(generic.ListView):
 
 		return context
 
-# class MovieListbyVocalView(generic.ListView):
-# 	model = Movie
-# 	paginate_by = 15
-# 	template_name = 'moviedatabase/music/movielistbyvocal.html'
+class MovieListbyVocalView(generic.ListView):
+	model = Movie
+	paginate_by = 15
+	template_name = 'moviedatabase/music/movielistbyvocal.html'
 
-# 	def get_queryset(self):
-# 		queryset = super().get_queryset()
-# 		queryset = Movie.objects.none()
-# 		queryset |= Movie.objects.filter(vocalnew=self.kwargs['vocal'])
-# 		parts = Part.objects.filter(vocalnew=self.kwargs['vocal'])
-# 		for part in parts:
-# 			queryset |= Movie.objects.filter(pk=part.movie.pk)
+	def get_queryset(self):
+		queryset = super().get_queryset()
+		queryset = Movie.objects.none()
+		parts = Part.objects.filter(vocalnew=self.kwargs['vocal'])
+		for part in parts:
+			queryset |= Movie.objects.filter(pk=part.movie.pk)
 			
-# 		queryset = queryset.exclude(is_active=False).order_by('-published_at')
-# 		sort = self.request.GET.get('sort')
-# 		order = self.request.GET.get('order')
-# 		return moviequery(queryset, sort, order)
+		queryset = queryset.exclude(is_active=False).order_by('-published_at')
+		sort = "pub"
+		order = "n"
+		return moviequery(queryset, sort, order)
 
-# 	def get_context_data(self, **kwargs):
-# 		context = super().get_context_data(**kwargs)
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
 
-# 		vocal = VocalNew.objects.get(pk=self.kwargs['vocal'])
+		vocal = VocalNew.objects.get(pk=self.kwargs['vocal'])
 		
-# 		context['vocal'] = vocal
+		context['vocal'] = vocal
 
-# 		context['sort'] = self.request.GET.get('sort')
-# 		context['order'] = self.request.GET.get('order')
-
-# 		return context
+		return context
 
 class CreatorTopView(generic.ListView):
 	model = Creator
