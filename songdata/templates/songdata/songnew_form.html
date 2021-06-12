@@ -37,6 +37,11 @@
 				<div class="submit-banner-inner">
 					<div class="submit-content">
 						<div class="submit-form-status">
+							{% for field, errors in form.errors.items %}
+								{% for error in errors %}
+									<p>{{ error }} (Error in {{ field }})</p>
+								{% endfor %}
+							{% endfor %}
 						</div>
 						<button onclick="submit();" class="submit-button">登録</button>
 					</div>

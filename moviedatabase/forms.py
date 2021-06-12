@@ -14,7 +14,7 @@ class LoginForm(AuthenticationForm):
 class MovieRegisterForm(forms.ModelForm):
 	class Meta:
 		model = Movie
-		fields = ('title', 'channel', 'main_id', 'youtube_id', 'niconico_id', 'published_at', 'duration', 'n_view', 'n_like', 'n_dislike', 'n_comment', 'description', 'reg_date', 'statistics_update_date')
+		fields = ('title', 'channel', 'main_id', 'youtube_id', 'niconico_id', 'published_at', 'published_at_year', 'published_at_month', 'published_at_day', 'published_at_hour', 'published_at_minute', 'published_at_second', 'duration', 'n_view', 'n_like', 'n_dislike', 'n_comment', 'description', 'reg_date', 'statistics_update_date')
 		widgets = {
 			'title': forms.HiddenInput(attrs={
 				'class': 'title',
@@ -33,6 +33,24 @@ class MovieRegisterForm(forms.ModelForm):
 			}),
 			'published_at': forms.HiddenInput(attrs={
 				'class': 'published_at',
+			}),
+			'published_at_year': forms.HiddenInput(attrs={
+				'class': 'published_at_year',
+			}),
+			'published_at_month': forms.HiddenInput(attrs={
+				'class': 'published_at_month',
+			}),
+			'published_at_day': forms.HiddenInput(attrs={
+				'class': 'published_at_day',
+			}),
+			'published_at_hour': forms.HiddenInput(attrs={
+				'class': 'published_at_hour',
+			}),
+			'published_at_minute': forms.HiddenInput(attrs={
+				'class': 'published_at_minute',
+			}),
+			'published_at_second': forms.HiddenInput(attrs={
+				'class': 'published_at_second',
 			}),
 			'duration': forms.HiddenInput(attrs={
 				'class': 'duration',

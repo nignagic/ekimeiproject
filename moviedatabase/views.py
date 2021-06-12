@@ -25,25 +25,91 @@ import datetime
 # Create your views here.
 
 def test(request):
-	stations = StationService.objects.all()
+	movies = Movie.objects.all()
+
+	# 今日の動画表示高速化
+	times = {}
+	for movie in movies:
+		t = movie.published_at
+		t = t + datetime.timedelta(hours=+9)
+		movie.published_at_year = t.year
+		movie.published_at_month = t.month
+		movie.published_at_day = t.day
+		movie.published_at_hour = t.hour
+		movie.published_at_minute = t.minute
+		movie.published_at_second = t.second
+		movie.save()
+		time = {
+			'year': t.year,
+			'month': t.month,
+			'day': t.day,
+			'hour': t.hour,
+			'minute': t.minute,
+			'second': t.second
+		}
+		times[movie] = time
+
+	# カテゴリー表示高速化
+	parts = Part.objects.all()
+	for part in parts:
+		lineinmovies = LineInMovie.objects.filter(part=part)
+		categories = BelongsCategory.objects.none()
+		for l in lineinmovies:
+			categories |= BelongsCategory.objects.filter(pk=l.line_service.category.pk)
+		text = ""
+		for c in categories:
+			if c.object_name and part.category:
+				if part.category.object_name:
+					text += (c.object_name + part.category.object_name) + '\n'
+		part.complex_category = text
+		part.save()
+
+	songs = SongNew.objects.all()
+
+	# 未設定の楽曲削除
+	s = {}
+	for song in songs:
+		parts = song.part_set.all()
+		movies = song.movie_set.all()
+		if (parts.first() is None and movies.first() is None):
+			song.delete()
+
+	# 読みカナテキスト仕様文字出力
+	text = {}
+	for song in songs:
+		if song.song_name_kana:
+			for t in song.song_name_kana:
+				text[t] = 1
+		if song.artist_name_kana:
+			for t in song.artist_name_kana:
+				text[t] = 1
 
 	context = {
-		'stations': stations
+	'times': text
 	}
+
+	# ボーカル重複削除
+	vocals = VocalNew.objects.all()
+	for vocal in vocals:
+		dups = VocalNew.objects.filter(name=vocal.name)
+		if dups.count() > 1:
+			first = dups.first()
+			for dup in dups:
+				for part in dup.part_set.all():
+					part.vocalnew.add(first)
+
+			dupex = dups.exclude(pk=first.pk)
+			for dup in dupex:
+				dup.delete()
 
 	return render(request, 'moviedatabase/test.html', context)
 
 def todaymovie():
 	JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')
 	now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
-	day = datetime.datetime(now.year, now.month, now.day, 0, 0, tzinfo=JST)
-	oldest = Movie.objects.earliest("published_at")
-	m = Movie.objects.none()
-	while day > oldest.published_at:
-		m |= Movie.objects.filter(published_at__range=(day, day + datetime.timedelta(hours=23, minutes=59)))
-		day = day - relativedelta.relativedelta(years=1)
+	m = Movie.objects.filter(published_at_month=now.month, published_at_day=now.day)
 	
-	return m.order_by('-published_at')
+	return m
 
 class Top(generic.ListView):
 	model = Movie
@@ -51,8 +117,8 @@ class Top(generic.ListView):
 
 
 	def get_context_data(self):
-		movies = Movie.objects.all().order_by('-published_at')[:6]
-		update_list = MovieUpdateInformation.objects.all()
+		movies = Movie.objects.all().exclude(is_active=False)[:6]
+		update_list = MovieUpdateInformation.objects.all()[:5]
 		notice_list = NoticeInformation.objects.all()
 		top_img = TopImage.objects.all().order_by("?").first()
 		context = {
@@ -1091,6 +1157,20 @@ def detail_movie(request, main_id):
 		return render(request, '403.html')
 
 	if 'confirm' in request.POST:
+		for part in parts:
+			lineinmovies = LineInMovie.objects.filter(part=part)
+			categories = BelongsCategory.objects.none()
+			for l in lineinmovies:
+				categories |= BelongsCategory.objects.filter(pk=l.line_service.category.pk)
+			text = ""
+
+			for c in categories:
+				if c.object_name and part.category:
+					if part.category.object_name:
+						text += (c.object_name + part.category.object_name) + '\n'
+			part.complex_category = text
+			part.save()
+
 		add_updatehistory(request, main_id, 'complete-confirm')
 		info = MovieUpdateInformation.objects.filter(movie=movie)
 		if info:

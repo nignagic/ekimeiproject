@@ -184,6 +184,9 @@
 			</h3>
 			<div class="part-outer">
 				{% for part in parts %}
+				{% for c in part.get_complex_category %}
+				{{ c }}
+				{% endfor %}
 				<div class="part-container">
 					<div class="part-header" {% if onlyonepart %}style="display: none;"{% endif %}>
 						<div class="part-name-short">
@@ -278,7 +281,7 @@
 								<th class="part-detail-label">使用ボーカル</th>
 								<td class="part-detail-content">
 									{% for vocal in part.vocalnew.all %}
-										{{ vocal }}
+										<span data-id="{{ vocal.id }}">{{ vocal }}</span>
 										{% if forloop.last %}
 										{% else %}
 											<span>/</span>

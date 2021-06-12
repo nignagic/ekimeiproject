@@ -3,6 +3,8 @@ from django.views import generic
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
 
+from django import forms
+
 from django.contrib.auth.decorators import permission_required
 
 from rest_framework import generics
@@ -72,9 +74,15 @@ class PopupArtistCreate(ArtistCreate):
 		}
 		return render(self.request, 'songdata/close_artist.html', context)
 
+class VocalForm(forms.ModelForm):
+	class Meta:
+		model = VocalNew
+		fields = ('name', 'name_kana')
+
 class VocalCreate(PermissionRequiredMixin, generic.CreateView):
+	form_class = VocalForm
 	model = VocalNew
-	fields = '__all__'
+
 	permission_required = ('songdata.add_vocalnew')
 	success_url = reverse_lazy('songdata:vocallist')
 

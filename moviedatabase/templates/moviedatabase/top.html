@@ -35,6 +35,8 @@
 		</nav>
 	</section>
 	<section class="top-movie-list">
+		{% load cache %}
+		{% cache 600 movielist %}
 		<div class="movie-list-left">
 			<h4 class="content-header movie-border">新着動画</h4>
 			{% if movie_list %}
@@ -44,6 +46,7 @@
 			{% endif %}
 			<a href="{% url 'moviedatabase:movielist' %}">もっと見る</a>
 		</div>
+		{% endcache %}
 		<div class="movie-list-right">
 			<h4 class="content-header movie-border">公式ツイート</h4>
 			<div class="tweets">
@@ -62,11 +65,9 @@
 						<img class="movie-img" src="https://i.ytimg.com/vi/{{ todaymovie.youtube_id }}/hqdefault.jpg">
 						<div class="movie-info">
 				{% load tz %}
-							<p class="movie-published">{{ todaymovie.published_at|timezone:'Asia/Tokyo'|date:"Y/n/j" }}<span class="movie-category">{{ todaymovie.get_is_collab_display  }}</span>{% for c in todaymovie.category %}<span class="movie-category">{{ c }}</span>{% endfor %}</p>
+							<p class="movie-published">{{ todaymovie.published_at|timezone:'Asia/Tokyo'|date:"Y/n/j" }}<span class="movie-category">{{ todaymovie.get_is_collab_display  }}</span></p>
 							<p class="movie-title"><span>{{ todaymovie.title }}</span></p>
 							<p><span class="movie-channel">{{ todaymovie.channel }}</span><span class="movie-duration"> - {{ todaymovie.get_duration }}</span></p>
-
-							<!-- <p>{% for s in todaymovie.songnew.all %}{{ s }}{% endfor %}</p> -->
 						</div>
 					</a>
 				</div>
@@ -89,6 +90,7 @@
 				{% endfor %}
 			</ul>
 		</div>
+		{% cache 300 update %}
 		<div class="top-update">
 			<h5 class="content-header movie-border">更新情報</h5>
 			<ul class="update-ul">
@@ -105,6 +107,7 @@
 				{% endfor %}
 			</ul>
 		</div>
+		{% endcache %}
 	</section>
 	{% include 'moviedatabase/includes/footer.html' %}
 </div>

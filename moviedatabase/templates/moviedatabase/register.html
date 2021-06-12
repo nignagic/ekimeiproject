@@ -50,7 +50,7 @@
 						{% endfor %}
 					{% endfor %}
 				</div>
-				<button class="submit-button" form="main-form" disabled="true">送信</button>
+				<button class="submit-button" form="main-form" disabled="true">登録</button>
 			</div>
 		</div>
 	</div>
@@ -229,6 +229,12 @@
 			$('input.main_id').val(videoId);
 			$('input.youtube_id').val(videoId);
 			$('input.published_at').val(dateU + " " + timeU);
+			$('input.published_at_year').val(dateJ.split('-')[0]);
+			$('input.published_at_month').val(dateJ.split('-')[1]);
+			$('input.published_at_day').val(dateJ.split('-')[2]);
+			$('input.published_at_hour').val(timeJ.split(':')[0]);
+			$('input.published_at_minute').val(timeJ.split(':')[1]);
+			$('input.published_at_second').val(timeJ.split(':')[2]);
 			$('input.duration').val(duration);
 			$('input.n_view').val(view);
 			$('input.n_like').val(like);

@@ -1,8 +1,13 @@
+
 <ul>
-{% for s in stations %}
+{% for key, value in d.items %}
 	<li>
-		<div>{{ s.name }} - {{ s.line_service }}</div>
-		<div>{{ s.station.lon }} / {{ s.station.lat }}</div>
+		<div>{{ key }}</div>
+		<ul>
+			<li>
+				{{ value }}</a>
+			</li>
+		</ul>
 	</li>
 {% endfor %}
 </ul>

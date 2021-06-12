@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.core import validators
 
 import re
 import jaconv
@@ -61,9 +62,27 @@ class Song(models.Model):
 
 class SongNew(models.Model):
 	song_name = models.CharField('曲名', max_length=200)
-	song_name_kana = models.CharField('曲名カナ', max_length=200, null=True, blank=True)
+	song_name_kana = models.CharField(
+		'曲名カナ',
+		max_length=200,
+		null=True,
+		blank=True,
+		validators=[validators.RegexValidator(
+				regex=u'^[ァ-ヶー]+$',
+				message='全角カタカナのみを入力してください'
+			)]
+		)
 	artist_name = models.TextField('アーティスト名', max_length=400, null=True, blank=True)
-	artist_name_kana = models.TextField('アーティスト名カナ', max_length=400, null=True, blank=True)
+	artist_name_kana = models.TextField(
+		'アーティスト名カナ',
+		max_length=400,
+		null=True,
+		blank=True,
+		validators=[validators.RegexValidator(
+				regex=u'^[ァ-ヶ\s（）ー]+$',
+				message='全角カタカナのみを入力してください'
+			)]
+		)
 	tag = models.TextField('タグ', max_length=400, null=True, blank=True)
 
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='登録者')
@@ -82,7 +101,16 @@ class SongNew(models.Model):
 
 class VocalNew(models.Model):
 	name = models.CharField('ボーカル名', max_length=200)
-	name_kana = models.CharField('ボーカル名カナ', max_length=200, null=True, blank=True)
+	name_kana = models.CharField(
+		'ボーカル名カナ',
+		max_length=200,
+		null=True,
+		blank=True,
+		validators=[validators.RegexValidator(
+				regex=u'^[ァ-ヶー]+$',
+				message='全角カタカナのみを入力してください'
+			)]
+		)
 	class Meta:
 		ordering = ('name_kana', 'name')
 

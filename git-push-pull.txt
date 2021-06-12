@@ -13,3 +13,21 @@ git fetch
 git fetch origin master
 git reset --hard origin/master
 git pull origin master
+
+---------------------------(Conoha)
+sudo git init
+sudo git remote rm origin
+sudo git remote add origin https://github.com/nignagic/ekimeiproject
+sudo git fetch
+sudo git fetch origin master
+sudo git reset --hard origin/master
+sudo git pull origin master
+
+sudo python3 manage.py collectstatic
+
+sudo python3 manage.py makemigrations
+
+sudo lsof -i:8001
+sudo kill -9 ****
+uwsgi --socket :8001 --module ekimeiproject.wsgi &
+sudo service nginx restart

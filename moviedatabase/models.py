@@ -76,7 +76,15 @@ class Movie(models.Model):
 	main_id = models.CharField('動画ID', max_length=200, unique=True)
 	youtube_id = models.CharField('YouTube 動画ID', max_length=200, null=True, blank=True)
 	niconico_id = models.CharField('ニコニコ動画 動画ID', max_length=200, null=True, blank=True)
+	
 	published_at = models.DateTimeField('投稿日時', null=True, blank=True)
+	published_at_year = models.IntegerField('投稿日時[日本時間]（年）', null=True, blank=True)
+	published_at_month = models.IntegerField('投稿日時[日本時間]（月）', null=True, blank=True)
+	published_at_day = models.IntegerField('投稿日時[日本時間]（日）', null=True, blank=True)
+	published_at_hour = models.IntegerField('投稿日時[日本時間]（時）', null=True, blank=True)
+	published_at_minute = models.IntegerField('投稿日時[日本時間]（分）', null=True, blank=True)
+	published_at_second = models.IntegerField('投稿日時[日本時間]（秒）', null=True, blank=True)
+
 	duration = models.DurationField('長さ', null=True, blank=True)
 	n_view = models.IntegerField('再生回数', default=0, null=True, blank=True)
 	n_like = models.IntegerField('高評価数', default=0, null=True, blank=True)
@@ -103,17 +111,17 @@ class Movie(models.Model):
 	explanation = models.TextField('補足説明', blank=True)
 	is_active = models.BooleanField('active', default=True)
 	class Meta:
-		ordering = ('is_collab', '-id')
+		ordering = ['-published_at']
 
 	def category(self):
 		parts = Part.objects.filter(movie=self.main_id)
 		text = []
 		for part in parts:
-			categories = part.complex_category()
+			categories = part.get_complex_category()
 			if categories:
 				for c in categories:
 					text.append(c)
-		return list(set(text))
+		return text
 
 	def get_duration(self):
 		d = self.duration
@@ -144,20 +152,15 @@ class Part(models.Model):
 	vocalnew = models.ManyToManyField(VocalNew, blank=True, verbose_name='使用ボーカル(パート)')
 	explanation = models.TextField('補足説明', null=True, blank=True)
 	incomplete = models.BooleanField('情報が不完全', default=False)
+
+	complex_category = models.TextField('複合カテゴリー', blank=True)
+
+	def get_complex_category(self):
+		s = self.complex_category.split('\n')
+		return s
+
 	def part_num(self):
 		return self.sort_by_movie + 1;
-
-	def complex_category(self):
-		lineinmovies = LineInMovie.objects.filter(part=self.pk)
-		categories = BelongsCategory.objects.none()
-		for l in lineinmovies:
-			categories |= BelongsCategory.objects.filter(pk=l.line_service.category.pk)
-		text = []
-		for c in categories:
-			if c.object_name and self.category:
-				if self.category.object_name:
-					text.append(c.object_name + self.category.object_name)
-		return text
 
 	def __str__(self):
 		if self.name:
