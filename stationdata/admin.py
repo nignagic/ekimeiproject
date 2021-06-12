@@ -4,12 +4,11 @@ from .models import *
 # Register your models here.
 class StationAdmin(admin.ModelAdmin):
 	list_display = ('name', 'line')
-	list_editable = ('line',)
 	search_fields = ['name']
 
 class StationServiceAdmin(admin.ModelAdmin):
 	list_display = ('name', 'line_service', 'get_color', 'is_representative')
-	list_editable = ('is_representative', 'line_service')
+	list_editable = ('is_representative',)
 	search_fields = ('name', 'line_service__name')
 
 # class StationInMovieAdmin(admin.ModelAdmin):
