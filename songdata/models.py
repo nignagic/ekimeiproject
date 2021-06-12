@@ -100,7 +100,7 @@ class SongNew(models.Model):
 		return self.tag.split('\n')
 
 class VocalNew(models.Model):
-	name = models.CharField('ボーカル名', max_length=200)
+	name = models.CharField('ボーカル名', max_length=200, unique=True)
 	name_kana = models.CharField(
 		'ボーカル名カナ',
 		max_length=200,
