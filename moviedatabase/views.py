@@ -5,6 +5,7 @@ from django.utils import timezone
 from rest_framework import generics
 from . import serializer
 from django.db.models import Q
+from pure_pagination.mixins import PaginationMixin
 
 from .models import *
 from stationdata.models import *
@@ -93,12 +94,12 @@ class Top(generic.ListView):
 
 		return context
 
-class NoticeList(generic.ListView):
+class NoticeList(PaginationMixin, generic.ListView):
 	model = NoticeInformation
 	paginate_by = 30
 	template_name = 'moviedatabase/notice/notice_list.html'
 
-class UpdateList(generic.ListView):
+class UpdateList(PaginationMixin, generic.ListView):
 	model = MovieUpdateInformation
 	paginate_by = 30
 	template_name = 'moviedatabase/notice/update_list.html'
@@ -139,7 +140,7 @@ def GuideAccountCreator(request):
 def StartUpGuide(request):
 	return render(request, 'moviedatabase/static-page/startup-guide.html')
 
-class MovieListView(generic.ListView):
+class MovieListView(PaginationMixin, generic.ListView):
 	model = Movie
 	template_name = 'moviedatabase/movielist.html'
 	queryset = Movie.objects.all()
@@ -282,7 +283,7 @@ class RailwayTopView(generic.TemplateView):
 
 		return context
 
-class MovieListbyBelongsCategoryView(generic.ListView):
+class MovieListbyBelongsCategoryView(PaginationMixin, generic.ListView):
 	model = Movie
 	paginate_by = 15
 	template_name = 'moviedatabase/railway/movielistbybelongscategory.html'
@@ -310,7 +311,7 @@ class MovieListbyBelongsCategoryView(generic.ListView):
 
 		return context
 
-class MovieListbyMovieCategoryView(generic.ListView):
+class MovieListbyMovieCategoryView(PaginationMixin, generic.ListView):
 	model = Movie
 	paginate_by = 15
 	template_name = 'moviedatabase/railway/movielistbymoviecategory.html'
@@ -336,7 +337,7 @@ class MovieListbyMovieCategoryView(generic.ListView):
 
 		return context
 
-class CompanyListbyRegionView(generic.ListView):
+class CompanyListbyRegionView(PaginationMixin, generic.ListView):
 	model = Company
 	paginate_by = 30
 	template_name = 'moviedatabase/railway/companylistbyregion.html'
@@ -364,7 +365,7 @@ class CompanyListbyRegionView(generic.ListView):
 		context['prefs'] = prefs
 		return context
 
-class LineServiceListbyPrefectureView(generic.ListView):
+class LineServiceListbyPrefectureView(PaginationMixin, generic.ListView):
 	model = LineService
 	paginate_by = 30
 	template_name = 'moviedatabase/railway/lineservicelistbyprefecture.html'
@@ -391,7 +392,7 @@ class LineServiceListbyPrefectureView(generic.ListView):
 
 		return context
 
-class LineServiceListbyCompanyView(generic.ListView):
+class LineServiceListbyCompanyView(PaginationMixin, generic.ListView):
 	model = LineService
 	paginate_by = 30
 	template_name = 'moviedatabase/railway/lineservicelistbycompany.html'
@@ -421,7 +422,7 @@ class LineServiceListbyCompanyView(generic.ListView):
 
 		return context
 
-class LineServiceListbyCompanyandPrefectureView(generic.ListView):
+class LineServiceListbyCompanyandPrefectureView(PaginationMixin, generic.ListView):
 	model = LineService
 	paginate_by = 30
 	template_name = 'moviedatabase/railway/lineservicelistbycompanyandprefecture.html'
@@ -445,7 +446,7 @@ class LineServiceListbyCompanyandPrefectureView(generic.ListView):
 
 		return context
 
-class LineServiceSearchView(generic.ListView):
+class LineServiceSearchView(PaginationMixin, generic.ListView):
 	model = LineService
 	paginate_by = 30
 	template_name = 'moviedatabase/railway/lineservicesearch.html'
@@ -466,7 +467,7 @@ class LineServiceSearchView(generic.ListView):
 
 		return context
 
-class StationServiceSearchView(generic.ListView):
+class StationServiceSearchView(PaginationMixin, generic.ListView):
 	model = StationService
 	paginate_by = 30
 	template_name = 'moviedatabase/railway/stationservicesearch.html'
@@ -498,7 +499,7 @@ def moviequery(q, sort, order):
 			q = q.order_by('n_view')
 	return q
 
-class MovieListbyStationInMovieSearchView(generic.ListView):
+class MovieListbyStationInMovieSearchView(PaginationMixin, generic.ListView):
 	model = Movie
 	paginate_by = 15
 	template_name = 'moviedatabase/railway/movielistbystationinmoviesearch.html'
@@ -526,7 +527,7 @@ class MovieListbyStationInMovieSearchView(generic.ListView):
 
 		return context
 
-class MovieListbyLineView(generic.ListView):
+class MovieListbyLineView(PaginationMixin, generic.ListView):
 	model = Movie
 	paginate_by = 15
 	template_name = 'moviedatabase/railway/movielistbyline.html'
@@ -571,7 +572,7 @@ class MovieListbyLineView(generic.ListView):
 
 		return context
 
-class MovieListbyStationView(generic.ListView):
+class MovieListbyStationView(PaginationMixin, generic.ListView):
 	model = Movie
 	paginate_by = 15
 	template_name = 'moviedatabase/railway/movielistbystation.html'
@@ -608,7 +609,7 @@ class MovieListbyStationView(generic.ListView):
 
 		return context
 
-class MovieListbyLineServiceView(generic.ListView):
+class MovieListbyLineServiceView(PaginationMixin, generic.ListView):
 	model = Movie
 	paginate_by = 15
 	template_name = 'moviedatabase/railway/movielistbylineservice.html'
@@ -645,7 +646,7 @@ class MovieListbyLineServiceView(generic.ListView):
 
 		return context
 
-class MovieListbyStationServiceView(generic.ListView):
+class MovieListbyStationServiceView(PaginationMixin, generic.ListView):
 	model = Movie
 	paginate_by = 15
 	template_name = 'moviedatabase/railway/movielistbystationservice.html'
@@ -773,7 +774,7 @@ def initial_query(q, kana):
 					q2 |= q.filter(name_kana__istartswith=d)
 		return q2.order_by('name_kana')
 
-class ArtistSearchView(generic.ListView):
+class ArtistSearchView(PaginationMixin, generic.ListView):
 	model = Movie
 	paginate_by = 15
 	template_name = 'moviedatabase/music/artistsearch.html'
@@ -804,7 +805,7 @@ class ArtistSearchView(generic.ListView):
 
 		return context
 
-class SongSearchView(generic.ListView):
+class SongSearchView(PaginationMixin, generic.ListView):
 	model = Movie
 	paginate_by = 15
 	template_name = 'moviedatabase/music/songsearch.html'
@@ -835,7 +836,7 @@ class SongSearchView(generic.ListView):
 
 		return context
 
-class SongTagSearchView(generic.ListView):
+class SongTagSearchView(PaginationMixin, generic.ListView):
 	model = Movie
 	paginate_by = 15
 	template_name = 'moviedatabase/music/songtagsearch.html'
@@ -866,7 +867,7 @@ class SongTagSearchView(generic.ListView):
 
 		return context
 
-class MovieListbyVocalView(generic.ListView):
+class MovieListbyVocalView(PaginationMixin, generic.ListView):
 	model = Movie
 	paginate_by = 15
 	template_name = 'moviedatabase/music/movielistbyvocal.html'
@@ -892,7 +893,7 @@ class MovieListbyVocalView(generic.ListView):
 
 		return context
 
-class CreatorTopView(generic.ListView):
+class CreatorTopView(PaginationMixin, generic.ListView):
 	model = Creator
 	paginate_by = 200
 	template_name = 'moviedatabase/creator/creatorlist.html'
@@ -919,12 +920,12 @@ class CreatorTopView(generic.ListView):
 
 		return context
 
-class ChannelListView(generic.ListView):
+class ChannelListView(PaginationMixin, generic.ListView):
 	model = YoutubeChannel
 	paginate_by = 30
 	template_name = 'moviedatabase/creator/youtubechannellist.html'
 
-class CreatorSearchView(generic.ListView):
+class CreatorSearchView(PaginationMixin, generic.ListView):
 	model = Creator
 	paginate_by = 30
 	template_name = 'moviedatabase/creator/creatorsearch.html'
@@ -946,7 +947,7 @@ class CreatorSearchView(generic.ListView):
 
 		return context
 
-class MovieListbyCreatorView(generic.ListView):
+class MovieListbyCreatorView(PaginationMixin, generic.ListView):
 	model = Movie
 	paginate_by = 15
 	template_name = 'moviedatabase/creator/movielistbycreator.html'
@@ -997,7 +998,7 @@ class MovieListbyCreatorView(generic.ListView):
 
 		return context
 
-class MovieListbyNameView(generic.ListView):
+class MovieListbyNameView(PaginationMixin, generic.ListView):
 	model = Movie
 	paginate_by = 15
 	template_name = 'moviedatabase/creator/movielistbyname.html'
@@ -1027,7 +1028,7 @@ class MovieListbyNameView(generic.ListView):
 
 		return context
 
-class MovieListbyChannelView(generic.ListView):
+class MovieListbyChannelView(PaginationMixin, generic.ListView):
 	model = Movie
 	paginate_by = 15
 	template_name = 'moviedatabase/creator/movielistbychannel.html'
@@ -1052,7 +1053,7 @@ class MovieListbyChannelView(generic.ListView):
 
 		return context
 
-class MovieListbyNiconicoView(generic.ListView):
+class MovieListbyNiconicoView(PaginationMixin, generic.ListView):
 	model = Movie
 	paginate_by = 15
 	template_name = 'moviedatabase/creator/movielistbyniconico.html'
