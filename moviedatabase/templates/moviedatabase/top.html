@@ -38,7 +38,7 @@
 		{% load cache %}
 		{% cache 600 movielist %}
 		<div class="movie-list-left">
-			<h4 class="content-header movie-border">新着動画</h4>
+			<h4 class="content-header movie-border">新着動画<span style="font-weight: normal;font-size: 0.7rem;padding-left: 1rem;">10分に一度更新</span></h4>
 			{% if movie_list %}
 				{% include 'moviedatabase/includes/movielist.html' %}
 			{% else %}
@@ -85,12 +85,12 @@
 				{% for info in notice_list %}
 				<li class="update-li">
 					<p class="update-top">{{ info.reg_date|timezone:'Asia/Tokyo'|date:"Y/n/j" }}　<span>{{ info.category }}</span></p>
-					<div class="update-bottom">{{ info.head }}</div>
+					<div class="update-bottom"><a href="{% url 'moviedatabase:notice' info.pk %}">{{ info.head }}</a></div>
 				</li>
 				{% endfor %}
 			</ul>
+			<a href="{% url 'moviedatabase:noticelist' %}">もっと見る</a>
 		</div>
-		{% cache 300 update %}
 		<div class="top-update">
 			<h5 class="content-header movie-border">更新情報</h5>
 			<ul class="update-ul">
@@ -106,8 +106,8 @@
 				</li>
 				{% endfor %}
 			</ul>
+			<a href="{% url 'moviedatabase:updatelist' %}">もっと見る</a>
 		</div>
-		{% endcache %}
 	</section>
 	{% include 'moviedatabase/includes/footer.html' %}
 </div>

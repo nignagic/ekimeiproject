@@ -25,45 +25,6 @@ import datetime
 # Create your views here.
 
 def test(request):
-	movies = Movie.objects.all()
-
-	# 今日の動画表示高速化
-	times = {}
-	for movie in movies:
-		t = movie.published_at
-		t = t + datetime.timedelta(hours=+9)
-		movie.published_at_year = t.year
-		movie.published_at_month = t.month
-		movie.published_at_day = t.day
-		movie.published_at_hour = t.hour
-		movie.published_at_minute = t.minute
-		movie.published_at_second = t.second
-		movie.save()
-		time = {
-			'year': t.year,
-			'month': t.month,
-			'day': t.day,
-			'hour': t.hour,
-			'minute': t.minute,
-			'second': t.second
-		}
-		times[movie] = time
-
-	# カテゴリー表示高速化
-	parts = Part.objects.all()
-	for part in parts:
-		lineinmovies = LineInMovie.objects.filter(part=part)
-		categories = BelongsCategory.objects.none()
-		for l in lineinmovies:
-			categories |= BelongsCategory.objects.filter(pk=l.line_service.category.pk)
-		text = ""
-		for c in categories:
-			if c.object_name and part.category:
-				if part.category.object_name:
-					text += (c.object_name + part.category.object_name) + '\n'
-		part.complex_category = text
-		part.save()
-
 	songs = SongNew.objects.all()
 
 	# 未設定の楽曲削除
@@ -74,7 +35,7 @@ def test(request):
 		if (parts.first() is None and movies.first() is None):
 			song.delete()
 
-	# 読みカナテキスト仕様文字出力
+	# 読みカナテキスト使用文字出力
 	text = {}
 	for song in songs:
 		if song.song_name_kana:
@@ -131,6 +92,20 @@ class Top(generic.ListView):
 		}
 
 		return context
+
+class NoticeList(generic.ListView):
+	model = NoticeInformation
+	paginate_by = 30
+	template_name = 'moviedatabase/notice/notice_list.html'
+
+class UpdateList(generic.ListView):
+	model = MovieUpdateInformation
+	paginate_by = 30
+	template_name = 'moviedatabase/notice/update_list.html'
+
+class NoticeDetail(generic.DetailView):
+	model = NoticeInformation
+	template_name = 'moviedatabase/notice/notice_detail.html'
 
 class Login(LoginView):
 	form_class = forms.LoginForm

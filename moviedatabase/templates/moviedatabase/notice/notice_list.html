@@ -1,0 +1,45 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}作者から探す - {{ kana }}{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
+<link rel="stylesheet" href="{% static 'moviedatabase/objectlist.css' %}">
+<link rel="stylesheet" href="{% static 'moviedatabase/top.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="detail-header">
+		<div class="detail-header-content">
+			<div class="detail-name">お知らせ</div>
+			<div class="detail-name-sub"></div>
+			<div class="sub-name">
+			</div>
+			<div class="under-color movie-background">
+			</div>
+			<div class="line-bottom">
+			</div>
+		</div>
+	</div>
+
+	<div class="main-content">
+		<div class="main-content-inner">
+			<div class="object-list">
+				{% load tz %}
+					<ul class="notice-ul-full">
+						{% for info in object_list %}
+						<li class="update-li">
+							<p class="update-top">{{ info.reg_date|timezone:'Asia/Tokyo'|date:"Y/n/j" }}　<span>{{ info.category }}</span></p>
+							<div class="update-bottom"><a href="{% url 'moviedatabase:notice' info.pk %}">{{ info.head }}</a></div>
+						</li>
+						{% endfor %}
+					</ul>
+				{% include 'moviedatabase/includes/pagination.html' %}
+			</div>
+			<div class="detail-side">
+			</div>
+		</div>
+	</div>
+	{% include 'moviedatabase/includes/footer.html' %}
+</div>
+{% endblock %}

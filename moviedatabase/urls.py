@@ -7,12 +7,14 @@ app_name = 'moviedatabase'
 
 urlpatterns = [
 	path('', views.Top.as_view(), name='top'),
+	path('notice/', views.NoticeList.as_view(), name='noticelist'),
+	path('notice/<int:pk>', views.NoticeDetail.as_view(), name='notice'),
+	path('update/', views.UpdateList.as_view(), name='updatelist'),
 	path('login/', views.Login.as_view(), name='login'),
 	path('logout/', views.Logout.as_view(), name='logout'),
 	path('mypage/', views.Mypage, name='mypage'),
 	path('terms/', views.Terms, name='terms'),
 	path('privacy/', views.Privacy, name='privacy'),
-	path('update/', views.Update, name='update'),
 	path('guide_account_creator/', views.GuideAccountCreator, name='guideaccountcreator'),
 	path('startup_guide/', views.StartUpGuide, name='startupguide'),
 
