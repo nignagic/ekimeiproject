@@ -42,7 +42,7 @@ urlpatterns = [
 	path('music/search/artist/', views.ArtistSearchView.as_view(), name='artistsearch'),
 	path('music/search/song/', views.SongSearchView.as_view(), name='songsearch'),
 	path('music/search/songtag/', views.SongTagSearchView.as_view(), name='songtagsearch'),
-	path('vocal/movie/<int:vocal>', views.MovieListbyVocalView.as_view(), name='songtagsearch'),
+	# path('music/vocal/<int:vocal>', views.MovieListbyVocalView.as_view(), name='songtagsearch'),
 
 	path('creator/', views.CreatorTopView.as_view(), name='creatortop'),
 
