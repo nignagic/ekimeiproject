@@ -59,6 +59,7 @@ urlpatterns = [
 	path('movie/edit/<slug:main_id>/part/', views.movie_part_edit, name='part_edit'),
 	path('movie/edit/<slug:main_id>/part/<int:sort_by_movie>', views.movie_part_station_edit, name='station_edit'),
 	path('movie/edit/<slug:main_id>/confirm', views.confirm_movie, name='confirm'),
+	path('movie/edit/station/upload', views.MultipleStationUpload, name='multiplestationupload'),
 	path('popup/name_create/', views.PopupNameCreate.as_view(), name='popup_name_create'),
 	path('popup/parent_movie_setting/', views.popup_parent_movie_setting, name='popup_parent_movie_setting'),
 	path('popup/related_movie_setting/', views.popup_related_movie_setting, name='popup_related_movie_setting'),

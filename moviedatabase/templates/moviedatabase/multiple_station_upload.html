@@ -1,0 +1,106 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block content %}
+<input type="file" id="exo" />
+<div id="content"></div>
+{% endblock %}
+
+{% load static %}
+{% block extrajs %}
+<script type="text/javascript" src="{% static 'moviedatabase/encoding.js' %}"></script>
+<script type="text/javascript">
+	class ExoObject {
+		constructor() {
+			this.ID;
+			this.name;
+			this.overlay;
+			this.start;
+			this.end;
+			this.layer;
+			this.text;
+		}
+	}
+
+	exoObjects = [];
+
+	window.addEventListener('load', () => {
+		$('#exo').on('change', function(e) {
+			let input = e.target;
+			if (input.files.length == 0) {
+				return;
+			}
+			const file = input.files[0];
+			const reader = new FileReader();
+			reader.readAsBinaryString(file);
+			reader.onload = function(e) {
+				var result = e.target.result;
+				var sjisArray = str2Array(result);
+				var uniArray = Encoding.convert(sjisArray, 'UNICODE', 'SJIS');
+				var data = Encoding.codeToString(uniArray);
+
+				var lines = data.split(/\r?\n/);
+				for (let i = 0; i < lines.length; i++) {
+					ExoRead(lines[i]);
+				}
+			};
+			console.log(exoObjects)
+			$('#content').html(exoObjects);
+
+		})
+	})
+
+	function str2Array(str) {
+		var array = [], i, il=str.length;
+		for(i=0;i<il;i++) array.push(str.charCodeAt(i));
+		return array;
+	}
+
+	var flag = -1;
+
+	function ExoRead(text) {
+		var arr = text.split('=');
+		if (arr.length == 1) {
+			if (arr[0][0] == '[') {
+				arr = arr[0].split('[')[1].split(']')[0].split('.');
+				if (arr.length == 1) {
+					if (arr[0] != "exedit") {
+						let object_num = arr[0];
+						var exoObject = new ExoObject();
+						exoObject.ID = object_num;
+						exoObjects.push(exoObject)
+					}
+				} else {
+					var object_num_sub = arr[1];
+					if (object_num_sub == 0) {
+						flag = 1;
+					}
+				}
+			}
+		} else if (arr[0] == "_name" && flag == 1) {
+			exoObjects[exoObjects.length - 1].name = arr[1];
+		} else if (arr[0] == "overlay") {
+			exoObjects[exoObjects.length - 1].overlay = arr[1];
+		} else if (arr[0] == "start") {
+			exoObjects[exoObjects.length - 1].start = arr[1];
+		} else if (arr[0] == "end") {
+			exoObjects[exoObjects.length - 1].end = arr[1];
+		} else if (arr[0] == "layer") {
+			exoObjects[exoObjects.length - 1].length = arr[1];
+		} else if (arr[0] == "text") {
+			var hex = arr[1].match(/.{1,4}/g) || [];
+			var string = '';
+			for (let i = 0; i < hex.length; i++) {
+				if (hex[i] == "0000") break;
+				var h = hex[i].substr(2,2) + hex[i].substr(0,2)
+				string += String.fromCharCode(parseInt(h, 16))
+			}
+			exoObjects[exoObjects.length - 1].text = string;
+			console.log(string)
+		}
+	}
+</script>
+{% endblock %}
+
+{% for item in items %}
+{{ item }}<br>
+{% endfor %}

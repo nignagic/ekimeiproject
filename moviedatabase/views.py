@@ -23,6 +23,9 @@ import pytz
 from dateutil import relativedelta
 import datetime
 
+from io import TextIOWrapper
+import csv
+
 # Create your views here.
 
 def test(request):
@@ -1321,6 +1324,17 @@ def movie_part_station_edit(request, main_id, sort_by_movie):
 	}
 
 	return render(request, 'moviedatabase/station_edit.html', context)
+
+@permission_required('moviedatabase.add_stationinmovie')
+def MultipleStationUpload(request):
+	if request.method == 'POST':
+		if 'exo' in request.FILES:
+			f = request.FILES.get('exo')
+			g
+	context = {
+	}
+
+	return render(request, 'moviedatabase/multiple_station_upload.html', context)
 
 class NameCreate(PermissionRequiredMixin, generic.CreateView):
 	model = Name
