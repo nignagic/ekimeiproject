@@ -26,6 +26,8 @@ import datetime
 from io import TextIOWrapper
 import csv
 
+import re
+
 # Create your views here.
 
 def test(request):
@@ -1327,14 +1329,34 @@ def movie_part_station_edit(request, main_id, sort_by_movie):
 
 @permission_required('moviedatabase.add_stationinmovie')
 def MultipleStationUpload(request):
-	if request.method == 'POST':
-		if 'exo' in request.FILES:
-			f = request.FILES.get('exo')
-			g
+
 	context = {
 	}
 
 	return render(request, 'moviedatabase/multiple_station_upload.html', context)
+
+@permission_required('moviedatabase.add_stationinmovie')
+def MultipleStationSearch(request):
+	if request.method == 'POST':
+		station_line_list = request.POST['station-line-list']
+		station_text = ""
+		line_text = ""
+		for station_line in station_line_list.splitlines():
+			sl = station_line.split('\t', 1);
+			station_text = station_text + sl[0] + "\n"
+			line_text = line_text + sl[1] + "\n"
+			
+		context = {
+			'station_text': station_text,
+			'line_text': line_text
+		}
+
+		return render(request, 'moviedatabase/multiple_station_search.html', context)
+
+	context = {
+	}
+
+	return render(request, 'moviedatabase/multiple_station_search.html', context)
 
 class NameCreate(PermissionRequiredMixin, generic.CreateView):
 	model = Name
@@ -1506,11 +1528,130 @@ class LineServicebyCompanyViewSet(generics.ListAPIView):
 		q = self.kwargs['company']
 		return LineService.objects.filter(company__id=q)
 
+hyphen = "-˗֊‐‑‒–⁃⁻₋−"
+prolonged_sound_mark = "ー—―─━ｰ"
+middle_dot = "·ᐧ•∙⋅⸱・･"
+parentheses = "【(『「[<《{≪〈〔（＜［｛｟"
+parentheses_end = "】)』」]>》}≫〉〕）＞］｝｠"
+
+def text_normalization(s):
+	s = re.sub("\<.+?\>", "|", s)
+	s = s.replace(' ', '|')
+	for h in hyphen:
+		s = s.replace(h, '|')
+	for p in prolonged_sound_mark:
+		s = s.replace(p, 'ー')
+	for m in middle_dot:
+		s = s.replace(m, '・')
+	for p in parentheses:
+		s = s.replace(p, '|')
+	for e in parentheses_end:
+		s = s.replace(e, '|')
+	return s
+
+def search_pref(text_array):
+	for text in text_array:
+		if (len(text) < 2):
+			continue
+		pref_q = Prefecture.objects.filter(name__contains=text)
+		if (pref_q.count() != 0):
+			return text
+
+	return ""
+
+def get_kata_ngram(string, mode=0):
+    """
+    入力された文字列を最大数としたn-gramの出力
+    @text: ngramを取得する文字列
+    """
+    srt_len = len(string) + 1
+    result = []
+    for n in range(1, srt_len):
+        result.append([string[k:k+n]
+                        for k in range(len(string)-n+1)])
+    return result[::-1]
+
+class StationServiceWithLineSearchViewSet(generics.ListAPIView):
+	serializer_class = serializer.StationServiceSerializer
+	def get_queryset(self):
+		q1 = text_normalization(self.kwargs['station']).split('|')
+		s = ""
+		for sp in q1:
+			if (sp != ""):
+				s = sp
+				break
+		pref = search_pref(q1)
+
+		q2 = text_normalization(self.kwargs['line']).split('|')
+		# a
+
+		for litem in reversed(q2):
+			for ll in get_kata_ngram(litem):
+				for l in ll:
+					stations = StationService.objects.filter(name=s, line_service__name__icontains=l, station__pref__name__icontains=pref)
+					if (stations.count() != 0):
+						return stations
+
+					stations = StationService.objects.filter(name__contains=s, line_service__name__icontains=l, station__pref__name__icontains=pref)
+					if (stations.count() != 0):
+						return stations
+
+					stations = StationService.objects.filter(name__contains=s, station__line__name__icontains=l, station__pref__name__icontains=pref)
+					if (stations.count() != 0):
+						return stations
+
+		for litem in q2:
+			for ll in get_kata_ngram(litem):
+				for l in ll:
+					stations = StationService.objects.filter(name=s, line_service__company__name__icontains=l, station__pref__name__icontains=pref)
+					if (stations.count() != 0):
+						return stations
+
+					stations = StationService.objects.filter(name__contains=s, line_service__company__name__icontains=l)
+					if (stations.count() != 0):
+						return stations
+
+		for sitem in reversed(q1):
+			for ss in get_kata_ngram(sitem):
+				for s in ss:
+					stations = StationService.objects.filter(name=s)
+					if (stations.count() != 0):
+						return stations
+
+					stations = StationService.objects.filter(name__contains=s)
+					if (stations.count() != 0):
+						return stations
+
+		return StationService.objects.none()
+
 class StationServiceSearchViewSet(generics.ListAPIView):
 	serializer_class = serializer.StationServiceSerializer
 	def get_queryset(self):
-		q = self.kwargs['word']
-		return StationService.objects.filter(name__contains=q)
+		if (self.request.GET.get('exact')):
+			q1 = text_normalization(self.kwargs['station'])
+			q1 = q1.split('|')
+			s = ""
+			for sp in q1:
+				if (sp != ""):
+					s = sp
+					break
+			pref = search_pref(q1)
+
+			for sitem in reversed(q1):
+				for ss in get_kata_ngram(sitem):
+					for s in ss:
+						stations = StationService.objects.filter(name=s)
+						if (stations.count() != 0):
+							return stations
+
+						stations = StationService.objects.filter(name__contains=s)
+						if (stations.count() != 0):
+							return stations
+		else:
+			s = text_normalization(self.kwargs['station'])
+			return StationService.objects.filter(name__contains=s)
+
+		return StationService.objects.none()
 
 class GroupStationSearchViewSet(generics.ListAPIView):
 	serializer_class = serializer.StationSerializer

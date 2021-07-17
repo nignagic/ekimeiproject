@@ -18,7 +18,7 @@ urlpatterns = [
 	path('guide_account_creator/', views.GuideAccountCreator, name='guideaccountcreator'),
 	path('startup_guide/', views.StartUpGuide, name='startupguide'),
 
-	path('test/', views.test, name='test'),
+	# path('test/', views.test, name='test'),
 
 	path('search/', views.FreeSearchView, name='freesearch'),
 
@@ -59,7 +59,8 @@ urlpatterns = [
 	path('movie/edit/<slug:main_id>/part/', views.movie_part_edit, name='part_edit'),
 	path('movie/edit/<slug:main_id>/part/<int:sort_by_movie>', views.movie_part_station_edit, name='station_edit'),
 	path('movie/edit/<slug:main_id>/confirm', views.confirm_movie, name='confirm'),
-	path('movie/edit/station/upload', views.MultipleStationUpload, name='multiplestationupload'),
+	path('movie/edit/station/multiple/upload', views.MultipleStationUpload, name='multiplestationupload'),
+	path('movie/edit/station/multiple/search', views.MultipleStationSearch, name='multiplestationsearch'),
 	path('popup/name_create/', views.PopupNameCreate.as_view(), name='popup_name_create'),
 	path('popup/parent_movie_setting/', views.popup_parent_movie_setting, name='popup_parent_movie_setting'),
 	path('popup/related_movie_setting/', views.popup_related_movie_setting, name='popup_related_movie_setting'),
@@ -79,7 +80,8 @@ urlpatterns = [
 	url('^api/pref/(?P<pref>.+)/lineservice/', views.LineServicebyPrefectureViewSet.as_view(), name='lineservicebyprefectureapi'),
 	url('^api/company/(?P<company>.+)/lineservice/', views.LineServicebyCompanyViewSet.as_view(), name='lineservicebycompanyapi'),
 	url('^api/line/(?P<line>.+)/station', views.StationbyLineViewSet.as_view(), name='stationbylineapi'),
-	url('^api/stationsearch/(?P<word>.+)/$', views.StationServiceSearchViewSet.as_view(), name='stationservicesearchapi'),
+	url('^api/stationsearch/(?P<station>.+)/$', views.StationServiceSearchViewSet.as_view(), name='stationservicesearchapi'),
+	url('^api/stationwithlinesearch/(?P<station>.+)/(?P<line>.+)/$', views.StationServiceWithLineSearchViewSet.as_view(), name='stationservicewithlinesearchapi'),
 	url('^api/groupstationsearch/(?P<word>.+)/$', views.GroupStationSearchViewSet.as_view(), name='groupstationsearchapi'),
 	url('^api/transfer/(?P<station_service>.+)/$', views.LineServiceTransferViewSet.as_view(), name='lineservicetransferapi'),
 	url('^api/partstation/(?P<id>.+)/$', views.PartStationViewSet.as_view(), name='partstationapi'),
