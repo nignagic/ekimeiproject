@@ -38,10 +38,10 @@ def test(request):
 			station.save()
 	parts = Part.objects.all()
 	for part in parts:
-		original_date = datetime.date(part.movie.published_at_year, part.movie.published_at_month, part.movie.published_at_day)
-		d = original_date if (part.information_time_point is None) else part.information_time_point
-		part.information_time_point = d
-		part.save()
+		if (part.information_time_point is None):
+			original_date = datetime.date(part.movie.published_at_year, part.movie.published_at_month, part.movie.published_at_day)
+			part.information_time_point = original_date
+			part.save()
 
 def todaymovie():
 	JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')
