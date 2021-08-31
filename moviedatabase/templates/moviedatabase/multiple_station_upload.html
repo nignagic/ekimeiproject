@@ -367,7 +367,7 @@
 			station = $(val).find('.station-input').val()
 			line = $(val).find('.line-input').val()
 			text += station + "\t" + line;
-			if (i != station_line_result.length-1) text += "\n"
+			if (i != $("#station-line-tbody tr").length-1) text += "\n"
 		})
 		$('#station-line-list').val(text)
 

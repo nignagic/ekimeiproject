@@ -12,13 +12,27 @@
 		<div class="railway-header-content">
 			<span class="detail-category station-background">駅</span>
 			<span class="detail-category white-background">正式区間</span>
-			{% if station.line.company.short_name_2 %}<a href="{% url 'moviedatabase:lineservicelistbycompany' station.line.company.pk %}" class="company-link">{{ station.line.company.short_name_2 }}</a>{% endif %}
-			<div class="main-name">{{ station }}</div>
+			{% if station.line.company.short_text %}<div class="company-link"><a href="{% url 'moviedatabase:lineservicelistbycompany' station.line.company.pk %}">{{ station.line.company.short_text }}</a></div>{% endif %}
+			<div class="main-name">
+				{{ station.name }}
+				{% if station.status_text %}
+				<span class="main-name-small">{{ station.status_text }}</span>
+				{% endif %}
+			</div>
 			<div class="main-name-sub">{{ station.name_kana }}</div>
 			<div class="sub-name white-background sub-name-station">
 				<div class="sub-name-inner">
 					<div class="sub-link">
-						<a href="{% url 'moviedatabase:movielistbyline' station.line.pk %}" class="black-color">{{ station.line }}</a>
+						<a href="{% url 'moviedatabase:movielistbyline' station.line.pk %}" class="black-color">
+							<span class="line-name-small">{{ station.line.company.short_text }}</span>
+							<span>{{ station.line.name }}</span>
+							{% if station.line.name_sub %}
+							<span class="line-name-small">({{ station.line.name_sub }})</span>
+							{% endif %}
+							{% if station.line.status_text %}
+							<span class="line-name-small">{{ station.line.status_text }}</span>
+							{% endif %}
+						</a>
 					</div>
 					<div class="station-before">
 						{% if station.prev_station %}
@@ -36,7 +50,25 @@
 			<div class="line-bottom">
 				{% for stationservice in stationservices %}
 				<div>
-					<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.pk %}">{{ stationservice }}</a> - <a href="{% url 'moviedatabase:movielistbylineservice' stationservice.line_service.pk %}">{{ stationservice.line_service }}</a>
+					<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.pk %}">
+						{{ stationservice.name }}
+						{% if stationservice.status_text %}
+						<span class="line-name-small">{{ stationservice.status_text }}</span>
+						{% endif %}
+					</a>
+					 - 
+					<a href="{% url 'moviedatabase:movielistbylineservice' stationservice.line_service.pk %}">
+						<span>{{ stationservice.line_service.name }}</span>
+						{% if stationservice.line_service.name_sub %}
+						<span class="line-name-small">({{ stationservice.line_service.name_sub }})</span>
+						{% endif %}
+						{% if stationservice.line_service.f_or_s %}
+						<span class="line-name-small">{{ stationservice.line_service.f_or_s }}</span>
+						{% endif %}
+						{% if stationservice.line_service.status_text %}
+						<span class="line-name-small">{{ stationservice.line_service.status_text }}</span>
+						{% endif %}
+					</a>
 				</div>
 				{% endfor %}
 				</div>
@@ -62,7 +94,16 @@
 				{% for station in transfers %}
 					<li class="station-li">
 						<div class="transfer-line-formal">
-							<a href="{% url 'moviedatabase:movielistbyline' station.line.pk %}">{{ station.line }}</a>
+							<a href="{% url 'moviedatabase:movielistbyline' station.line.pk %}">
+								<span class="line-name-small">{{ station.line.company.short_text }}</span>
+								<span>{{ station.line.name }}</span>
+								{% if station.line.name_sub %}
+								<span class="line-name-small">({{ station.line.name_sub }})</span>
+								{% endif %}
+								{% if station.line.status_text %}
+								<span class="line-name-small">{{ station.line.status_text }}</span>
+								{% endif %}
+							</a>
 						</div>
 					</li>
 				{% endfor %}

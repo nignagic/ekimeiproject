@@ -143,7 +143,7 @@
 	flex-wrap: wrap;
 	align-items: center;
 	justify-content: center;
-	margin: 2.0rem 0;
+	margin: 2.0rem 0 1.0rem 0;
 	font-size: 0.9rem;
 }
 
@@ -159,6 +159,12 @@
 	text-decoration: none;
 	transition: color .25s,background-color .25s;
 	box-shadow: 0 2px 0.25rem rgba(0,0,0,.1), 0 0.25rem 0.25rem -0.25rem rgba(0,0,0,.1);
+}
+
+.pagination-caption {
+	text-align: center;
+	font-weight: normal;
+	margin-bottom: 2rem;
 }
 
 a.page-number:hover {
@@ -235,6 +241,20 @@ a.page-pn:hover {
 	color: #06262b;
 }
 
+.search-input-category {
+	border-left: 8px solid #cc5c00;
+	padding: 0.5em 1em;
+	margin: 1rem;
+	box-shadow: 1px 1px 8px #ccc;
+}
+
+.search-input-container {
+	position: relative;
+	width: 16em;
+	height: 2rem;
+	margin: 0.5rem auto;
+}
+
 .youtube-frame {
 	width: 72%;
 	padding-top: calc(56.25% * 0.72);
@@ -267,16 +287,71 @@ a.page-pn:hover {
 	margin: 0;
 }
 
+.detail-search-query-table {
+	margin: 0 auto;
+	padding: 0 1em;
+}
+
+.detail-search-query-table th {
+	font-weight: normal;
+	text-align: right;
+	padding-right: 1em;
+	white-space: nowrap;
+}
+
+.detail-search-query-table {
+	margin: 0 auto;
+	text-align: left;
+}
+
+.search-reset {
+	margin: 0.5em 0 0 auto;
+	padding: 0 0.5em;
+	color: #fff;
+	border-radius: 0.4rem;
+	font: inherit;
+	font-size: 0.8rem;
+	display: block;
+	border: 2px solid #cc8800;
+	background-color: #cc8800;
+	cursor: pointer;
+	transition: all .3s;
+}
+
+.search-reset:hover {
+	background: #FFF;
+	color: #cc8800;
+}
+
+.search-advanced-button {
+	margin: 1em;
+	padding: 0.5em 1em;
+	color: #fff;
+	border-radius: 0.4rem;
+	font: inherit;
+	font-size: 1.1em;
+	display: block;
+	border: 2px solid #cc5c00;
+	background-color: #cc5c00;
+	cursor: pointer;
+	transition: all .3s;
+}
+
+.search-advanced-button:hover {
+	background: #FFF;
+	color: #cc5c00;
+}
+
 .search-box {
 	position: absolute;
 	top: 0;
 	left: 0;
-	font-size: 1.2rem;
+	font-size: 1.2em;
 	width: 100%;
 	height: 100%;
-	padding: 0 2rem 0 1.5rem;
+	padding: 0 2em 0 1.5em;
 	background: #ecedef;
-	border-radius: 1.0rem;
+	border-radius: 1.0em;
 	border: none;
 }
 
@@ -319,6 +394,7 @@ a.page-pn:hover {
 	.detail-side {
 		padding: 0;
 		width: 100%;
+		font-size: 0.9rem;
 	}
 
 	.movie-card a {

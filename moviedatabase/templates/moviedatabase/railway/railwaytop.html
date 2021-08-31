@@ -49,8 +49,8 @@
 				<ul class="object-dict-outer">
 				{% for region in regions %}
 					<li class="object-dict-outer-li">
-						<h5 class="object-dict-header">
-							<a href="{% url 'moviedatabase:companylistbyregion' region.pk %}">{{ region }}</a>
+						<h5 class="region-header">
+							{{ region }}
 						</h5>
 						<ul class="object-dict-inner">
 							{% for pref in region.prefecture_set.all %}

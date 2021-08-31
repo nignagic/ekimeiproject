@@ -61,7 +61,18 @@
 			$('.station-select').empty();
 			$.getJSON(s, function(data) {
 				for (var i in data) {
-					var op_station = "<option value='" + data[i].station_service_pk + "' data-name='" + data[i].__str__ + "' data-line='" + data[i].line_service_name + "' class='station-option'>" + data[i].__str__ + " ‐ " + data[i].line_service_name + "</option>"
+					pk = data[i].station_service_pk
+					str = data[i].__str__
+					line_service_name = data[i].line_service_name
+					f_or_s = data[i].line_service_f_or_s
+					line_name = data[i].line_name
+					text = ""
+					if (line_service_name != line_name) {
+						text = str + " ‐ " + line_service_name + f_or_s + "(" + line_name + ")"
+					} else {
+						text = str + " ‐ " + line_service_name + f_or_s
+					}
+					op_station = "<option value='" + pk + "' data-name='" + str + "' data-line='" + line_service_name + "' class='station-option' title='" + text + "'>" + text +  "</option>"
 					$(val).children('.station-result-ul').append(op_station)
 				}
 			})

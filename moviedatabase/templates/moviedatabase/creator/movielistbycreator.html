@@ -1,5 +1,23 @@
 {% extends 'moviedatabase/base.html' %}
 
+{% block meta %}
+	<meta name="title" content="{{ creator }}｜駅名動画データベース">
+	<meta name="description" content="{{ creator }}の駅名動画を探す">
+	<meta property="og:site_name" content="駅名動画データベース">
+	<meta property="og:url" content="{{ request.build_absolute_uri }}">
+	<meta property="og:title" content="{{ creator }}｜駅名動画データベース">
+	<meta property="og:image" content="https://i.ytimg.com/vi/{{ movie_list.0.youtube_id }}/maxresdefault.jpg">
+	<meta property="og:image:width" content="1280">
+	<meta property="og:image:height" content="720">
+	<meta property="og:description" content="{{ creator }}の駅名動画を探す">
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:site" content="@STANMIC_DB">
+	<meta name="twitter:url" content="{{ request.build_absolute_uri }}">
+	<meta name="twitter:title" content="{{ creator }}｜駅名動画データベース">
+	<meta name="twitter:description" content="{{ creator }}の駅名動画を探す">
+	<meta name="twitter:image" content="https://i.ytimg.com/vi/{{ movie_list.0.youtube_id }}/maxresdefault.jpg">
+{% endblock %}
+
 {% block title %}{{ creator }}{% endblock %}
 
 {% load static %}
@@ -24,6 +42,14 @@
 	<div class="main-content">
 		<div class="main-content-inner">
 			<div class="detail-movie-list">
+				<div class="share-buttons" style="text-align: right;">
+					<a class="twitter-share-button"
+						href="https://twitter.com/intent/tweet"
+						data-text="{{ creator }}｜駅名動画データベース"
+						data-url="{{ request.build_absolute_uri }}"
+						data-hashtags="駅名動画DB">
+					</a>
+				</div>
 				<h4 class="movie-list-header creator-border">動画一覧</h4>
 				{% include 'moviedatabase/includes/movielist.html' %}
 				{% include 'moviedatabase/includes/pagination.html' %}

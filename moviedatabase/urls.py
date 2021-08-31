@@ -17,8 +17,9 @@ urlpatterns = [
 	path('privacy/', views.Privacy, name='privacy'),
 	path('guide_account_creator/', views.GuideAccountCreator, name='guideaccountcreator'),
 	path('startup_guide/', views.StartUpGuide, name='startupguide'),
+	path('line_customize_guide/', views.LineCustomizeGuide, name='linecustomizeguide'),
 
-	# path('test/', views.test, name='test'),
+	path('test/', views.test, name='test'),
 
 	path('search/', views.FreeSearchView, name='freesearch'),
 

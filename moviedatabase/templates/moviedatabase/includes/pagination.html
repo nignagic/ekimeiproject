@@ -34,3 +34,6 @@
 		<span class="page-button gray-background page-pn">次へ</span>
 	{% endif %}
 </div>
+<div class="pagination-caption">
+	{{ page_obj.start_index }}件目～{{ page_obj.end_index }}件目 / 全{{ paginator.count }}件
+</div>

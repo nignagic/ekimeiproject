@@ -37,7 +37,6 @@
 }
 
 .company-link {
-	display: block;
 	margin-top: 1.0rem;
 	font-size: 1.2rem;
 }
@@ -45,6 +44,10 @@
 .main-name {
 	margin-top: 0.5rem;
 	font-size: 2.0em;
+}
+
+.main-name-small {
+	font-size: 0.7em;
 }
 
 .sub-name {
@@ -106,6 +109,10 @@
 	margin-bottom: 1.0em;
 }
 
+.line-bottom-title {
+	margin-bottom: 0.5em;
+}
+
 .railway-movie-list {
 	width: 64%;
 }
@@ -124,11 +131,19 @@
 .transfer-line-formal {
 	background: #031d29;
 	padding: 8px 1.0rem;
-	font-size: 0.9rem;
 }
 
 .transfer-line-formal a {
-	color: #fff;	
+	color: #fff;
+	display: block;
+}
+
+.line-name-small:first-child {
+	margin-right: 0.2em;
+}
+
+.line-name-small {
+	font-size: 0.8em;
 }
 
 .service-ul {

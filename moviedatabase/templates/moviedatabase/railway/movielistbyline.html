@@ -13,18 +13,47 @@
 		<div class="railway-header-content">
 			<span class="detail-category line-background">路線</span>
 			<span class="detail-category white-background">正式区間</span>
-			{% if line.company.short_name_2 %}<a href="{% url 'moviedatabase:lineservicelistbycompany' line.company.pk %}" class="company-link">{{ line.company.short_name_2 }}</a>{% endif %}
-			<div class="main-name">{{ line.name }}{% if line.name_sub %}<small> - {{ line.name_sub }}</small>{% endif %}{% if line.status == 2 %}<small> - 廃止</small>{% endif %}</div>
+			{% if line.company.short_text %}<div class="company-link"><a href="{% url 'moviedatabase:lineservicelistbycompany' line.company.pk %}">{{ line.company.short_text }}</a></div>{% endif %}
+			<div class="main-name">
+				{{ line.name }}
+				{% if line.name_sub %}
+				<span class="main-name-small">({{ line.name_sub }})</span>
+				{% endif %}
+				{% if line.status_text %}
+				<span class="main-name-small">{{ line.status_text }}</span>
+				{% endif %}
+			</div>
 			<div class="main-name-sub"></div>
 			<div class="sub-name white-background">
-				{{ line.start_station }} ～ {{ line.end_station }}
+				{% if line.start_station and line.end_station %}
+					{{ line.start_station.name }}
+					{% if line.start_station.status_text %}
+						<small>{{ line.start_station.status_text }}</small>
+					{% endif %}
+					 ～
+					{{ line.end_station.name }}
+					{% if line.end_station.status_text %}
+						<small>{{ line.end_station.status_text }}</small>
+					{% endif %}
+				{% endif %}
 			</div>
 			<div class="under-color black-background"></div>
 			<div class="line-bottom">
+				所属路線：
 				{% for lineservice in lineservices %}
-				<div>
-					<a href="{% url 'moviedatabase:movielistbylineservice' lineservice.pk %}">{{ lineservice }}</a>
-				</div>
+					<a href="{% url 'moviedatabase:movielistbylineservice' lineservice.pk %}">
+						{{ lineservice.name }}
+						{% if lineservice.name_sub %}
+						<small>({{ lineservice.name_sub }})</small>
+						{% endif %}
+						{% if lineservice.status_text %}
+						<small>{{ lineservice.status_text }}</small>
+						{% endif %}
+					</a>
+					{% if forloop.last %}
+					{% else %}
+						<span>/</span>
+					{% endif %}
 				{% endfor %}
 			</div>
 			<div class="pref-list">
@@ -56,7 +85,12 @@
 						<li class="station-list-li black-border-all" data-lon="{{ station.lon }}" data-lat="{{ station.lat }}">
 							<a href="{% url 'moviedatabase:movielistbystation' station.pk %}">
 								<div class="li-station-info white-background">
-									<div class="station-name">{{ station }}</div>
+									<div class="station-name">
+										{{ station.name }}
+										{% if station.status_text %}
+										<small>{{ station.status_text }}</small>
+										{% endif %}
+									</div>
 								</div>
 							</a>
 						</li>

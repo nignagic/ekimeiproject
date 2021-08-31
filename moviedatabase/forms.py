@@ -296,9 +296,15 @@ PartEditFormset = forms.inlineformset_factory(
 )
 
 class PartEditForm(forms.ModelForm):
+	information_time_point = forms.DateTimeField(
+        required=False,
+        widget=forms.DateInput(attrs={"type": "date"}),
+        input_formats=['%Y-%m-%d']
+    )
+
 	class Meta:
 		model = Part
-		fields = ('name', 'movie', 'participant', 'category', 'start_time', 'songnew', 'vocalnew', 'explanation', 'incomplete')
+		fields = ('name', 'movie', 'participant', 'category', 'start_time', 'songnew', 'vocalnew', 'explanation', 'incomplete', 'information_time_point')
 		widgets = {
 			'name': forms.TextInput(attrs={
 				'class': 'name',
@@ -333,11 +339,11 @@ class StationInMovieEditForm(forms.ModelForm):
 		(2, '強制的に離す'),
 	]
 	back_rel = forms.ChoiceField(
-		label='前駅関係', choices=BACKREL_CHOICES, widget=forms.Select
+		label='前駅関係', choices=BACKREL_CHOICES, widget=forms.Select(attrs={'class': 'back_rel'})
 	)
 	class Meta:
 		model = StationInMovie
-		fields = ('sort_by_part', 'part', 'station_service', 'sung_name', 'back_rel', 'explanation')
+		fields = ('sort_by_part', 'part', 'station_service', 'line_service_on_other_options', 'line_name_customize', 'sung_name', 'back_rel', 'explanation')
 		widgets = {
 			'sort_by_part': forms.HiddenInput(attrs={
 				'class': 'sort_by_part',
@@ -348,11 +354,14 @@ class StationInMovieEditForm(forms.ModelForm):
 			'station_service': forms.HiddenInput(attrs={
 				'class': 'station_service',
 			}),
+			'line_service_on_other_options': forms.HiddenInput(attrs={
+				'class': 'line_service_on_other_options',
+			}),
+			'line_name_customize': forms.HiddenInput(attrs={
+				'class': 'line_name_customize',
+			}),
 			'sung_name': forms.TextInput(attrs={
 				'class': 'sung_name',
-			}),
-			'back_rel': forms.TextInput(attrs={
-				'class': 'back_rel',
 			}),
 			'explanation': forms.TextInput(attrs={
 				'class': 'explanation',

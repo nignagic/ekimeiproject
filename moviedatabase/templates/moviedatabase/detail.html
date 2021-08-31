@@ -1,11 +1,33 @@
 {% extends 'moviedatabase/base.html' %}
 
+{% block meta %}
+	<meta name="title" content="{{ movie.title }}｜駅名動画データベース">
+	<meta name="description" content="駅名動画データベース｜{{ movie.description }}">
+	<meta property="og:site_name" content="駅名動画データベース">
+	<meta property="og:url" content="{{ request.build_absolute_uri }}">
+	<meta property="og:title" content="{{ movie.title }}｜駅名動画データベース">
+	<meta property="og:image" content="https://i.ytimg.com/vi/{{ movie.main_id }}/maxresdefault.jpg">
+	<meta property="og:image:width" content="1280">
+	<meta property="og:image:height" content="720">
+	<meta property="og:description" content="駅名動画データベース｜{{ movie.description }}">
+	<meta name="twitter:card" content="player">
+	<meta name="twitter:site" content="駅名動画データベース">
+	<meta name="twitter:url" content="{{ request.build_absolute_uri }}">
+	<meta name="twitter:title" content="{{ movie.title }}｜駅名動画データベース">
+	<meta name="twitter:description" content="駅名動画データベース｜{{ movie.description }}">
+	<meta name="twitter:image" content="https://i.ytimg.com/vi/{{ movie.main_id }}/maxresdefault.jpg">
+	<meta name="twitter:player" content="https://www.youtube.com/embed/{{ movie.main_id }}">
+	<meta name="twitter:player:width" content="1280">
+	<meta name="twitter:player:height" content="720">
+{% endblock %}
+
 {% block title %}{{ movie }} - 詳細{% endblock %}
 
 {% load static %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
 <link rel="stylesheet" href="{% static 'moviedatabase/detail.css' %}">
+<link rel="stylesheet" href="{% static 'moviedatabase/detail_station_list.css' %}">
 
 <!-- <div class="background" style="background: url(https://i.ytimg.com/vi/{{ movie.youtube_id }}/hqdefault.jpg) no-repeat center; background-size: cover; background-attachment: fixed;"> -->
 {% if type == "confirm" %}
@@ -26,6 +48,14 @@
 							<img id="img" class="style-scope yt-img-shadow" width="80" alt="" src="https://yt3.ggpht.com/{{ movie.channel.icon }}=s88-c-k-c0x00ffffff-no-rj">
 						</div>
 						<div class="main-movie-channel-name">{{ movie.channel }}</div>
+					</a>
+				</div>
+				<div class="share-buttons" style="text-align: right;">
+					<a class="twitter-share-button"
+						href="https://twitter.com/intent/tweet"
+						data-text="{{ movie }}｜駅名動画データベース"
+						data-url="{{ request.build_absolute_uri }}"
+						data-hashtags="駅名動画DB">
 					</a>
 				</div>
 				<h3 class="movie-detail-header">投稿日時</h3>
@@ -302,7 +332,13 @@
 							{% if part.explanation %}
 							<tr class="part-detail-row">
 								<th class="part-detail-label">説明</th>
-								<td class="part-detail-content">{{ part.explanation }}</td>
+								<td class="part-detail-content" style="font-weight: normal;">{{ part.explanation }}</td>
+							</tr>
+							{% endif %}
+							{% if part.information_time_point and part.information_time_point != part.movie_publish_date %}
+							<tr class="part-detail-row">
+								<th class="part-detail-label">情報の日付</th>
+								<td class="part-detail-content">{{ part.information_time_point|date:"Y年n月j日" }}</td>
 							</tr>
 							{% endif %}
 						</table>

@@ -65,7 +65,21 @@
 					<ul class="object-list-ul">
 						{% for lineservice in lineservices %}
 							<li class="object-list-li">
-								<a href="{% url 'moviedatabase:movielistbylineservice' lineservice.pk %}" class="line-color">{{ lineservice }}</a>
+								<a href="{% url 'moviedatabase:movielistbylineservice' lineservice.pk %}" class="line-color">
+									<div>
+										<span class="object-list-li-small">{{ lineservice.company.short_text }}</span>
+										<span>{{ lineservice.name }}</span>
+										{% if lineservice.name_sub %}
+										<span class="object-list-li-small">({{ lineservice.name_sub }})</span>
+										{% endif %}
+										{% if lineservice.f_or_s %}
+										<span class="object-list-li-small">{{ lineservice.f_or_s }}</span>
+										{% endif %}
+										{% if lineservice.status_text %}
+										<span class="object-list-li-small">{{ lineservice.status_text }}</span>
+										{% endif %}
+									</div>
+								</a>
 							</li>
 						{% endfor %}
 					</ul>
@@ -79,10 +93,30 @@
 					{% if stationservices %}
 					<ul class="object-list-ul">
 						{% for stationservice in stationservices %}
-							<li class="object-list-li">
+							<li class="object-list-li object-list-li-space-between">
 								<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.pk %}" class="station-color">
-									<div>{{ stationservice }}</div>
-									<div>{{ stationservice.line_service }}</div>
+									<div>
+										{{ stationservice.name }}
+										{% if stationservice.status_text %}
+										<span class="object-list-li-small">{{ stationservice.status_text }}</span>
+										{% endif %}
+									</div>
+									<div>
+										<span class="object-list-li-small">{{ stationservice.line_service.company.short_text }}</span>
+										<span>{{ stationservice.line_service.name }}</span>
+										{% if stationservice.line_service.name_sub %}
+										<span class="object-list-li-small">({{ stationservice.line_service.name_sub }})</span>
+										{% endif %}
+										{% if stationservice.line_service.f_or_s %}
+										<span class="object-list-li-small">{{ stationservice.line_service.f_or_s }}</span>
+										{% endif %}
+										{% if stationservice.line_service.status_text %}
+										<span class="object-list-li-small">{{ stationservice.line_service.status_text }}</span>
+										{% endif %}
+										{% if stationservice.line_service.name != stationservice.station.line.name %}
+											<span class="object-list-li-small">({{ stationservice.station.line.name }})</span>
+										{% endif %}
+									</div>
 								</a>
 							</li>
 						{% endfor %}

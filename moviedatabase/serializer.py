@@ -4,12 +4,20 @@ from rest_framework.serializers import SerializerMethodField
 from .models import *
 
 class StationServiceSerializer(serializers.ModelSerializer):
+	company_short_name = serializers.CharField(source='line_service.company.short_name_2')
 	line_service_pk = serializers.IntegerField(source='line_service.id')
-	line_service_name = serializers.CharField(source='line_service.name')
+	line_service_name = serializers.CharField(source='line_service.__str__')
+	line_service_f_or_s = serializers.CharField(source='line_service.f_or_s')
+	line_name = serializers.CharField(source='station.line.with_sub')
 	station_service_pk = serializers.IntegerField(source='id')
+
+	get_group_station = serializers.IntegerField(source='station.get_group_station_id')
+	pref = serializers.CharField(source='get_pref')
+	category = serializers.CharField(source='line_service.category.icon')
+	other_option = serializers.BooleanField(source='line_service.company.other_option')
 	class Meta:
 		model = StationService
-		fields = ('__str__', 'station_service_pk', 'line_service_pk', 'line_service_name', 'get_color')
+		fields = ('name', '__str__', 'station_service_pk', 'company_short_name', 'line_service_pk', 'line_service_name', 'line_service_f_or_s', 'line_name', 'get_group_station', 'get_color', 'status_text', 'pref', 'get_color', 'is_representative', 'category', 'other_option')
 
 class StationSerializer(serializers.ModelSerializer):
 	line_pk = serializers.IntegerField(source='line.id')
@@ -39,7 +47,7 @@ class StationInMovieSerializer(serializers.ModelSerializer):
 	other_option = serializers.BooleanField(source='station_service.line_service.company.other_option')
 	class Meta:
 		model = StationInMovie
-		fields = ['station_service_name', 'sung_name', 'station_service_pk', 'get_group_station', 'line_service_pk', 'line_service_name', 'pref', 'get_color', 'back_rel', 'is_representative', 'category', 'other_option']
+		fields = ['station_service_name', 'sung_name', 'explanation', 'station_service_pk', 'get_group_station', 'line_service_pk', 'line_service_name', 'pref', 'get_color', 'back_rel', 'is_representative', 'category', 'other_option', 'line_service_on_other_options', 'line_name_customize']
 
 class MovieSerializer(serializers.ModelSerializer):
 	movie_pk = serializers.IntegerField(source='id')

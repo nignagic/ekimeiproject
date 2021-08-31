@@ -36,8 +36,19 @@
 				{% for l in lineservice_list %}
 					<li class="object-list-li">
 						<a href="{% url 'moviedatabase:movielistbylineservice' l.pk %}" class="line-color">
-							<div>{{ l }}</div>
-							<div>{{ l.company }}</div>
+							<div>
+								<span class="object-list-li-small">{{ l.company.short_text }}</span>
+								<span>{{ l.name }}</span>
+								{% if l.name_sub %}
+								<span class="object-list-li-small">({{ l.name_sub }})</span>
+								{% endif %}
+								{% if l.f_or_s %}
+								<span class="object-list-li-small">{{ l.f_or_s }}</span>
+								{% endif %}
+								{% if l.status_text %}
+								<span class="object-list-li-small">{{ l.status_text }}</span>
+								{% endif %}
+							</div>
 						</a>
 					</li>
 				{% endfor %}

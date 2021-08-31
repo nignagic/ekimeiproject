@@ -14,7 +14,7 @@
 			<div class="detail-name-sub">路線一覧</div>
 			<div class="sub-name">
 			</div>
-			<div class="under-color line-background">カテゴリー：すべて　　事業者：すべて
+			<div class="under-color line-background">事業者：すべて
 			</div>
 			<div class="line-bottom">
 			</div>
@@ -27,7 +27,19 @@
 				<ul class="object-list-ul">
 				{% for l in lineservice_list %}
 					<li class="object-list-li">
-						<a href="{% url 'moviedatabase:movielistbylineservice' l.pk %}" class="line-color">{{ l }}</a>
+						<a href="{% url 'moviedatabase:movielistbylineservice' l.pk %}" class="line-color">
+							<span class="object-list-li-small">{{ l.company.short_text }}</span>
+							<span>{{ l.name }}</span>
+							{% if l.name_sub %}
+							<span class="object-list-li-small">({{ l.name_sub }})</span>
+							{% endif %}
+							{% if l.f_or_s %}
+							<span class="object-list-li-small">{{ l.f_or_s }}</span>
+							{% endif %}
+							{% if l.status_text %}
+							<span class="object-list-li-small">{{ l.status_text }}</span>
+							{% endif %}
+						</a>
 					</li>
 				{% endfor %}
 				{% include 'moviedatabase/includes/pagination.html' %}
@@ -37,7 +49,7 @@
 				<h4 class="side-header">事業者</h4>
 				<li class="side-list-li">
 					{% for company in companies %}
-						<a href="{% url 'moviedatabase:lineservicelistbycompanyandprefecture' company.pk pref.pk %}" class="line-color">{{ company }}</a>
+						<a href="{% url 'moviedatabase:lineservicelistbycompanyandprefecture' company.pk pref.pk %}" class="line-color">{{ company.short_name }}</a>
 					{% endfor %}
 				</li>
 			</div>

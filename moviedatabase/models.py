@@ -4,6 +4,7 @@ from django.db import models
 from stationdata.models import *
 from songdata.models import *
 from user.models import *
+import datetime
 
 # Create your models here.
 class Creator(models.Model):
@@ -19,6 +20,10 @@ class Creator(models.Model):
 class Name(models.Model):
 	name = models.CharField('名義', max_length=200)
 	creator = models.ForeignKey(Creator, null=True, blank=True, on_delete=models.SET_NULL, related_name='creator_name', verbose_name='作者')
+	
+	class Meta:
+		ordering = ['creator', 'name']
+
 	def __str__(self):
 		return self.name
 
@@ -152,6 +157,8 @@ class Part(models.Model):
 	vocalnew = models.ManyToManyField(VocalNew, blank=True, verbose_name='使用ボーカル(パート)')
 	explanation = models.TextField('補足説明', null=True, blank=True)
 	incomplete = models.BooleanField('情報が不完全', default=False)
+	
+	information_time_point = models.DateField('情報の日付', null=True, blank=True)
 
 	complex_category = models.TextField('複合カテゴリー', blank=True)
 
@@ -161,6 +168,9 @@ class Part(models.Model):
 
 	def part_num(self):
 		return self.sort_by_movie + 1;
+
+	def movie_publish_date(self):
+		return datetime.date(self.movie.published_at_year, self.movie.published_at_month, self.movie.published_at_day)
 
 	def __str__(self):
 		if self.name:
@@ -179,9 +189,23 @@ class StationInMovie(models.Model):
 	sort_by_part = models.IntegerField()
 	part = models.ForeignKey(Part, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='動画パート')
 	station_service = models.ForeignKey(StationService, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='駅')
+	line_service_on_other_options = models.ForeignKey(LineService, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='路線（その他の駅用）')
+	line_name_customize = models.CharField('所属路線名カスタマイズ', null=True, blank=True, max_length=200)
 	sung_name = models.CharField('歌唱名', null=True, blank=True, max_length=400)
 	back_rel = models.IntegerField('前駅との関係', default=1)
 	explanation = models.TextField('補足説明', null=True, blank=True)
+	def get_line_service(self):
+		if (self.line_service_on_other_options and self.station_service.line_service.company.other_option):
+			return self.line_service_on_other_options
+		return self.station_service.line_service
+
+	def get_line_name(self):
+		if (self.line_name_customize == ""):
+			return self.station_service.line_service.__str__
+		if (self.line_name_customize != self.station_service.line_service.__str__):
+			return self.line_name_customize
+		return self.station_service.line_service.__str__
+
 	def __str__(self):
 		return self.sung_name
 

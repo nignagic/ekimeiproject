@@ -31,45 +31,17 @@ import re
 # Create your views here.
 
 def test(request):
-	songs = SongNew.objects.all()
-
-	# 未設定の楽曲削除
-	s = {}
-	for song in songs:
-		parts = song.part_set.all()
-		movies = song.movie_set.all()
-		if (parts.first() is None and movies.first() is None):
-			song.delete()
-
-	# 読みカナテキスト使用文字出力
-	text = {}
-	for song in songs:
-		if song.song_name_kana:
-			for t in song.song_name_kana:
-				text[t] = 1
-		if song.artist_name_kana:
-			for t in song.artist_name_kana:
-				text[t] = 1
-
-	context = {
-	'times': text
-	}
-
-	# ボーカル重複削除
-	vocals = VocalNew.objects.all()
-	for vocal in vocals:
-		dups = VocalNew.objects.filter(name=vocal.name)
-		if dups.count() > 1:
-			first = dups.first()
-			for dup in dups:
-				for part in dup.part_set.all():
-					part.vocalnew.add(first)
-
-			dupex = dups.exclude(pk=first.pk)
-			for dup in dupex:
-				dup.delete()
-
-	return render(request, 'moviedatabase/test.html', context)
+	stations = StationInMovie.objects.all()
+	for station in stations:
+		if (station.line_name_customize is None or station.line_name_customize == ""):
+			station.line_name_customize = station.station_service.line_service.__str__()
+			station.save()
+	parts = Part.objects.all()
+	for part in parts:
+		original_date = datetime.date(part.movie.published_at_year, part.movie.published_at_month, part.movie.published_at_day)
+		d = original_date if (part.information_time_point is None) else part.information_time_point
+		part.information_time_point = d
+		part.save()
 
 def todaymovie():
 	JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')
@@ -145,32 +117,120 @@ def GuideAccountCreator(request):
 def StartUpGuide(request):
 	return render(request, 'moviedatabase/static-page/startup-guide.html')
 
+def LineCustomizeGuide(request):
+	return render(request, 'moviedatabase/static-page/line-customize-guide.html')
+
 class MovieListView(PaginationMixin, generic.ListView):
 	model = Movie
 	template_name = 'moviedatabase/movielist.html'
 	queryset = Movie.objects.all()
-	paginate_by = 12
+	paginate_by = 30
 	ordering = '-published_at'
 
 	def get_queryset(self):
 		queryset = super().get_queryset()
-		queryset = Movie.objects.none()
+
 		word = self.request.GET.get('word')
 		if word:
+			queryset = queryset.filter(Q(title__icontains=word) | Q(main_id__icontains=word) | Q(description__icontains=word) | Q(explanation__icontains=word))
 			parts = Part.objects.filter(Q(name__icontains=word) | Q(explanation__icontains=word))
+			queryset_by_part = Movie.objects.none()
 			for part in parts:
-				queryset |= Movie.objects.filter(pk=part.movie.pk)
-			queryset |= Movie.objects.filter(Q(title__icontains=word) | Q(main_id__icontains=word) | Q(description__icontains=word) | Q(explanation__icontains=word))
-		else:
-			queryset = Movie.objects.all()
-		return queryset.exclude(is_active=False).order_by('-published_at')
+				queryset_by_part |= Movie.objects.filter(pk=part.movie.pk)
+			queryset |= queryset_by_part
+
+		q_is_collab = self.request.GET.getlist('is_collab')
+		if q_is_collab:
+			movies_is_collab = Movie.objects.none()
+			for q in q_is_collab:
+				movies_is_collab |= queryset.filter(is_collab=q)
+			queryset = movies_is_collab
+
+		q_channel = self.request.GET.get('channel')
+		if q_channel:
+			queryset = queryset.filter(channel__name__icontains=q_channel)
+
+		q_sung_name = self.request.GET.get('sung_name')
+		if q_sung_name:
+			movies_sungname = Movie.objects.none()
+			stationinmovies = StationInMovie.objects.filter(sung_name__icontains=q_sung_name)
+			for s in stationinmovies:
+				if (s.part):
+					movies_sungname |= Movie.objects.filter(pk=s.part.movie.pk)
+			queryset &= movies_sungname
+
+		q_line_name_customize = self.request.GET.get('line_name_customize')
+		if q_line_name_customize:
+			movies_linenamecustomize = Movie.objects.none()
+			stationinmovies = StationInMovie.objects.filter(line_name_customize__icontains=q_line_name_customize)
+			for s in stationinmovies:
+				if (s.part):
+					movies_linenamecustomize |= Movie.objects.filter(pk=s.part.movie.pk)
+			queryset &= movies_linenamecustomize
+
+		q_artist = self.request.GET.get('artist')
+		if q_artist:
+			movies_artist = Movie.objects.none()
+			songnews = SongNew.objects.filter(Q(artist_name__icontains=q_artist) | Q(artist_name_kana__icontains=q_artist)).order_by('artist_name_kana')
+			for song in songnews:
+				movies_artist |= Movie.objects.filter(songnew=song)
+				parts = Part.objects.filter(songnew=song)
+				for part in parts:
+					movies_artist |= Movie.objects.filter(pk=part.movie.pk)
+			queryset &= movies_artist
+
+		q_song = self.request.GET.get('song')
+		if q_song:
+			movies_song = Movie.objects.none()
+			songnews = SongNew.objects.filter(Q(song_name__icontains=q_song) | Q(song_name_kana__icontains=q_song)).order_by('song_name_kana')
+			for song in songnews:
+				movies_song |= Movie.objects.filter(songnew=song)
+				parts = Part.objects.filter(songnew=song)
+				for part in parts:
+					movies_song |= Movie.objects.filter(pk=part.movie.pk)
+			queryset &= movies_song
+
+
+		JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')
+		q_published_at_start = self.request.GET.get('published_at_start')
+		q_published_at_end = self.request.GET.get('published_at_end')
+
+		if q_published_at_start and q_published_at_end:
+			q_published_at_start = datetime.datetime.strptime(q_published_at_start, '%Y-%m-%dT%H:%M').astimezone(JST)
+			q_published_at_end = datetime.datetime.strptime(q_published_at_end, '%Y-%m-%dT%H:%M').astimezone(JST)
+			queryset = queryset.filter(published_at__gte=q_published_at_start, published_at__lte=q_published_at_end)
+		
+		q_information_time_point_start = self.request.GET.get('information_time_point_start')
+		q_information_time_point_end = self.request.GET.get('information_time_point_end')
+
+		if q_information_time_point_start and q_information_time_point_end:
+			movies_infotime = Movie.objects.none()
+			parts = Part.objects.filter(information_time_point__gte=q_information_time_point_start, information_time_point__lte=q_information_time_point_end)
+			for part in parts:
+				movies_infotime |= Movie.objects.filter(pk=part.movie.pk)
+			queryset &= movies_infotime
+		
+		queryset = queryset.exclude(is_active=False).order_by('-published_at').distinct()
+		return moviequery(queryset, "pub", "n")
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		
-		word = self.request.GET.get('word')
-		context['word'] = word
+		context['word'] = self.request.GET.get('word')
+		context['is_collab'] = self.request.GET.getlist('is_collab')
+		context['channel'] = self.request.GET.get('channel')
+		context['sung_name'] = self.request.GET.get('sung_name')
+		context['line_name_customize'] = self.request.GET.get('line_name_customize')
+		context['song'] = self.request.GET.get('song')
+		context['artist'] = self.request.GET.get('artist')
+		context['published_at_start'] = self.request.GET.get('published_at_start')
+		context['published_at_end'] = self.request.GET.get('published_at_end')
+		context['information_time_point_start'] = self.request.GET.get('information_time_point_start')
+		context['information_time_point_end'] = self.request.GET.get('information_time_point_end')
+		context['is_detail_search'] = False
 
+		if (context['word'] or context['is_collab'] or context['channel'] or context['sung_name'] or context['line_name_customize'] or context['song'] or context['artist'] or context['published_at_start'] or context['published_at_end'] or context['information_time_point_start'] or context['information_time_point_end']):
+			context['is_detail_search'] = True
 		return context
 
 def FreeSearchView(request):
@@ -290,7 +350,7 @@ class RailwayTopView(generic.TemplateView):
 
 class MovieListbyBelongsCategoryView(PaginationMixin, generic.ListView):
 	model = Movie
-	paginate_by = 15
+	paginate_by = 30
 	template_name = 'moviedatabase/railway/movielistbybelongscategory.html'
 
 	def get_queryset(self):
@@ -318,7 +378,7 @@ class MovieListbyBelongsCategoryView(PaginationMixin, generic.ListView):
 
 class MovieListbyMovieCategoryView(PaginationMixin, generic.ListView):
 	model = Movie
-	paginate_by = 15
+	paginate_by = 30
 	template_name = 'moviedatabase/railway/movielistbymoviecategory.html'
 
 	def get_queryset(self):
@@ -481,15 +541,18 @@ class StationServiceSearchView(PaginationMixin, generic.ListView):
 		queryset = super().get_queryset()
 		queryset = StationService.objects.none()
 		word = self.request.GET.get('word')
+		
 		if word:
-			queryset = StationService.objects.filter(name__icontains=word).order_by('line_service')
-		return queryset
+			queryset = StationService.objects.filter(name__icontains=word)
+			if self.request.GET.get('is_kana') == "true":
+				queryset |= StationService.objects.filter(station__name_kana__icontains=word)
+		return queryset.order_by('line_service')
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		
-		word = self.request.GET.get('word')
-		context['word'] = word
+		context['word'] = self.request.GET.get('word')
+		context['is_kana'] = self.request.GET.get('is_kana')
 
 		return context
 
@@ -506,7 +569,7 @@ def moviequery(q, sort, order):
 
 class MovieListbyStationInMovieSearchView(PaginationMixin, generic.ListView):
 	model = Movie
-	paginate_by = 15
+	paginate_by = 30
 	template_name = 'moviedatabase/railway/movielistbystationinmoviesearch.html'
 
 	def get_queryset(self):
@@ -534,7 +597,7 @@ class MovieListbyStationInMovieSearchView(PaginationMixin, generic.ListView):
 
 class MovieListbyLineView(PaginationMixin, generic.ListView):
 	model = Movie
-	paginate_by = 15
+	paginate_by = 30
 	template_name = 'moviedatabase/railway/movielistbyline.html'
 
 	def get_queryset(self):
@@ -579,7 +642,7 @@ class MovieListbyLineView(PaginationMixin, generic.ListView):
 
 class MovieListbyStationView(PaginationMixin, generic.ListView):
 	model = Movie
-	paginate_by = 15
+	paginate_by = 30
 	template_name = 'moviedatabase/railway/movielistbystation.html'
 
 	def get_queryset(self):
@@ -616,7 +679,7 @@ class MovieListbyStationView(PaginationMixin, generic.ListView):
 
 class MovieListbyLineServiceView(PaginationMixin, generic.ListView):
 	model = Movie
-	paginate_by = 15
+	paginate_by = 30
 	template_name = 'moviedatabase/railway/movielistbylineservice.html'
 
 	def get_queryset(self):
@@ -653,7 +716,7 @@ class MovieListbyLineServiceView(PaginationMixin, generic.ListView):
 
 class MovieListbyStationServiceView(PaginationMixin, generic.ListView):
 	model = Movie
-	paginate_by = 15
+	paginate_by = 30
 	template_name = 'moviedatabase/railway/movielistbystationservice.html'
 
 	def get_queryset(self):
@@ -781,7 +844,7 @@ def initial_query(q, kana):
 
 class ArtistSearchView(PaginationMixin, generic.ListView):
 	model = Movie
-	paginate_by = 15
+	paginate_by = 30
 	template_name = 'moviedatabase/music/artistsearch.html'
 
 	def get_queryset(self):
@@ -812,7 +875,7 @@ class ArtistSearchView(PaginationMixin, generic.ListView):
 
 class SongSearchView(PaginationMixin, generic.ListView):
 	model = Movie
-	paginate_by = 15
+	paginate_by = 30
 	template_name = 'moviedatabase/music/songsearch.html'
 
 	def get_queryset(self):
@@ -843,7 +906,7 @@ class SongSearchView(PaginationMixin, generic.ListView):
 
 class SongTagSearchView(PaginationMixin, generic.ListView):
 	model = Movie
-	paginate_by = 15
+	paginate_by = 30
 	template_name = 'moviedatabase/music/songtagsearch.html'
 
 	def get_queryset(self):
@@ -874,7 +937,7 @@ class SongTagSearchView(PaginationMixin, generic.ListView):
 
 class MovieListbyVocalView(PaginationMixin, generic.ListView):
 	model = Movie
-	paginate_by = 15
+	paginate_by = 30
 	template_name = 'moviedatabase/music/movielistbyvocal.html'
 
 	def get_queryset(self):
@@ -954,7 +1017,7 @@ class CreatorSearchView(PaginationMixin, generic.ListView):
 
 class MovieListbyCreatorView(PaginationMixin, generic.ListView):
 	model = Movie
-	paginate_by = 15
+	paginate_by = 30
 	template_name = 'moviedatabase/creator/movielistbycreator.html'
 
 	def get_queryset(self):
@@ -1005,7 +1068,7 @@ class MovieListbyCreatorView(PaginationMixin, generic.ListView):
 
 class MovieListbyNameView(PaginationMixin, generic.ListView):
 	model = Movie
-	paginate_by = 15
+	paginate_by = 30
 	template_name = 'moviedatabase/creator/movielistbyname.html'
 
 	def get_queryset(self):
@@ -1035,7 +1098,7 @@ class MovieListbyNameView(PaginationMixin, generic.ListView):
 
 class MovieListbyChannelView(PaginationMixin, generic.ListView):
 	model = Movie
-	paginate_by = 15
+	paginate_by = 30
 	template_name = 'moviedatabase/creator/movielistbychannel.html'
 
 	def get_queryset(self):
@@ -1060,7 +1123,7 @@ class MovieListbyChannelView(PaginationMixin, generic.ListView):
 
 class MovieListbyNiconicoView(PaginationMixin, generic.ListView):
 	model = Movie
-	paginate_by = 15
+	paginate_by = 30
 	template_name = 'moviedatabase/creator/movielistbyniconico.html'
 
 	def get_queryset(self):
@@ -1284,7 +1347,15 @@ def movie_part_station_edit(request, main_id, sort_by_movie):
 	add_updatehistory(request, main_id, 'access-part-station-edit')
 
 	part = get_object_or_404(Part, movie=main_id, sort_by_movie=sort_by_movie)
-	part_form = forms.PartEditForm(request.POST or None, instance=part)
+
+	original_date = datetime.date(part.movie.published_at_year, part.movie.published_at_month, part.movie.published_at_day)
+	d = original_date if (part.information_time_point is None) else part.information_time_point
+
+	initial_dict = {
+		'information_time_point': d,
+	}
+	
+	part_form = forms.PartEditForm(request.POST or None, instance=part, initial=initial_dict)
 	formset = forms.StationInMovieEditFormset(request.POST or None, instance=part)
 	if request.method == 'POST' and part_form.is_valid() and formset.is_valid():
 		part_form.save()
@@ -1297,6 +1368,9 @@ def movie_part_station_edit(request, main_id, sort_by_movie):
 		lines = LineService.objects.none()
 		lineinmovies = []
 		for station in stations:
+			if (station.line_name_customize is None or station.line_name_customize == ""):
+				station.line_name_customize = station.station_service.line_service.__str__()
+				station.save()
 			lines |= LineService.objects.filter(pk=station.station_service.line_service.pk)
 		for line in lines:
 			lineinmovie = LineInMovie(part=part, line_service=line)
@@ -1313,15 +1387,18 @@ def movie_part_station_edit(request, main_id, sort_by_movie):
 	partcount = Part.objects.filter(movie=main_id).count()
 	prefs = Prefecture.objects.all()
 	companies = Company.objects.all()
-	others = StationService.objects.filter(line_service__company__other_option=True)
+	other_stations = StationService.objects.filter(line_service__company__other_option=True).filter(is_representative=False)
+	other_lines = StationService.objects.filter(line_service__company__other_option=True).filter(is_representative=True)
 
 	context = {
 		'part': part,
 		'part_form': part_form,
 		'formset': formset,
+		'original_date': original_date,
 		'prefs': prefs,
 		'companies': companies,
-		'others': others,
+		'other_stations': other_stations,
+		'other_lines': other_lines,
 		'partcount': partcount
 	}
 
@@ -1571,87 +1648,85 @@ def get_kata_ngram(string, mode=0):
                         for k in range(len(string)-n+1)])
     return result[::-1]
 
+def searchStationService(q1, q2):
+	q1 = text_normalization(q1).split('|')
+	s = ""
+	for sp in q1:
+		if (sp != ""):
+			s = sp
+			break
+	pref = search_pref(q1)
+
+	q2 = text_normalization(q2).split('|')
+
+	for litem in reversed(q2):
+		for ll in get_kata_ngram(litem):
+			for l in ll:
+				stations = StationService.objects.filter(name=s, line_service__name__icontains=l, station__pref__name__icontains=pref)
+				if (stations.count() != 0):
+					return stations
+
+				stations = StationService.objects.filter(name__contains=s, line_service__name__icontains=l, station__pref__name__icontains=pref)
+				if (stations.count() != 0):
+					return stations
+
+				stations = StationService.objects.filter(name__contains=s, station__line__name__icontains=l, station__pref__name__icontains=pref)
+				if (stations.count() != 0):
+					return stations
+
+	for litem in q2:
+		for ll in get_kata_ngram(litem):
+			for l in ll:
+				stations = StationService.objects.filter(name=s, line_service__company__name__icontains=l, station__pref__name__icontains=pref)
+				if (stations.count() != 0):
+					return stations
+
+				stations = StationService.objects.filter(name__contains=s, line_service__company__name__icontains=l)
+				if (stations.count() != 0):
+					return stations
+
+	for sitem in reversed(q1):
+		for ss in get_kata_ngram(sitem):
+			for s in ss:
+				stations = StationService.objects.filter(name=s)
+				if (stations.count() != 0):
+					return stations
+
+				stations = StationService.objects.filter(name__contains=s)
+				if (stations.count() != 0):
+					return stations
+
+	return StationService.objects.none()
+
+def duplicate_delection(result):
+	query = StationService.objects.none()
+	for r in result:
+		if ((r.prev_group() != r.next_group()) and (r.prev_group().station.line == r.next_group().station.line)):
+			if (r.prev_group() == r):
+				query |= StationService.objects.filter(pk=r.pk)
+		else:
+			query |= StationService.objects.filter(pk=r.pk)
+
+	return query
+
 class StationServiceWithLineSearchViewSet(generics.ListAPIView):
 	serializer_class = serializer.StationServiceSerializer
 	def get_queryset(self):
-		q1 = text_normalization(self.kwargs['station']).split('|')
-		s = ""
-		for sp in q1:
-			if (sp != ""):
-				s = sp
-				break
-		pref = search_pref(q1)
+		result = searchStationService(self.kwargs['station'], self.kwargs['line'])
 
-		q2 = text_normalization(self.kwargs['line']).split('|')
-		# a
-
-		for litem in reversed(q2):
-			for ll in get_kata_ngram(litem):
-				for l in ll:
-					stations = StationService.objects.filter(name=s, line_service__name__icontains=l, station__pref__name__icontains=pref)
-					if (stations.count() != 0):
-						return stations
-
-					stations = StationService.objects.filter(name__contains=s, line_service__name__icontains=l, station__pref__name__icontains=pref)
-					if (stations.count() != 0):
-						return stations
-
-					stations = StationService.objects.filter(name__contains=s, station__line__name__icontains=l, station__pref__name__icontains=pref)
-					if (stations.count() != 0):
-						return stations
-
-		for litem in q2:
-			for ll in get_kata_ngram(litem):
-				for l in ll:
-					stations = StationService.objects.filter(name=s, line_service__company__name__icontains=l, station__pref__name__icontains=pref)
-					if (stations.count() != 0):
-						return stations
-
-					stations = StationService.objects.filter(name__contains=s, line_service__company__name__icontains=l)
-					if (stations.count() != 0):
-						return stations
-
-		for sitem in reversed(q1):
-			for ss in get_kata_ngram(sitem):
-				for s in ss:
-					stations = StationService.objects.filter(name=s)
-					if (stations.count() != 0):
-						return stations
-
-					stations = StationService.objects.filter(name__contains=s)
-					if (stations.count() != 0):
-						return stations
-
-		return StationService.objects.none()
+		return duplicate_delection(result)
 
 class StationServiceSearchViewSet(generics.ListAPIView):
 	serializer_class = serializer.StationServiceSerializer
 	def get_queryset(self):
 		if (self.request.GET.get('exact')):
-			q1 = text_normalization(self.kwargs['station'])
-			q1 = q1.split('|')
-			s = ""
-			for sp in q1:
-				if (sp != ""):
-					s = sp
-					break
-			pref = search_pref(q1)
-
-			for sitem in reversed(q1):
-				for ss in get_kata_ngram(sitem):
-					for s in ss:
-						stations = StationService.objects.filter(name=s)
-						if (stations.count() != 0):
-							return stations
-
-						stations = StationService.objects.filter(name__contains=s)
-						if (stations.count() != 0):
-							return stations
+			result = searchStationService(self.kwargs['station'], "")
 		else:
 			s = text_normalization(self.kwargs['station'])
-			return StationService.objects.filter(name__contains=s)
+			result = StationService.objects.filter(name__contains=s)
 
-		return StationService.objects.none()
+		return duplicate_delection(result)
+		return result
 
 class GroupStationSearchViewSet(generics.ListAPIView):
 	serializer_class = serializer.StationSerializer

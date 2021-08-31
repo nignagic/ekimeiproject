@@ -1,0 +1,192 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}路線編集ガイド{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
+<link rel="stylesheet" href="{% static 'moviedatabase/guide.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="detail-header">
+		<div class="detail-header-content">
+			<div class="detail-name">路線編集ガイド</div>
+			<div class="detail-name-sub"></div>
+			<div class="sub-name">
+			</div>
+			<div class="under-color movie-background">
+			</div>
+			<div class="line-bottom">
+			</div>
+		</div>
+	</div>
+
+	<div class="main-content">
+		<div class="main-content-inner">
+			<div class="guide">
+				<ol class="article">
+					<li>
+						<h2>はじめに</h2>
+						<div>
+							<p>今回、廃駅などが連続した際の表示崩れを解決するために、「廃駅などの路線設定」の機能を追加しました。</p>
+						</div>
+						<div>
+							<p>登録した駅に廃駅が含まれていた時に、その廃駅が前後のどの路線に所属するかを設定することができます。</p>
+						</div>
+						<div>
+							<p>また、これに合わせて、路線名をカスタマイズする機能を追加しました。</p>
+						</div>
+						<div>
+							<p>当時シリーズなどでその当時の路線名が現在と異なっている場合にご活用いただけます。</p>
+						</div>
+					</li>
+				</ol>
+				<h2 class="out-center-header">廃駅などの路線設定</h2>
+				<ol class="article">
+					<li>
+						<h2>各動画（パート）に駅を登録する</h2>
+						<div>
+							<p>まずは、通常通りに駅を登録します。</p>
+							<p>廃駅が含まれる場合も、駅リストでは動画での歌唱の順番通りになるように並べます。</p>
+						</div>
+						<h2>「路線編集/表示確認」画面を開く</h2>
+						<div>
+							<p>右側の「路線編集/表示確認」のボタンを押すと、編集画面が浮かび上がります。</p>
+							<div class="img-flex-wrapper">
+								<div class="img-flex guide-img">
+									<img src="{% static 'moviedatabase/base/20210831update/modal.png' %}">
+								</div>
+							</div>
+						</div>
+						<h2>「廃駅などの路線設定」タブを開く</h2>
+						<div>
+							<p>「廃駅などの路線設定」を押し、廃駅に対して所属路線を設定する画面へ移ります。（デフォルトでは最初からこのタブが開かれています）</p>
+						</div>
+						<h2>廃駅が含まれるブロックを選ぶ</h2>
+						<div>
+							<p>現在設定されている駅リストをもとに、路線ごとに分割されたブロックが表示されます。</p>
+							<p>このうち、廃駅部分のブロックのみがクリックできるようになっています。</p>
+							<p>廃駅が連続して含まれる区間は、1つのブロックにまとめられます。廃駅が連続せずに複数含まれている箇所がある場合は、各連続区間でブロックにまとめられます。</p>
+						</div>
+						<h2>廃駅ブロックに対し、前後に続く路線の範囲を指定する</h2>
+						<div>
+							<p>廃駅のブロックを選択すると、そのブロック内に含まれる駅がすべて表示されます。</p>
+							<p>このリストの上下に、この前後の現存駅ブロックでの所属路線の名前が表示されます。</p>
+							<div class="img-flex-wrapper">
+								<div class="img-flex guide-img">
+									<img src="{% static 'moviedatabase/base/20210831update/option_preview.png' %}">
+								</div>
+							</div>
+							<p>この「前の路線」「後の路線」が、廃駅連続区間の中でどこまで続いているのかを設定することができます。</p>
+							<p>駅の各リストアイテムの右側には、「▼」「▲」のボタンが表示されています。</p>
+							<p>左側の「▼」を押すと、「前の路線」の続く範囲の終点を指定することができます。</p>
+							<div class="img-flex-wrapper">
+								<div class="img-flex guide-img">
+									<img src="{% static 'moviedatabase/base/20210831update/prev_line_demo.png' %}">
+								</div>
+							</div>
+							<p>同様に、右側の「▲」を押すと、「後の路線」に続く範囲の始点を指定することができます。</p>
+							<div class="img-flex-wrapper">
+								<div class="img-flex guide-img">
+									<img src="{% static 'moviedatabase/base/20210831update/next_line_demo.png' %}">
+								</div>
+							</div>
+							<p>いくつか例を挙げます。</p>
+							<h3>「前の路線」と「後の路線」が同じで、その間の廃駅も全てその路線と同じ場合</h3>
+							<p>駅の一番最初のリストアイテムの「▲」を押す、または一番最後のリストアイテムの「▼」を押す。</p>
+							<p>これにより、「前の路線」または「後の路線」の続く範囲が、ブロック内の廃駅全体となり、前後がつながるようになります。</p>
+							<div class="img-flex-wrapper">
+								<div class="img-flex guide-img">
+									<img src="{% static 'moviedatabase/base/20210831update/prev_next_same_demo.png' %}">
+								</div>
+							</div>
+							<h3>「前の路線」と「後の路線」が異なり、途中で路線が切り替わる場合</h3>
+							<p>「前の路線」が続く範囲の最後の駅の「▼」を押す。さらに、「後の路線」が続く範囲の最初の駅の「▲」を押す。</p>
+							<div class="img-flex-wrapper">
+								<div class="img-flex guide-img">
+									<img src="{% static 'moviedatabase/base/20210831update/prev_next_line_demo.png' %}">
+								</div>
+							</div>
+							<h3>廃駅ブロックの一部または全体に、「前の路線」「後の路線」のどちらでもない駅が含まれている場合</h3>
+							<p>ブロック内の一部に該当する駅が含まれている場合は、先に「前の路線」と「後の路線」の続く範囲を指定します。</p>
+							<p>いずれにも所属しない路線は、路線を指定せず、そのままにしておきます。こちらの路線名は、後述の「路線名カスタマイズ」にて編集が可能です。</p>
+						</div>
+						<p>そのほかにも、既存の機能である「強制的に離す」などのオプションと組み合わせ、様々な操作が可能となっています。色々試していただき、ご活用ください。</p>
+					</li>
+				</ol>
+				<h2 class="out-center-header">路線名カスタマイズ</h2>
+				<ol class="article">
+					<li>
+						<h2>各動画（パート）に駅を登録する</h2>
+						<div>
+							<p>通常通りに駅を登録します。歌唱の順番通りになるようにしてください。</p>
+						</div>
+						<h2>「路線編集/表示確認」画面を開く</h2>
+						<div>
+							<p>右側の「路線編集/表示確認」のボタンを押すと、編集画面が浮かび上がります。</p>
+							<div class="img-flex-wrapper">
+								<div class="img-flex guide-img">
+									<img src="{% static 'moviedatabase/base/20210831update/modal.png' %}">
+								</div>
+							</div>
+						</div>
+						<h2>「廃駅などの路線設定」を済ませる</h2>
+						<div>
+							<p>駅リストに廃駅が含まれている場合は、前述の「廃駅などの路線設定」を先に完了させてください。</p>
+							<p>路線名カスタマイズは、この路線設定を反映させた情報に基づいて行うため、順番が前後しないようご注意ください。</p>
+						</div>
+						<h2>「路線名カスタマイズ」タブを開く</h2>
+						<div>
+							<p>「路線名カスタマイズ」を押し、各駅に対して路線名を設定する画面を開きます。</p>
+						</div>
+						<h2>路線名を変更したい駅が含まれるブロックを選ぶ</h2>
+						<div>
+							<p>「廃駅などの路線設定」の内容を反映させた駅リストをもとに、路線ごとに分割されたブロックが表示されます。</p>
+							<p>この中から、路線名を変更したいブロックを選びます。</p>
+							<div class="img-flex-wrapper">
+								<div class="img-flex guide-img">
+									<img src="{% static 'moviedatabase/base/20210831update/line_name_customize.png' %}">
+								</div>
+							</div>
+						</div>
+						<h2>路線名をカスタマイズする</h2>
+						<p>路線のブロックを選択すると、そのブロック内に含まれる駅がすべて表示されます。</p>
+						<p>路線に対してまとめて設定する方法と、駅ごとに細かく設定する方法の2種類があります。</p>
+						<p>路線全体の名称を変更したい場合は、「まとめて設定」ボタンの左側の入力ボックスに、設定したい名前を入力し、ボタンを押します。</p>
+						<div class="img-flex-wrapper">
+							<div class="img-flex guide-img">
+								<img src="{% static 'moviedatabase/base/20210831update/line_name_all_customize.png' %}">
+							</div>
+						</div>
+						<p>路線名をカスタマイズした場合、駅リストでは、その名称の下に正式な路線名が小さいフォントサイズで表示されます。</p>
+						<p>区間を分割したい場合などは、手動で駅ごとに設定を行ってください。例としては、以下のような設定が可能です。</p>
+						<div class="img-flex-wrapper">
+							<div class="img-flex guide-img">
+								<img src="{% static 'moviedatabase/base/20210831update/line_name_partial_customize.png' %}">
+							</div>
+						</div>
+						<p>こちらは挙動が複雑なため、興味がある方は、プレビューを参考にしながらご自身で確かめてみてください。</p>
+					</li>
+				</ol>
+				<h2 class="out-center-header">活用例</h2>
+				<ol class="article">
+					<li>
+						<p>順次追加していく予定です。こんな使い方あるよというアイデア募集中です。</p>
+						<div class="img-flex-wrapper">
+							<div class="img-flex guide-img">
+								<img src="{% static 'moviedatabase/base/20210831update/line_customize_hokuriku.png' %}">
+							</div>
+						</div>
+						<div class="img-flex-wrapper">
+							<div class="img-flex guide-img">
+								<img src="{% static 'moviedatabase/base/20210831update/line_customize_hokkaido.png' %}">
+							</div>
+						</div>
+					</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+	{% include 'moviedatabase/includes/footer.html' %}
+</div>
+{% endblock %}

@@ -13,17 +13,19 @@
 			<div class="detail-name">{% if word %}{{ word }}{% endif %}</div>
 			<div class="detail-name-sub">駅</div>
 			<div class="sub-name">
-				{% if word %}
-					キーワード：{{ word }}
-				{% endif %}
 			</div>
 			<div class="under-color station-background">
 				{{ paginator.count }}件
 			</div>
 			<div class="line-bottom">
 				<form action="" method="get" class="search-form">
-					<input type="textbox" name="word" class="search-box" value="{% if word %}{{ word }}{% endif %}">
-					<button class="search-button" type="submit"><i class="fas fa-search"></i></button>
+					<div class="search-form">
+						<input type="textbox" name="word" class="search-box" value="{% if word %}{{ word }}{% endif %}">
+						<button class="search-button" type="submit"><i class="fas fa-search"></i></button>
+					</div>
+					<label>
+						<input type="checkbox" name="is_kana" value="true"> 読みがなを含める
+					</label>
 				</form>
 			</div>
 		</div>
@@ -33,11 +35,31 @@
 		<div class="main-content-inner">
 			<div class="object-list">
 				<ul class="object-list-ul">
-				{% for s in stationservice_list %}
-					<li class="object-list-li">
-						<a href="{% url 'moviedatabase:movielistbystationservice' s.pk %}" class="station-color">
-							<div>{{ s }}</div>
-							<div>{{ s.line_service }}</div>
+				{% for stationservice in stationservice_list %}
+					<li class="object-list-li object-list-li-space-between">
+						<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.pk %}" class="station-color">
+							<div>
+								{{ stationservice.name }}
+								{% if stationservice.status_text %}
+								<span class="object-list-li-small">{{ stationservice.status_text }}</span>
+								{% endif %}
+							</div>
+							<div>
+								<span class="object-list-li-small">{{ stationservice.line_service.company.short_text }}</span>
+								<span>{{ stationservice.line_service.name }}</span>
+								{% if stationservice.line_service.name_sub %}
+								<span class="object-list-li-small">({{ stationservice.line_service.name_sub }})</span>
+								{% endif %}
+								{% if stationservice.line_service.f_or_s %}
+								<span class="object-list-li-small">{{ stationservice.line_service.f_or_s }}</span>
+								{% endif %}
+								{% if stationservice.line_service.status_text %}
+								<span class="object-list-li-small">{{ stationservice.line_service.status_text }}</span>
+								{% endif %}
+								{% if stationservice.line_service.name != stationservice.station.line.name %}
+								<span class="object-list-li-small">({{ stationservice.station.line.name }})</span>
+								{% endif %}
+							</div>
 						</a>
 					</li>
 				{% endfor %}
@@ -50,4 +72,12 @@
 	</div>
 	{% include 'moviedatabase/includes/footer.html' %}
 </div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+	if ("{{ is_kana }}" == "true") {
+		$('input:checkbox[name="is_kana"]').prop('checked', true)
+	}
+</script>
 {% endblock %}

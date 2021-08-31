@@ -163,6 +163,16 @@ input, select {
 	margin-right: 1rem;
 }
 
+.part-detail-left-row {
+	padding: 1.0rem;
+	border-bottom: 1px solid #ccc;	
+}
+
+.part-detail-left-content {
+	font-weight: normal;
+	padding-left: 0.5rem;
+}
+
 .part-detail-right {
 	width: 67%;
 }
@@ -212,7 +222,7 @@ input, select {
 	color: #333;
 }
 
-.station-list {
+.station-option-list {
 	flex: 1;
 	height: calc(100% - 5rem);
 	display: flex;
@@ -231,7 +241,7 @@ input, select {
 
 .is-show {
 	display: flex;
-	width: 512px;
+	width: 440px;
 	height: 100%;
 }
 
@@ -246,7 +256,7 @@ input, select {
 	overflow-y: scroll;
 	margin: 0 0.4rem 0 0;
 	padding: 2px;
-	width: 10rem;
+	width: 8rem;
 	height: 100%;
 }
 /* スクロールの幅の設定 */
@@ -274,11 +284,11 @@ input, select {
 }
 
 .select-div span {
-	font-size: 0.9rem;
+	font-size: 0.8rem;
 }
 
 .linelist-company-name {
-	margin-right: 0.5rem;
+	margin-right: 0.3rem;
 }
 
 .select-div div:hover {
@@ -302,7 +312,7 @@ input, select {
 }
 
 .station-queue {
-	width: 10rem;
+	width: 15rem;
 	height: 100%;
 	display: flex;
 	flex-direction: column;
@@ -330,7 +340,7 @@ input, select {
 	border: 1px solid #ccc;
 	margin: 0 0.4rem 0 0;
 	padding: 2px;
-	width: 10rem;
+	width: 15rem;
 	height: 100%;
 	border: 0;
 }
@@ -364,14 +374,40 @@ input, select {
 
 .selected-list-container {
 	background-color: #f0f2f9;
-	padding: 2rem;
+	padding: 1rem;
 	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.selected-list-header {
+	display: flex;
+	justify-content: space-between;
+	padding: 0.5em;
+}
+
+#line-customize-modal-open {
+	margin: 0;
+	padding: 0 0.5em;
+	color: #fff;
+	border-radius: 0.4rem;
+	font: inherit;
+	font-size: 0.8rem;
+	border: 2px solid #5B4D92;
+	background-color: #5B4D92;
+	cursor: pointer;
+	transition: all .3s;
+}
+
+#line-customize-modal-open:hover {
+	background-color: #fff;
+	color: #5B4D92;
 }
 
 .selected-list {
 	padding: 1rem;
 	width: 100%;
-	height: calc(100% - 1rem);
+	flex: 1;
 	overflow-y: scroll;
 }
 
@@ -461,6 +497,10 @@ input, select {
 	background-color: #fff;
 }
 
+.station-list a {
+	pointer-events: none;
+}
+
 /*送信ボタン*/
 .submit-banner {
 	width: 100%;
@@ -525,6 +565,365 @@ input, select {
 }
 
 .submit-button:hover {
+	background-color: #fff;
+	color: #3846ac;
+}
+
+/*モーダルウィンドウ*/
+#line-customize-modal-overlay {
+	z-index: 3;
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 120%;
+	background-color: rgba(0, 0, 0, 0.7);
+}
+
+#line-customize-modal-content {
+	display: none;
+	width: 80%;
+	height: 80%;
+	padding: 2rem;
+	background-color: #D6D1E9;
+	z-index: 4;
+	position: fixed;
+}
+
+#line-customize-inner {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+#line-customize-upper {
+	margin: 0 0 1rem 0;
+	padding: 1rem;
+	flex: 1;
+	overflow-y: hidden;
+	display: flex;
+}
+
+.modal-tab {
+	margin-right: 4px;
+	padding: 4px;
+	background-color: #333;
+	color: #fff;
+	font-weight: normal;
+}
+
+.modal-is-active {
+	font-weight: bold;
+	background-color: #fff;
+	color: #333;
+}
+
+.modal-tab-content-group {
+	height: 100%;
+	padding: 0;
+}
+
+.modal-tab-content-container {
+	min-height: 0;
+	background-color: #fff;
+	flex: 1;
+}
+
+#line-customize-editor {
+	display: flex;
+	flex: 2;
+    flex-direction: column;
+    margin: 0 1rem 0 0;
+}
+
+.modal-tab-content {
+	padding: 0.5rem;
+	height: 100%;
+	display: none;
+}
+
+.modal-is-show {
+	display: flex;
+	height: 100%;
+}
+
+#line-name-customize-selector {
+	overflow-y: scroll;
+	flex: 1;
+	padding: 0.5rem;
+}
+
+.line-name-customize-option {
+	padding: 0.5rem;
+	margin-bottom: 0.5rem;
+	box-shadow: 0px 0px 8px rgb(0 0 0 / 40%);
+	cursor: pointer;
+}
+
+.line-name-customize-option:hover {
+	background-color: #D2EBF7;
+}
+
+.line-name-customize-option-active {
+	background-color: #70ADCB;
+	cursor: initial;
+}
+
+.line-name-customize-option-active:hover {
+	background-color: #70ADCB;
+}
+
+#line-name-customize-detail-editor {
+	flex: 1;
+	padding: 0.5rem;
+	display: flex;
+	flex-direction: column;
+}
+
+#line-name-customize-detail-controller {
+	padding: 0.5rem;
+	text-align: right;
+}
+
+.line-name-customize-all-button {
+	margin: 0;
+	padding: 0 0.5em;
+	color: #fff;
+	border-radius: 0.4rem;
+	font: inherit;
+	font-size: 0.8rem;
+	border: 2px solid #FAA038;
+	background-color: #FAA038;
+	cursor: pointer;
+	transition: all .3s;	
+}
+
+.line-name-customize-all-button:hover {
+	background-color: #fff;
+	color: #FAA038;
+}
+
+.line-name-customize-reset {
+	margin: 0.5rem 0 0 0;
+	padding: 0 0.5em;
+	color: #fff;
+	border-radius: 0.4rem;
+	font: inherit;
+	font-size: 0.8rem;
+	border: 2px solid #FAA038;
+	background-color: #FAA038;
+	cursor: pointer;
+	transition: all .3s;	
+}
+
+.line-name-customize-reset:hover {
+	background-color: #fff;
+	color: #FAA038;
+}
+
+#line-name-customize-detail-station-list {
+	padding: 0.5rem;
+	min-height: 0;
+    overflow-y: scroll;
+	box-shadow: 0px 0px 8px rgb(0 0 0 / 20%) inset;
+}
+
+.line-name-customize-detail-station-option {
+	margin-bottom: 0.5rem;
+	box-shadow: 0px 0px 8px rgb(0 0 0 / 20%);
+	display: flex;
+}
+
+.line-name-customize-detail-station-option:last-child {
+	margin-bottom: 0;
+}
+
+.line-name-customize-detail-station-option > div {
+	padding: 0.5rem;
+	flex: 1;
+}
+
+#other_option-line-selector {
+	overflow-y: scroll;
+	flex: 1;
+	padding: 0.5rem;
+}
+
+.other_option-line-option {
+	padding: 0.5rem;
+	margin-bottom: 0.5rem;
+	box-shadow: 0px 0px 8px rgb(0 0 0 / 20%);
+	cursor: pointer;
+}
+
+.other_option-line-option:hover {
+	background-color: #FFDCD3;
+}
+
+.other_option-line-option-active {
+	background-color: #FF7F5D;
+}
+
+.other_option-line-option-active:hover {
+	background-color: #FF7F5D;
+	cursor: initial;
+}
+
+.is-disable {
+	background-color: #ccc;
+	cursor: initial;
+}
+
+.is-disable:hover {
+	background-color: #ccc;
+}
+
+#other_option-line-detail-editor {
+	padding: 0.5rem;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+#other_option-detail-controller {
+	display: flex;
+	justify-content: flex-end;
+	padding: 0 0.5rem;
+}
+
+#other_option-reset {
+	margin: 0;
+	padding: 0 0.5em;
+	color: #fff;
+	border-radius: 0.4rem;
+	font: inherit;
+	font-size: 0.8rem;
+	display: block;
+	border: 2px solid #FAA038;
+	background-color: #FAA038;
+	cursor: pointer;
+	transition: all .3s;
+}
+
+#other_option-reset:hover {
+	background-color: #fff;
+	color: #FAA038;
+}
+
+.other_option-surround-line-name {
+	padding: 0.5rem;
+	font-weight: normal;
+}
+
+.other_option-surround-line-name .before-name {
+	font-weight: bold;
+	color: #FA6038;
+}
+
+.other_option-surround-line-name .after-name {
+	font-weight: bold;
+	color: #28B264;
+}
+
+#other_option-detail-station-list {
+	padding: 0.5rem;
+	min-height: 0;
+    overflow-y: scroll;
+	box-shadow: 0px 0px 8px rgb(0 0 0 / 20%) inset;
+}
+
+.other_option-detail-station-option {
+	margin-bottom: 0.5rem;
+	box-shadow: 0px 0px 8px rgb(0 0 0 / 20%);
+	display: flex;
+}
+
+.other_option-detail-station-option:last-child {
+	margin-bottom: 0;
+}
+
+.other_option-detail-station-name {
+	padding: 0.5rem;
+	flex: 1;
+}
+
+.other_option-detail-station-before-set {
+	width: 2rem;
+	background-color: #FFF;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+}
+
+.other_option-detail-station-before-set-active {
+	background-color: #FA6038;
+}
+
+.other_option-detail-station-after-set {
+	width: 2rem;
+	background-color: #FFF;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+}
+
+.other_option-detail-station-after-set-active {
+	background-color: #28B264;
+}
+
+#station-display-check-wrapper {
+	flex: 1;
+	height: 100%;
+	padding: 0.5rem;
+	background-color: #fff;
+	display: flex;
+	flex-direction: column;
+}
+
+#station-display-check {
+	flex: 1;
+	overflow-y: scroll;
+}
+
+#line-customize-lower {
+	display: flex;
+}
+
+#line-customize-modal-close {
+	margin: 0 0 0 1rem;
+	padding: 0.6rem 1.2rem;
+	color: #3846ac;
+	border-radius: 0.4rem;
+	font: inherit;
+	display: block;
+	border: 2px solid #3846ac;
+	background-color: #fff;
+	cursor: pointer;
+	transition: all .3s;
+}
+
+#line-customize-modal-close:hover {
+	opacity: 0.8;
+}
+
+#line-customize-modal-determine {
+	margin: 0 0 0 1rem;
+	padding: 0.6rem 1.2rem;
+	color: #fff;
+	border-radius: 0.4rem;
+	font: inherit;
+	display: block;
+	border: 2px solid #3846ac;
+	background-color: #3846ac;
+	cursor: pointer;
+	transition: all .3s;
+}
+
+#line-customize-modal-determine:hover {
 	background-color: #fff;
 	color: #3846ac;
 }

@@ -36,6 +36,16 @@ class Company(models.Model):
 	def __str__(self):
 		return self.name
 
+	def short_text(self):
+		if self.short_name_2:
+			return self.short_name_2
+		elif self.short_name:
+			return self.short_name
+		elif self.name:
+			return name
+		else:
+			return ""
+
 class BelongsCategory(models.Model):
 	name = models.CharField('所属カテゴリー', max_length=100)
 	object_name = models.CharField('名称カテゴリー', null=True, blank=True, max_length=100)
@@ -64,21 +74,37 @@ class Line(models.Model):
 	def end_station(self):
 		return Station.objects.filter(line=self.pk).order_by('sort_by_line').last()
 
-	def __str__(self):
-		n = ""
-		if self.company and self.name_sub:
-			n += self.company.name + " " + self.name + "(" + self.name_sub + ")"
-		elif self.name_sub:
-			n += self.name + "(" + self.name_sub + ")"
-		elif self.company:
-			n += self.company.name + " " + self.name
+	def with_sub(self):
+		if self.name == None:
+			return "untitled"
+		if self.name_sub:
+			return self.name + "(" + self.name_sub + ")"
 		else:
-			n += self.name
+			return self.name
 
-		if self.status == 2:
-			return n + "[廃]"
+	def status_text(self):
+		if self.status == 1:
+			return "[未]"
+		elif self.status == 2:
+			return "[廃]"
 		else:
-			return n
+			return ""
+
+	def __str__(self):
+		if self.name == None:
+			return "untitled"
+		if self.company == None:
+			return "untitled"
+
+		n = ""
+		if self.company.short_text():
+			n += self.company.short_text() + " " + self.with_sub()
+		else:
+			n += self.with_sub()
+
+		if self.status_text():
+			return n + self.status_text()
+		return n
 
 class Station(models.Model):
 	# category = models.ForeignKey(ObjectCategory, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='名称カテゴリー')
@@ -123,8 +149,16 @@ class Station(models.Model):
 			text = text + l.line.name + " / "
 		return text
 
+	def status_text(self):
+		if self.status == 1:
+			return "[未]"
+		elif self.status == 2:
+			return "[廃]"
+		else:
+			return ""
+
 	def __str__(self):
-		return self.name
+		return self.name + self.status_text()
 
 class LineService(models.Model):
 	category = models.ForeignKey(BelongsCategory, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='所属カテゴリー')
@@ -150,41 +184,23 @@ class LineService(models.Model):
 	def end_station(self):
 		return StationService.objects.filter(line_service=self.pk).order_by('sort_by_line_service').exclude(is_representative=True).last()
 
-	def with_company(self):
-		if self.company == None:
-			return "untitled"
-		n = ""
-		if self.company:
-			if self.company.short_name_2:
-				n = self.company.short_name_2 + " " + self.name
-			else:
-				n = self.name
-		else:
-			n = self.name
-
-		if self.status == 2:
-			return n + "[廃]"
-		else:
-			return n
-
 	def f_or_s(self):
-		if self.is_formal and (self.is_service==""):
+		a = self.is_formal
+		b = self.is_service
+		if self.is_formal and (self.is_service=="" or self.is_service is None):
 			return "[正式区間]"
-		elif (self.is_formal=="") and self.is_service:
+		elif (self.is_formal=="" or self.is_formal is None) and self.is_service:
 			return "[運行系統]"
 		else:
 			return ""
 
-	def __str__(self):
+	def with_sub(self):
 		if self.name == None:
 			return "untitled"
-		n = ""
 		if self.name_sub:
-			n += self.with_company() + "(" + self.name_sub + ") " + self.f_or_s()
+			return self.name + "(" + self.name_sub + ")"
 		else:
-			n += self.with_company() + " " + self.f_or_s()
-
-		return n
+			return self.name
 
 	def status_text(self):
 		if self.status == 1:
@@ -193,6 +209,25 @@ class LineService(models.Model):
 			return "[廃]"
 		else:
 			return ""
+
+	def __str__(self):
+		if self.name == None:
+			return "untitled"
+		if self.company == None:
+			return "untitled"
+
+		n = ""
+		if self.company.short_text():
+			n += self.company.short_text() + " " + self.with_sub()
+		else:
+			n += self.with_sub()
+
+		if self.f_or_s():
+			return n + self.f_or_s()
+
+		if self.status_text():
+			return n + self.status_text()
+		return n
 
 class StationService(models.Model):
 	# category = models.ForeignKey(ObjectCategory, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='名称カテゴリー')
@@ -209,9 +244,11 @@ class StationService(models.Model):
 	color = models.CharField('駅カラー', max_length=100, null=True, blank=True, default='')
 	is_representative = models.BooleanField('代表オブジェクト', default=False)
 	def prev_station_base(self):
+		# 路線上の純粋な並び替えで前の駅オブジェクトを取得
 		return type(self).objects.filter(line_service=self.line_service).filter(sort_by_line_service__lt=self.sort_by_line_service).order_by('sort_by_line_service').last()
 
 	def next_station_base(self):
+		# 路線上の純粋な並び替えで後の駅オブジェクトを取得
 		return type(self).objects.filter(line_service=self.line_service).filter(sort_by_line_service__gt=self.sort_by_line_service).order_by('sort_by_line_service').first()
 
 	def get_group_station_service(self):
@@ -300,14 +337,16 @@ class StationService(models.Model):
 		else:
 			return "#06262b"
 
+	def status_text(self):
+		if self.station.status == 1:
+			return "[未]"
+		elif self.station.status == 2:
+			return "[廃]"
+		else:
+			return ""
+
 	def __str__(self):
-		s = ""
-		if self.station:
-			if self.station.status == 1:
-				s = "[未]"
-			elif self.station.status == 2:
-				s = "[廃]"
-		return self.name + s
+		return self.name + self.status_text()
 
 class StationServiceHistory(models.Model):
 	# category_history = models.ForeignKey(ObjectCategory, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='名称カテゴリー')
