@@ -20,6 +20,10 @@ class Prefecture(models.Model):
 
 class CompanyCategory(models.Model):
 	name = models.CharField('事業者区分', max_length=200)
+
+	class Meta:
+		ordering = ['pk']
+
 	def __str__(self):
 		return self.name
 
@@ -33,6 +37,10 @@ class Company(models.Model):
 	sort_by_category = models.IntegerField('区分ごとの並び順', default=0)
 
 	other_option = models.BooleanField('その他の選択肢', default=False)
+
+	class Meta:
+		ordering = ['category', 'sort_by_category']
+
 	def __str__(self):
 		return self.name
 
@@ -178,6 +186,10 @@ class LineService(models.Model):
 		(2, '廃止')
 	)
 	status = models.IntegerField('状態', null=True, blank=True, choices=STATUS_CHOICES, default=0)
+
+	class Meta:
+		ordering = ['company', 'sort_by_company']
+
 	def start_station(self):
 		return StationService.objects.filter(line_service=self.pk).order_by('sort_by_line_service').exclude(is_representative=True).first()
 
@@ -243,6 +255,10 @@ class StationService(models.Model):
 	sort_by_line_service = models.IntegerField('路線(運行系統)ごとの並び順', null=True, blank=True, default=0)
 	color = models.CharField('駅カラー', max_length=100, null=True, blank=True, default='')
 	is_representative = models.BooleanField('代表オブジェクト', default=False)
+
+	class Meta:
+		ordering = ['line_service', 'sort_by_line_service']
+
 	def prev_station_base(self):
 		# 路線上の純粋な並び替えで前の駅オブジェクトを取得
 		return type(self).objects.filter(line_service=self.line_service).filter(sort_by_line_service__lt=self.sort_by_line_service).order_by('sort_by_line_service').last()
