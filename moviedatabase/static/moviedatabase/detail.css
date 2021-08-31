@@ -434,16 +434,4 @@
 	.movie-title {
 		font-size: 0.7rem;
 	}
-
-	.movie-station-list {
-		width: 100%;
-	}
-
-	.station-list {
-		font-size: 1.0rem;
-	}
-
-	.line-name {
-		font-size: 0.8rem;
-	}
 }

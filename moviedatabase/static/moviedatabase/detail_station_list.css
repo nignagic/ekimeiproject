@@ -225,3 +225,17 @@
 	text-align: right;
 	max-width: 30%;
 }
+
+@media (max-width: 768px) {
+	.movie-station-list {
+		width: 100%;
+	}
+	
+	.station-list {
+		font-size: 1.0rem;
+	}
+
+	.line-name {
+		font-size: 0.8rem;
+	}
+}
