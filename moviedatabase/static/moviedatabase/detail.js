@@ -66,15 +66,17 @@ stationurl = $('#detail-url').data('station').split('0')
 
 function key_station_text(beforecolor, aftercolor, stationid, stationservicename, linename, stationsungname, explanation, end) {
 	if (explanation) {
+		name = stationsungname + "<small>" + explanation + "</small>"
 		title = stationsungname + "" + explanation + " 【" + stationservicename + " - " + linename + "】"
 	} else {
+		name = stationsungname
 		title = stationsungname + " 【" + stationservicename + " - " + linename + "】"
 	}
 
 	if (end) {
-		return "<div class='key-station key-station-end' title='" + title + "'><div class='key-station-icon'></div><div class='station-before' style='background: " + beforecolor + "'></div><div class='station-after' style='background: " + aftercolor + "'></div><a href='" + stationurl[0] + stationid + stationurl[1] + "'>" + stationsungname + "<small>" + explanation + "</small></a></div>";
+		return "<div class='key-station key-station-end' title='" + title + "'><div class='key-station-icon'></div><div class='station-before' style='background: " + beforecolor + "'></div><div class='station-after' style='background: " + aftercolor + "'></div><a href='" + stationurl[0] + stationid + stationurl[1] + "'>" + name + "</a></div>";
 	} else {
-		return "<div class='key-station' title='" + title + "'><div class='key-station-icon'></div><div class='station-before' style='background: " + beforecolor + "'></div><div class='station-after' style='background: " + aftercolor + "'></div><a href='" + stationurl[0] + stationid + stationurl[1] + "'>" + stationsungname + "<small>" + explanation + "</small></a></div>";
+		return "<div class='key-station' title='" + title + "'><div class='key-station-icon'></div><div class='station-before' style='background: " + beforecolor + "'></div><div class='station-after' style='background: " + aftercolor + "'></div><a href='" + stationurl[0] + stationid + stationurl[1] + "'>" + name + "</a></div>";
 	}
 }
 
@@ -92,12 +94,14 @@ function station_ul_text(id, ul) {
 
 function station_text_f(beforecolor, aftercolor, stationid, stationservicename, linename, stationsungname, explanation) {
 	if (explanation) {
+		name = stationsungname + "<small>" + explanation + "</small>"
 		title = stationsungname + "" + explanation + " 【" + stationservicename + " - " + linename + "】"
 	} else {
+		name = stationsungname
 		title = stationsungname + " 【" + stationservicename + " - " + linename + "】"
 	}
 
-	return "<li class='station-name' title='" + title + "'><div class='station-before' style='background: " + beforecolor + "'></div><div class='station-after' style='background: " + aftercolor + "'></div><a href='" + stationurl[0] + stationid + stationurl[1] + "'>" + stationsungname + "<small>" + explanation + "</small></a></li>";
+	return "<li class='station-name' title='" + title + "'><div class='station-before' style='background: " + beforecolor + "'></div><div class='station-after' style='background: " + aftercolor + "'></div><a href='" + stationurl[0] + stationid + stationurl[1] + "'>" + name + "</a></li>";
 }
 
 $(function() {
@@ -166,7 +170,6 @@ function generate_stations_for_display(stations) {
 		prev_line_name = now_line_name;
 	})
 
-console.log(stations_for_display)
 	return stations_for_display;
 }
 
