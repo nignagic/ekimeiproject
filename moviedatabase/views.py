@@ -6,6 +6,8 @@ from rest_framework import generics
 from . import serializer
 from django.db.models import Q
 from pure_pagination.mixins import PaginationMixin
+from django.http import HttpResponse
+import urllib
 
 from .models import *
 from stationdata.models import *
@@ -30,18 +32,49 @@ import re
 
 # Create your views here.
 
+@permission_required('songdata.change_songnew')
 def test(request):
-	stations = StationInMovie.objects.all()
-	for station in stations:
-		if (station.line_name_customize is None or station.line_name_customize == ""):
-			station.line_name_customize = station.station_service.line_service.__str__()
-			station.save()
-	parts = Part.objects.all()
-	for part in parts:
-		if (part.information_time_point is None):
-			original_date = datetime.date(part.movie.published_at_year, part.movie.published_at_month, part.movie.published_at_day)
-			part.information_time_point = original_date
-			part.save()
+	response = HttpResponse(content_type='text/csv')
+	filename = urllib.parse.quote((u'曲一覧.csv').encode("utf8"))
+	response['Content-Disposition'] = 'attachment; filename*=UTF-8\'\'{}'.format(filename)
+	writer = csv.writer(response)
+	prev = None
+
+	for song in SongNew.objects.all():
+		if (song.song_name == None):
+			song.song_name = ''
+		if (song.song_name_kana == None):
+			song.song_name_kana = ''
+		if (song.artist_name == None):
+			song.artist_name = ''
+		if (song.artist_name_kana == None):
+			song.artist_name_kana = ''
+		if (song.tag == None):
+			song.tag = ''
+		song.save()
+
+	for song in SongNew.objects.all():
+		same_songs = SongNew.objects.filter(song_name=song.song_name, song_name_kana=song.song_name_kana, artist_name=song.artist_name, artist_name_kana=song.artist_name_kana, tag=song.tag)
+		same_song_first = same_songs.order_by('pk').first()
+		for same_song in same_songs:
+			for m in same_song.movie_set.all():
+				m.songnew.remove(same_song)
+				m.songnew.add(same_song_first)
+			for p in same_song.part_set.all():
+				p.songnew.remove(same_song)
+				p.songnew.add(same_song_first)
+
+	for song in SongNew.objects.all():
+		movie_count = song.movie_set.all().count()
+		part_count = song.part_set.all().count()
+		if (movie_count == 0 and part_count == 0):
+			song.delete()
+
+	for song in SongNew.objects.all():
+		same_songs = SongNew.objects.filter(song_name=song.song_name, song_name_kana=song.song_name_kana, artist_name=song.artist_name, artist_name_kana=song.artist_name_kana, tag=song.tag)
+		writer.writerow([song.song_name, song.song_name_kana, song.artist_name, song.artist_name_kana, song.tag, same_songs.count()])
+
+	return response
 
 def todaymovie():
 	JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')

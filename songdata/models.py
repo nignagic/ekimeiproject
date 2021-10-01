@@ -87,6 +87,9 @@ class SongNew(models.Model):
 
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='登録者')
 
+	class Meta:
+		ordering = ['song_name_kana', 'artist_name_kana']
+
 	def __str__(self):
 		return self.song_name + " - " + ' '.join(self.artist_name.splitlines())
 
