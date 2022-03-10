@@ -86,7 +86,7 @@ def other_option(value):
 @register.filter(name='get_group_station')
 def get_group_station(value):
 	if value:
-		return Station.objects.get(pk=value).group_station_id
+		return Station.objects.get(pk=value).group_station_new
 	else:
 		return "デフォルト（DB新規駅）"
 
