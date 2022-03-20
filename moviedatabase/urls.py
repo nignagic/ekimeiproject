@@ -1,6 +1,5 @@
 from django.urls import path
 from django.views.decorators.cache import cache_page
-from django.conf.urls import url, include
 from . import views
 
 app_name = 'moviedatabase'
@@ -77,18 +76,18 @@ urlpatterns = [
 
 	path('check/channel_movie_is_exist/<slug:channel_id>/', views.ChannelMovieIsExist, name='channel_movie_is_exist'),
 
-	url('^api/lineservice/(?P<line_service>.+)/stationservice/', views.StationServicebyLineServiceViewSet.as_view(), name='stationservicebylineserviceapi'),
-	url('^api/pref/(?P<pref>.+)/lineservice/', views.LineServicebyPrefectureViewSet.as_view(), name='lineservicebyprefectureapi'),
-	url('^api/company/(?P<company>.+)/lineservice/', views.LineServicebyCompanyViewSet.as_view(), name='lineservicebycompanyapi'),
-	url('^api/line/(?P<line>.+)/station', views.StationbyLineViewSet.as_view(), name='stationbylineapi'),
-	url('^api/stationsearch/(?P<station>.+)/$', views.StationServiceSearchViewSet.as_view(), name='stationservicesearchapi'),
-	url('^api/stationwithlinesearch/(?P<station>.+)/(?P<line>.+)/$', views.StationServiceWithLineSearchViewSet.as_view(), name='stationservicewithlinesearchapi'),
-	url('^api/groupstationsearch/(?P<word>.+)/$', views.GroupStationSearchViewSet.as_view(), name='groupstationsearchapi'),
-	url('^api/transfer/(?P<station_service>.+)/$', views.LineServiceTransferViewSet.as_view(), name='lineservicetransferapi'),
-	url('^api/partstation/(?P<id>.+)/$', views.PartStationViewSet.as_view(), name='partstationapi'),
-	url('^api/channel/(?P<channel>.+)/movie/', views.MoviebyChannelViewSet.as_view(), name='moviebychannelapi'),
-	url('^api/movie/(?P<movie>.+)/', views.MovieViewSet.as_view(), name='movieapi'),
-	url('^api/creator/(?P<creator>.+)/name/', views.NamebyCreatorViewSet.as_view(), name='namebycreatorapi'),
-	url('^api/name/(?P<name>.+)/', views.NameViewSet.as_view(), name='nameapi'),
-	url('^api/movie_is_exist/(?P<main_id>.+)/', views.MovieIsExistViewSet.as_view(), name='movieisexistapi'),
+	path('api/lineservice/<line_service>/stationservice/', views.StationServicebyLineServiceViewSet.as_view(), name='stationservicebylineserviceapi'),
+	path('api/pref/<pref>/lineservice/', views.LineServicebyPrefectureViewSet.as_view(), name='lineservicebyprefectureapi'),
+	path('api/company/<company>/lineservice/', views.LineServicebyCompanyViewSet.as_view(), name='lineservicebycompanyapi'),
+	path('api/line/<line>/station', views.StationbyLineViewSet.as_view(), name='stationbylineapi'),
+	path('api/stationsearch/<station>/', views.StationServiceSearchViewSet.as_view(), name='stationservicesearchapi'),
+	path('api/stationwithlinesearch/<station>/<line>/', views.StationServiceWithLineSearchViewSet.as_view(), name='stationservicewithlinesearchapi'),
+	path('api/groupstationsearch/<word>/', views.GroupStationSearchViewSet.as_view(), name='groupstationsearchapi'),
+	path('api/transfer/<station_service>/', views.LineServiceTransferViewSet.as_view(), name='lineservicetransferapi'),
+	path('api/partstation/<id>/', views.PartStationViewSet.as_view(), name='partstationapi'),
+	path('api/channel/<channel>/movie/', views.MoviebyChannelViewSet.as_view(), name='moviebychannelapi'),
+	path('api/movie/<movie>/', views.MovieViewSet.as_view(), name='movieapi'),
+	path('api/creator/<creator>/name/', views.NamebyCreatorViewSet.as_view(), name='namebycreatorapi'),
+	path('api/name/<name>/', views.NameViewSet.as_view(), name='nameapi'),
+	path('api/movie_is_exist/<main_id>/', views.MovieIsExistViewSet.as_view(), name='movieisexistapi'),
 ]
