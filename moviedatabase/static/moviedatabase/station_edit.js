@@ -1002,3 +1002,9 @@ function line_customize_determine() {
 		station_form.find('.line_name_customize').val(station.line_name_customize)
 	})
 }
+
+$('.submit-button').on('click', function() {
+	$(this).prop('disabled', true);
+	$(this).addClass("submit-button-disabled")
+	$(this).html('<div class="loading"></div>');
+})

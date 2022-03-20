@@ -27,7 +27,7 @@ a:hover {
 	color: #1cb1c4;
 }
 
-a. button {
+a, button {
 	color: inherit;
 	font-weight: inherit;
 	cursor: pointer;
@@ -567,6 +567,33 @@ input, select {
 .submit-button:hover {
 	background-color: #fff;
 	color: #3846ac;
+}
+
+.submit-button-disabled {
+	cursor: default;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.submit-button>.loading {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
+	border: 0.25rem solid rgba(255, 255, 255, 0.2);
+	border-top-color: rgb(255, 255, 255);
+	animation: spin 1s infinite linear;
+}
+
+.submit-button:hover>.loading {
+	border: 0.25rem solid rgba(56, 70, 172, 0.2);
+	border-top-color: rgb(56, 70, 172);
 }
 
 /*モーダルウィンドウ*/

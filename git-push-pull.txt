@@ -31,5 +31,3 @@ sudo lsof -i:8001
 sudo kill -9 ****
 uwsgi --socket :8001 --module ekimeiproject.wsgi &
 sudo service nginx restart
-
-giuhubtoken ~2021/9/30 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

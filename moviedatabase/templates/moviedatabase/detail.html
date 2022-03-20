@@ -86,7 +86,7 @@
 							{% endif %}</div>
 							<div class="movie-statistics-name">高評価数</div>
 						</div>
-						<div class="movie-statistics-item">
+						{% comment %} <div class="movie-statistics-item">
 							<div class="movie-statistics-num">
 							{% if movie.n_dislike == 0 %}
 								0
@@ -97,7 +97,7 @@
 							{% endif %}
 							</div>
 							<div class="movie-statistics-name">低評価数</div>
-						</div>
+						</div> {% endcomment %}
 						<div class="movie-statistics-item">
 							<div class="movie-statistics-num">
 							{% if movie.n_comment == 0 %}
@@ -135,7 +135,11 @@
 							<td class="song-name"><a href="{% url 'moviedatabase:songsearch' %}?word={{ songnew.song_name }}">{{ songnew.song_name }}</a></td>
 							<td class="artist-name">
 								{% for n in songnew.artist_name_all %}
-								<a href="{% url 'moviedatabase:artistsearch' %}?word={{ n }}">{{ n }}</a>
+									<a href="{% url 'moviedatabase:artistsearch' %}?word={{ n }}">{{ n }}</a>
+									{% if forloop.last %}
+									{% else %}
+										<span>/</span>
+									{% endif %}
 								{% endfor %}
 							</td>
 						</tr>
@@ -286,9 +290,15 @@
 								<td class="part-detail-content">
 										{% for songnew in part.songnew.all %}
 											<a href="{% url 'moviedatabase:songsearch' %}?word={{ songnew.song_name }}">{{ songnew.song_name }}</a> - 
+												<span class="part-artist-name">
 												{% for n in songnew.artist_name_all %}
-												<a href="{% url 'moviedatabase:artistsearch' %}?word={{ n }}" class="part-artist-name">{{ n }}</a>
+													<a href="{% url 'moviedatabase:artistsearch' %}?word={{ n }}">{{ n }}</a>
+													{% if forloop.last %}
+													{% else %}
+														<span>/</span>
+													{% endif %}
 												{% endfor %}
+												</span>
 											{% if songnew.tag %}
 												<br>
 												{% for n in songnew.tag_all %}
@@ -343,6 +353,7 @@
 							{% endif %}
 						</table>
 						<div class="station-list-{{ part.id }} station-list">
+							<div class="station-loading"></div>
 						</div>
 					</div>
 				</div>

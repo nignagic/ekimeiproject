@@ -194,13 +194,14 @@ function station_display(id, stations_for_display) {
 				key_station = key_station_text(prev_color, now_color, station.station_service_pk, station.station_service_name, line_name, station.sung_name, station.explanation, false)
 				line_box = line_box_text(station.line_service_pk, station.get_color, station.get_color, line_name, station.line_name_customize, station.category, station.other_option, true)
 				station_ul = station_ul_text(id, ul);
-				station_list.append(key_station + line_box + station_ul);
+				$(station_list).append(key_station + line_box + station_ul);
 			}
 
 			function end_station() {
 				key_station = key_station_text(now_color, "none", station.station_service_pk, station.station_service_name, line_name, station.sung_name, station.explanation, true)
-				station_list.append(key_station);
+				$(station_list).append(key_station);
 			}
+			
 			function middle_station() {
 				station = station_text_f(prev_color, station.get_color, station.station_service_pk, station.station_service_name, line_name, station.sung_name, station.explanation)
 				$('.station-ul-' + id + '-' + ul).append(station)
@@ -286,4 +287,5 @@ function station_display(id, stations_for_display) {
 			middle_station();
 		})
 	})
+	$(station_list).children('.station-loading').remove()
 }
