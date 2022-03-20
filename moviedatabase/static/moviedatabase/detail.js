@@ -170,6 +170,7 @@ function generate_stations_for_display(stations) {
 		prev_line_name = now_line_name;
 	})
 
+	console.log(stations_for_display);
 	return stations_for_display;
 }
 
