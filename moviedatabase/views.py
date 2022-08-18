@@ -720,9 +720,10 @@ class MovieListbyLineServiceView(PaginationMixin, generic.ListView):
 		queryset = Movie.objects.none()
 		lineservice = LineService.objects.get(pk=self.kwargs['line_service'])
 		lineinmovies = LineInMovie.objects.filter(line_service=lineservice)
-		for lineinmovie in lineinmovies:
-			if (lineinmovie.part):
-				queryset |= Movie.objects.filter(pk=lineinmovie.part.movie.pk)
+		
+		movies = lineinmovies.values_list('part__movie__pk', flat=True)
+		for movie in movies:
+			queryset |= Movie.objects.filter(pk=movie)
 
 		queryset = queryset.exclude(is_active=False).order_by('-published_at')
 		sort = self.request.GET.get('sort')
@@ -757,17 +758,18 @@ class MovieListbyStationServiceView(PaginationMixin, generic.ListView):
 		queryset = Movie.objects.none()
 		stationservice = StationService.objects.get(pk=self.kwargs['station_service'])
 		stationinmovies = StationInMovie.objects.filter(station_service=stationservice)
-		for stationinmovie in stationinmovies:
-			if (stationinmovie.part):
-				queryset |= Movie.objects.filter(pk=stationinmovie.part.movie.pk)
-
+		
+		movies = stationinmovies.values_list('part__movie__pk', flat=True)
+		for movie in movies:
+			queryset |= Movie.objects.filter(pk=movie)
+			
 		stationservicegroup = stationservice.get_group_station_service()
 		if stationservicegroup:
 			if stationservicegroup.station.line == stationservice.station.line:
 				stationinmovies = StationInMovie.objects.filter(station_service=stationservice)
-				for stationinmovie in stationinmovies:
-					if (stationinmovie.part):
-						queryset |= Movie.objects.filter(pk=stationinmovie.part.movie.pk)
+				movies = stationinmovies.values_list('part__movie__pk', flat=True)
+				for movie in movies:
+					queryset |= Movie.objects.filter(pk=movie)
 
 		queryset = queryset.exclude(is_active=False).order_by('-published_at')
 		sort = self.request.GET.get('sort')
