@@ -26,6 +26,7 @@
 					{% if line_name_customize %}<tr><th>歌唱路線名</th><td>{{ line_name_customize }}</td>{% endif %}
 					{% if song %}<tr><th>曲名</th><td>{{ song }}</td>{% endif %}
 					{% if artist %}<tr><th>アーティスト名</th><td>{{ artist }}</td>{% endif %}
+					{% if song_tag %}<tr><th>楽曲タグ</th><td>{{ song_tag }}</td>{% endif %}
 					{% if published_at_start and published_at_end %}<tr><th>投稿日時</th><td><span class="datetime-display">{{ published_at_start }}</span>～<span class="datetime-display">{{ published_at_end }}</span></td>{% endif %}
 					{% if information_time_point_start and information_time_point_end %}<tr><th>情報の日付</th><td><span class="date-display">{{ information_time_point_start }}</span>～<span class="date-display">{{ information_time_point_end }}<span class="date-display"></td>{% endif %}
 				</table>
@@ -89,6 +90,12 @@
 						アーティスト名
 						<div class="search-input-container">
 							<input type="textbox" name="artist" class="search-box" value="{% if artist %}{{ artist }}{% endif %}">
+						</div>
+					</div>
+					<div class="search-input-category">
+						楽曲タグ
+						<div class="search-input-container">
+							<input type="textbox" name="song_tag" class="search-box" value="{% if song_tag %}{{ song_tag }}{% endif %}">
 						</div>
 					</div>
 					<div class="search-input-category">

@@ -55,7 +55,7 @@
 				{% include 'moviedatabase/includes/pagination.html' %}
 				{% if admin %}
 				<div class="update-container">
-					<p>※編集権限を持つユーザーでログインしている場合のみ表示されています。この作者の情報を登録した際は下のボタンを押してください。トップページなどの更新情報に反映されます。</p>
+					<p>※管理者権限を持つユーザーでログインしている場合のみ表示されています。この作者の情報を登録した際は下のボタンを押してください。トップページなどの更新情報に反映されます。</p>
 					<a href="{% url 'moviedatabase:updateinformationforcreator' creator.pk %}">更新情報登録</a>
 				</div>
 				{% endif %}

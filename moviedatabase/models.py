@@ -102,7 +102,7 @@ class Movie(models.Model):
 	statistics_update_date = models.DateTimeField('統計情報更新日時', null=True, blank=True)
 
 	song = models.ManyToManyField(Song, blank=True, verbose_name='使用楽曲(動画全体)(旧)')
-	songnew = models.ManyToManyField(SongNew, blank=True, verbose_name='使用楽曲(楽曲全体)')
+	songnew = models.ManyToManyField(SongNew, blank=True, verbose_name='使用楽曲(楽曲全体)', related_name='movie')
 	# vocal = models.ManyToManyField(Vocal, blank=True, verbose_name='使用ボーカル(動画全体)')
 	vocalnew = models.ManyToManyField(VocalNew, blank=True, verbose_name='使用ボーカル(動画全体)')
 
@@ -147,12 +147,12 @@ class Part(models.Model):
 	sort_by_movie = models.IntegerField()
 	short_name = models.CharField(max_length=10, null=True, blank=True)
 	name = models.CharField('パート名', max_length=200, null=True, blank=True)
-	movie = models.ForeignKey(Movie, to_field='main_id', null=True, blank=True, on_delete=models.SET_NULL, verbose_name='動画')
+	movie = models.ForeignKey(Movie, to_field='main_id', null=True, blank=True, on_delete=models.SET_NULL, verbose_name='動画', related_name='part')
 	participant = models.ManyToManyField(Name, blank=True, verbose_name='参加名義')
 	category = models.ForeignKey(MovieCategory, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='カテゴリー')
 	start_time = models.DurationField('開始時間', null=True, blank=True, default='00:00:00')
 	song = models.ManyToManyField(Song, blank=True, verbose_name='使用楽曲(パート)(旧)')
-	songnew = models.ManyToManyField(SongNew, blank=True, verbose_name='使用楽曲(パート)')
+	songnew = models.ManyToManyField(SongNew, blank=True, verbose_name='使用楽曲(パート)', related_name='part')
 	# vocal = models.ManyToManyField(Vocal, blank=True, verbose_name='使用ボーカル(パート)')
 	vocalnew = models.ManyToManyField(VocalNew, blank=True, verbose_name='使用ボーカル(パート)')
 	explanation = models.TextField('補足説明', null=True, blank=True)
@@ -187,7 +187,7 @@ class Part(models.Model):
 
 class StationInMovie(models.Model):
 	sort_by_part = models.IntegerField()
-	part = models.ForeignKey(Part, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='動画パート')
+	part = models.ForeignKey(Part, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='動画パート', related_name='stationinmovie')
 	station_service = models.ForeignKey(StationService, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='駅')
 	line_service_on_other_options = models.ForeignKey(LineService, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='路線（その他の駅用）')
 	line_name_customize = models.CharField('所属路線名カスタマイズ', null=True, blank=True, max_length=200)
