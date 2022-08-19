@@ -5,15 +5,32 @@ from django.shortcuts import render
 
 from ..models import *
 
-def moviequery(q, sort, order):
-	if sort == "pub":
-		if order == "o":
+from .searchsets import *
+
+def organize_movie_query(q, sort="published", order="newer"):
+	"""
+	sort,orderにより並べ替えを行う。
+	sort -> published(投稿日時), view(再生回数)
+	order -> older, newer(published), max, min(view)
+	非アクティブな動画を除外し、一意にする
+	"""
+
+	q = q.exclude(is_active=False).order_by('-published_at').distinct()
+
+	if sort == "published":
+
+		if order == "older":
 			q = q.order_by('published_at')
+		elif order == "newer":
+			q = q.order_by('-published_at')
+
 	elif sort == "view":
-		if order == "x":
+
+		if order == "max":
 			q = q.order_by('-n_view')
-		elif order == "n":
+		elif order == "min":
 			q = q.order_by('n_view')
+
 	return q
 
 class MovieListView(PaginationMixin, generic.ListView):
@@ -26,21 +43,13 @@ class MovieListView(PaginationMixin, generic.ListView):
 	def get_queryset(self):
 		queryset = super().get_queryset()
 
-		word = self.request.GET.get('word')
-		if word:
-			queryset = queryset.filter(Q(title__icontains=word) | Q(main_id__icontains=word) | Q(description__icontains=word) | Q(explanation__icontains=word))
-			parts = Part.objects.filter(Q(name__icontains=word) | Q(explanation__icontains=word))
-			queryset_by_part = Movie.objects.none()
-			for part in parts:
-				queryset_by_part |= Movie.objects.filter(pk=part.movie.pk)
-			queryset |= queryset_by_part
+		q_word = self.request.GET.get('word')
+		if q_word:
+			queryset = search_keyword(queryset, q_word)
 
 		q_is_collab = self.request.GET.getlist('is_collab')
 		if q_is_collab:
-			movies_is_collab = Movie.objects.none()
-			for q in q_is_collab:
-				movies_is_collab |= queryset.filter(is_collab=q)
-			queryset = movies_is_collab
+			queryset = search_is_collab(queryset, q_is_collab)
 
 		q_channel = self.request.GET.get('channel')
 		if q_channel:
@@ -48,66 +57,37 @@ class MovieListView(PaginationMixin, generic.ListView):
 
 		q_sung_name = self.request.GET.get('sung_name')
 		if q_sung_name:
-			movies_sungname = Movie.objects.none()
-			stationinmovies = StationInMovie.objects.filter(sung_name__icontains=q_sung_name)
-			for s in stationinmovies:
-				if (s.part):
-					movies_sungname |= Movie.objects.filter(pk=s.part.movie.pk)
-			queryset &= movies_sungname
+			queryset = search_sung_name(queryset, q_sung_name)
 
 		q_line_name_customize = self.request.GET.get('line_name_customize')
 		if q_line_name_customize:
-			movies_linenamecustomize = Movie.objects.none()
-			stationinmovies = StationInMovie.objects.filter(line_name_customize__icontains=q_line_name_customize)
-			for s in stationinmovies:
-				if (s.part):
-					movies_linenamecustomize |= Movie.objects.filter(pk=s.part.movie.pk)
-			queryset &= movies_linenamecustomize
-
-		q_artist = self.request.GET.get('artist')
-		if q_artist:
-			movies_artist = Movie.objects.none()
-			songnews = SongNew.objects.filter(Q(artist_name__icontains=q_artist) | Q(artist_name_kana__icontains=q_artist)).order_by('artist_name_kana')
-			for song in songnews:
-				movies_artist |= Movie.objects.filter(songnew=song)
-				parts = Part.objects.filter(songnew=song)
-				for part in parts:
-					movies_artist |= Movie.objects.filter(pk=part.movie.pk)
-			queryset &= movies_artist
+			queryset = search_line_name_customize(queryset, q_line_name_customize)
 
 		q_song = self.request.GET.get('song')
 		if q_song:
-			movies_song = Movie.objects.none()
-			songnews = SongNew.objects.filter(Q(song_name__icontains=q_song) | Q(song_name_kana__icontains=q_song)).order_by('song_name_kana')
-			for song in songnews:
-				movies_song |= Movie.objects.filter(songnew=song)
-				parts = Part.objects.filter(songnew=song)
-				for part in parts:
-					movies_song |= Movie.objects.filter(pk=part.movie.pk)
-			queryset &= movies_song
+			queryset = search_song(queryset, q_song)
 
+		q_artist = self.request.GET.get('artist')
+		if q_artist:
+			queryset = search_artist(queryset, q_artist)
 
-		JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')
+		q_song_tag = self.request.GET.get('song_tag')
+		if q_song_tag:
+			queryset = search_song_tag(queryset, q_song_tag)
+
 		q_published_at_start = self.request.GET.get('published_at_start')
 		q_published_at_end = self.request.GET.get('published_at_end')
-
 		if q_published_at_start and q_published_at_end:
-			q_published_at_start = datetime.datetime.strptime(q_published_at_start, '%Y-%m-%dT%H:%M').astimezone(JST)
-			q_published_at_end = datetime.datetime.strptime(q_published_at_end, '%Y-%m-%dT%H:%M').astimezone(JST)
-			queryset = queryset.filter(published_at__gte=q_published_at_start, published_at__lte=q_published_at_end)
-		
+			queryset = search_published_at(queryset, q_published_at_start, q_published_at_end)
+			
 		q_information_time_point_start = self.request.GET.get('information_time_point_start')
 		q_information_time_point_end = self.request.GET.get('information_time_point_end')
-
 		if q_information_time_point_start and q_information_time_point_end:
-			movies_infotime = Movie.objects.none()
-			parts = Part.objects.filter(information_time_point__gte=q_information_time_point_start, information_time_point__lte=q_information_time_point_end)
-			for part in parts:
-				movies_infotime |= Movie.objects.filter(pk=part.movie.pk)
-			queryset &= movies_infotime
+			queryset = search_information_time_point(queryset, q_information_time_point_start, q_information_time_point_end)
 		
-		queryset = queryset.exclude(is_active=False).order_by('-published_at').distinct()
-		return moviequery(queryset, "pub", "n")
+
+		return organize_movie_query(queryset, "published", "newer")
+
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -119,6 +99,7 @@ class MovieListView(PaginationMixin, generic.ListView):
 		context['line_name_customize'] = self.request.GET.get('line_name_customize')
 		context['song'] = self.request.GET.get('song')
 		context['artist'] = self.request.GET.get('artist')
+		context['song_tag'] = self.request.GET.get('song_tag')
 		context['published_at_start'] = self.request.GET.get('published_at_start')
 		context['published_at_end'] = self.request.GET.get('published_at_end')
 		context['information_time_point_start'] = self.request.GET.get('information_time_point_start')
@@ -127,19 +108,19 @@ class MovieListView(PaginationMixin, generic.ListView):
 
 		if (context['word'] or context['is_collab'] or context['channel'] or context['sung_name'] or context['line_name_customize'] or context['song'] or context['artist'] or context['published_at_start'] or context['published_at_end'] or context['information_time_point_start'] or context['information_time_point_end']):
 			context['is_detail_search'] = True
+
 		return context
+
 
 def FreeSearchView(request):
 	word = request.GET.get('word')
 
-	movies = Movie.objects.none()
-	if word:
-		parts = Part.objects.filter(Q(name__icontains=word) | Q(explanation__icontains=word))
-		for part in parts:
-			movies |= Movie.objects.filter(pk=part.movie.pk)
-		movies |= Movie.objects.filter(Q(title__icontains=word) | Q(main_id__icontains=word) | Q(description__icontains=word) | Q(explanation__icontains=word))
+	queryset = Movie.objects.all()
+
+	movies = search_keyword(queryset, word)
+	movies = organize_movie_query(movies)
 	mcount = movies.count
-	movies = movies.exclude(is_active=False).order_by('-published_at')[:5]
+	movies = movies[:5]
 
 	lineservices = LineService.objects.none()
 	if word:
@@ -159,56 +140,25 @@ def FreeSearchView(request):
 	ccount = creators.count
 	creators = creators[:10]
 
-	movies_sungname = Movie.objects.none()
-	if word:
-		stationinmovies = StationInMovie.objects.filter(sung_name__icontains=word)
-		for s in stationinmovies:
-			if (s.part):
-				movies_sungname |= Movie.objects.filter(pk=s.part.movie.pk)
-
-	movies_sungname = movies_sungname.exclude(is_active=False).order_by('-published_at').distinct()
+	movies_sungname = search_sung_name(queryset, word)
+	movies_sungname = organize_movie_query(movies_sungname)
 	sncount = movies_sungname.count
-	movies_sungname = moviequery(movies_sungname, "pub", "n")[:5]
+	movies_sungname = movies_sungname[:5]
 
-	movies_songtag = Movie.objects.none()
-	if word:
-		songnews = SongNew.objects.filter(Q(tag__icontains=word)).order_by('song_name_kana')
-		
-		for song in songnews:
-			movies_songtag |= Movie.objects.filter(songnew=song)
-			parts = Part.objects.filter(songnew=song)
-			for part in parts:
-				movies_songtag |= Movie.objects.filter(pk=part.movie.pk)
+	movies_song_tag = search_song_tag(queryset, word)
+	movies_song_tag = organize_movie_query(movies_song_tag)
+	tcount = movies_song_tag.count
+	movies_song_tag = movies_song_tag[:5]
 
-	movies_songtag = movies_songtag.exclude(is_active=False).order_by('-published_at').distinct()
-	tcount = movies_songtag.count
-	movies_songtag = moviequery(movies_songtag, "pub", "n")[:5]
-
-	movies_artist = Movie.objects.none()
-	if word:
-		songnews = SongNew.objects.filter(Q(artist_name__icontains=word) | Q(artist_name_kana__icontains=word)).order_by('artist_name_kana')
-		for song in songnews:
-			movies_artist |= Movie.objects.filter(songnew=song)
-			parts = Part.objects.filter(songnew=song)
-			for part in parts:
-				movies_artist |= Movie.objects.filter(pk=part.movie.pk)
-	
-	movies_artist = movies_artist.exclude(is_active=False).order_by('-published_at').distinct()
+	movies_artist = search_artist(queryset, word)
+	movies_artist = organize_movie_query(movies_artist)
 	acount = movies_artist.count
-	movies_artist = moviequery(movies_artist, "pub", "n")[:5]
+	movies_artist = movies_artist[:5]
 
-	movies_song = Movie.objects.none()
-	if word:
-		songnews = SongNew.objects.filter(Q(song_name__icontains=word) | Q(song_name_kana__icontains=word)).order_by('song_name_kana')
-		for song in songnews:
-			movies_song |= Movie.objects.filter(songnew=song)
-			parts = Part.objects.filter(songnew=song)
-			for part in parts:
-				movies_song |= Movie.objects.filter(pk=part.movie.pk)
-	
-	movies_song = movies_song.exclude(is_active=False).order_by('-published_at').distinct()
+	movies_song = search_song(queryset, word)
+	movies_song = organize_movie_query(movies_song)
 	songcount = movies_song.count
-	movies_song = moviequery(movies_song, "pub", "n")[:5]
+	movies_song = movies_song[:5]
 
 	context = {
 		'movie_list': movies,
@@ -216,7 +166,7 @@ def FreeSearchView(request):
 		"stationservices": stationservices,
 		"creators": creators,
 		"movies_sungname": movies_sungname,
-		"movies_songtag": movies_songtag,
+		"movies_songtag": movies_song_tag,
 		"movies_artist": movies_artist,
 		"movies_song": movies_song,
 		'mcount': mcount,
@@ -309,124 +259,35 @@ def initial_query(q, kana):
 					q2 |= q.filter(name_kana__istartswith=d)
 		return q2.order_by('name_kana')
 
-class ArtistSearchView(PaginationMixin, generic.ListView):
-	model = Movie
-	paginate_by = 30
-	template_name = 'moviedatabase/music/artistsearch.html'
+# class ArtistSearchView(PaginationMixin, generic.ListView):
+# 	model = Movie
+# 	paginate_by = 30
+# 	template_name = 'moviedatabase/music/artistsearch.html'
 
-	def get_queryset(self):
-		queryset = super().get_queryset()
-		queryset = Movie.objects.none()
-		word = self.request.GET.get('word')
-		if word:
-			songnews = SongNew.objects.filter(Q(artist_name__icontains=word) | Q(artist_name_kana__icontains=word)).order_by('artist_name_kana')
+# 	def get_queryset(self):
+# 		queryset = super().get_queryset()
+
+# 		queryset = Movie.objects.none()
+# 		word = self.request.GET.get('word')
+
+# 		if word:
+# 			songnews = SongNew.objects.filter(Q(artist_name__icontains=word) | Q(artist_name_kana__icontains=word)).order_by('artist_name_kana')
 			
-			for song in songnews:
-				queryset |= Movie.objects.filter(songnew=song)
-				parts = Part.objects.filter(songnew=song)
-				for part in parts:
-					queryset |= Movie.objects.filter(pk=part.movie.pk)
+# 			for song in songnews:
+# 				queryset |= Movie.objects.filter(songnew=song)
+# 				parts = Part.objects.filter(songnew=song)
+# 				for part in parts:
+# 					queryset |= Movie.objects.filter(pk=part.movie.pk)
 		
-		queryset = queryset.exclude(is_active=False).order_by('-published_at').distinct()
-		sort = "pub"
-		order = "n"
-		return moviequery(queryset, sort, order)
+# 		return organize_movie_query(queryset)
 
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
+# 	def get_context_data(self, **kwargs):
+# 		context = super().get_context_data(**kwargs)
 		
-		word = self.request.GET.get('word')
-		context['word'] = word
+# 		word = self.request.GET.get('word')
+# 		context['word'] = word
 
-		return context
-
-class SongSearchView(PaginationMixin, generic.ListView):
-	model = Movie
-	paginate_by = 30
-	template_name = 'moviedatabase/music/songsearch.html'
-
-	def get_queryset(self):
-		queryset = super().get_queryset()
-		queryset = Movie.objects.none()
-		word = self.request.GET.get('word')
-		if word:
-			songnews = SongNew.objects.filter(Q(song_name__icontains=word) | Q(song_name_kana__icontains=word)).order_by('song_name_kana')
-			
-			for song in songnews:
-				queryset |= Movie.objects.filter(songnew=song)
-				parts = Part.objects.filter(songnew=song)
-				for part in parts:
-					queryset |= Movie.objects.filter(pk=part.movie.pk)
-		
-		queryset = queryset.exclude(is_active=False).order_by('-published_at').distinct()
-		sort = "pub"
-		order = "n"
-		return moviequery(queryset, sort, order)
-
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		
-		word = self.request.GET.get('word')
-		context['word'] = word
-
-		return context
-
-class SongTagSearchView(PaginationMixin, generic.ListView):
-	model = Movie
-	paginate_by = 30
-	template_name = 'moviedatabase/music/songtagsearch.html'
-
-	def get_queryset(self):
-		queryset = super().get_queryset()
-		queryset = Movie.objects.none()
-		word = self.request.GET.get('word')
-		if word:
-			songnews = SongNew.objects.filter(Q(tag__icontains=word)).order_by('song_name_kana')
-			
-			for song in songnews:
-				queryset |= Movie.objects.filter(songnew=song)
-				parts = Part.objects.filter(songnew=song)
-				for part in parts:
-					queryset |= Movie.objects.filter(pk=part.movie.pk)
-		
-		queryset = queryset.exclude(is_active=False).order_by('-published_at').distinct()
-		sort = "pub"
-		order = "n"
-		return moviequery(queryset, sort, order)
-
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		
-		word = self.request.GET.get('word')
-		context['word'] = word
-
-		return context
-
-class MovieListbyVocalView(PaginationMixin, generic.ListView):
-	model = Movie
-	paginate_by = 30
-	template_name = 'moviedatabase/music/movielistbyvocal.html'
-
-	def get_queryset(self):
-		queryset = super().get_queryset()
-		queryset = Movie.objects.none()
-		parts = Part.objects.filter(vocalnew=self.kwargs['vocal'])
-		for part in parts:
-			queryset |= Movie.objects.filter(pk=part.movie.pk)
-			
-		queryset = queryset.exclude(is_active=False).order_by('-published_at')
-		sort = "pub"
-		order = "n"
-		return moviequery(queryset, sort, order)
-
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-
-		vocal = VocalNew.objects.get(pk=self.kwargs['vocal'])
-		
-		context['vocal'] = vocal
-
-		return context
+# 		return context
 
 class CreatorTopView(PaginationMixin, generic.ListView):
 	model = Creator
@@ -499,7 +360,7 @@ class MovieListbyCreatorView(PaginationMixin, generic.ListView):
 		queryset = queryset.exclude(is_active=False).order_by('-published_at')
 		sort = self.request.GET.get('sort')
 		order = self.request.GET.get('order')
-		return moviequery(queryset, sort, order)
+		return organize_movie_query(queryset, sort, order)
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -549,7 +410,7 @@ class MovieListbyNameView(PaginationMixin, generic.ListView):
 		queryset = queryset.exclude(is_active=False).order_by('-published_at')
 		sort = self.request.GET.get('sort')
 		order = self.request.GET.get('order')
-		return moviequery(queryset, sort, order)
+		return organize_movie_query(queryset, sort, order)
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -572,7 +433,7 @@ class MovieListbyChannelView(PaginationMixin, generic.ListView):
 		queryset = Movie.objects.filter(channel=self.kwargs['channel_id']).exclude(is_active=False).order_by('-published_at')
 		sort = self.request.GET.get('sort')
 		order = self.request.GET.get('order')
-		return moviequery(queryset, sort, order)
+		return organize_movie_query(queryset, sort, order)
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
@@ -597,7 +458,7 @@ class MovieListbyNiconicoView(PaginationMixin, generic.ListView):
 		queryset = Movie.objects.filter(niconico_account=self.kwargs['niconico_account']).exclude(is_active=False).order_by('-published_at')
 		sort = self.request.GET.get('sort')
 		order = self.request.GET.get('order')
-		return moviequery(queryset, sort, order)
+		return organize_movie_query(queryset, sort, order)
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)

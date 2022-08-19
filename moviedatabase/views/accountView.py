@@ -6,14 +6,12 @@ from django.contrib.auth.decorators import permission_required
 def UpdateInformationforCreator(request, creator):
 	creator = get_object_or_404(Creator, id=creator)
 	info = MovieUpdateInformation.objects.filter(creator=creator)
-	if info:
-		t = 'U'
-	else:
-		t = 'C'
+
+	if not info.exists():
 		i = MovieUpdateInformation(movie=None, creator=creator, is_create='C', reg_date=timezone.now())
 		i.save()
 
-	return redirect('moviedatabase:movielistbycreator', creator=creator.pk, sort='pub', order='n')
+	return redirect('moviedatabase:movielistbycreator', creator=creator.pk)
 
 def AccountAndCreatorApplicationView(request):
 	if (request.user is None):
@@ -29,6 +27,7 @@ def AccountAndCreatorApplicationView(request):
 def AccountAndCreatorApplicationConfirmView(request, creator):
 	if (request.user is None or request.user.creator_applied):
 		return render(request, '403.html')
+		
 	creator = Creator.objects.get(pk=creator)
 
 	context = {

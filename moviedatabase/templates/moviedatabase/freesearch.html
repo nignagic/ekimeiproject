@@ -152,7 +152,7 @@
 	<p>該当する動画が見つかりませんでした。</p>
 	{% endif %}
 </ul>
-					<a href="{% url 'moviedatabase:movielistbystationinmoviesearch' %}?word={{ word }}">もっと見る</a>
+					<a href="{% url 'moviedatabase:movielist' %}?sung_name={{ word }}">もっと見る</a>
 
 				</div>
 				<div class="song-list">
@@ -178,7 +178,7 @@
 	<p>該当する動画が見つかりませんでした。</p>
 	{% endif %}
 </ul>
-					<a href="{% url 'moviedatabase:songtagsearch' %}?word={{ word }}">もっと見る</a>
+					<a href="{% url 'moviedatabase:movielist' %}?song_tag={{ word }}">もっと見る</a>
 				</div>
 			</section>
 			<section class="list-container">
@@ -206,7 +206,7 @@
 	<p>該当する動画が見つかりませんでした。</p>
 	{% endif %}
 </ul>
-					<a href="{% url 'moviedatabase:artistsearch' %}?word={{ word }}">もっと見る</a>
+					<a href="{% url 'moviedatabase:movielist' %}?artist={{ word }}">もっと見る</a>
 
 				</div>
 				<div class="song-list">
@@ -232,7 +232,7 @@
 	<p>該当する動画が見つかりませんでした。</p>
 	{% endif %}
 </ul>
-					<a href="{% url 'moviedatabase:songsearch' %}?word={{ word }}">もっと見る</a>
+					<a href="{% url 'moviedatabase:movielist' %}?song={{ word }}">もっと見る</a>
 				</div>
 			</section>
 		</div>

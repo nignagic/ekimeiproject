@@ -132,10 +132,10 @@
 					<table class="song-table">
 					{% for songnew in movie.songnew.all %}
 						<tr>
-							<td class="song-name"><a href="{% url 'moviedatabase:songsearch' %}?word={{ songnew.song_name }}">{{ songnew.song_name }}</a></td>
+							<td class="song-name"><a href="{% url 'moviedatabase:movielist' %}?song={{ songnew.song_name }}">{{ songnew.song_name }}</a></td>
 							<td class="artist-name">
 								{% for n in songnew.artist_name_all %}
-								<a href="{% url 'moviedatabase:artistsearch' %}?word={{ n }}">{{ n }}</a>
+								<a href="{% url 'moviedatabase:movielist' %}?artist={{ n }}">{{ n }}</a>
 								{% endfor %}
 							</td>
 						</tr>
@@ -143,7 +143,7 @@
 							<td colspan="2" class="song-tag-td">
 							{% if songnew.tag %}
 								{% for n in songnew.tag_all %}
-									<a href="{% url 'moviedatabase:songtagsearch' %}?word={{ n }}" class="song-tag-a"><i class="fas fa-tag"></i> {{ n }}</a>
+									<a href="{% url 'moviedatabase:movielist' %}?song_tag={{ n }}" class="song-tag-a"><i class="fas fa-tag"></i> {{ n }}</a>
 								{% endfor %}
 							{% endif %}
 							</td>
@@ -285,14 +285,14 @@
 								<th class="part-detail-label">使用楽曲</th>
 								<td class="part-detail-content">
 										{% for songnew in part.songnew.all %}
-											<a href="{% url 'moviedatabase:songsearch' %}?word={{ songnew.song_name }}">{{ songnew.song_name }}</a> - 
+											<a href="{% url 'moviedatabase:movielist' %}?song={{ songnew.song_name }}">{{ songnew.song_name }}</a> - 
 												{% for n in songnew.artist_name_all %}
-												<a href="{% url 'moviedatabase:artistsearch' %}?word={{ n }}" class="part-artist-name">{{ n }}</a>
+												<a href="{% url 'moviedatabase:movielist' %}?artist={{ n }}" class="part-artist-name">{{ n }}</a>
 												{% endfor %}
 											{% if songnew.tag %}
 												<br>
 												{% for n in songnew.tag_all %}
-													<a href="{% url 'moviedatabase:songtagsearch' %}?word={{ n }}" class="song-tag-a"><i class="fas fa-tag"></i> {{ n }}</a>
+													<a href="{% url 'moviedatabase:movielist' %}?song_tag={{ n }}" class="song-tag-a"><i class="fas fa-tag"></i> {{ n }}</a>
 												{% endfor %}
 											{% endif %}
 											{% if forloop.last %}

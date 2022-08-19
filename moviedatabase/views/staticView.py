@@ -18,8 +18,7 @@ env.read_env('.env')
 
 import twitter
 
-def todaymovie():
-	JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')
+def getTodayMovies():
 	now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
 	m = Movie.objects.filter(published_at_month=now.month, published_at_day=now.day)
 	
@@ -29,16 +28,16 @@ class Top(generic.ListView):
 	model = Movie
 	template_name = 'moviedatabase/top.html'
 
-
 	def get_context_data(self):
 		movies = Movie.objects.all().exclude(is_active=False)[:6]
 		update_list = MovieUpdateInformation.objects.all()[:10]
 		notice_list = NoticeInformation.objects.all()[:10]
 		top_img = TopImage.objects.all().order_by("?").first()
+
 		context = {
 			'top_img': top_img,
 			'movie_list': movies,
-			'todaymovie': todaymovie().order_by("?").first(),
+			'todaymovie': getTodayMovies().order_by("?").first(),
 			'today': timezone.now(),
 			'update_list': update_list,
 			'notice_list': notice_list

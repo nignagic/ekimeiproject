@@ -26,22 +26,22 @@
 			<div class="object-list">
 				<h4 class="object-list-header artist-border">アーティスト</h4>
 				<div class="search-container">
-					<form action="{% url 'moviedatabase:artistsearch' %}" method="get" class="search-form">
-						キーワード検索　<input type="textbox" name="word" class="search-box" value="{{ word }}">
+					<form action="{% url 'moviedatabase:movielist' %}" method="get" class="search-form">
+						キーワード検索　<input type="textbox" name="artist" class="search-box" value="{{ word }}">
 						<button class="search-button" type="submit"><i class="fas fa-search"></i></button>
 					</form>
 				</div>
 				<h4 class="object-list-header song-border">楽曲</h4>
 				<div class="search-container">
-					<form action="{% url 'moviedatabase:songsearch' %}" method="get" class="search-form">
-						<input type="textbox" name="word" class="search-box" value="{{ word }}">
+					<form action="{% url 'moviedatabase:movielist' %}" method="get" class="search-form">
+						<input type="textbox" name="song" class="search-box" value="{{ word }}">
 						<button class="search-button" type="submit"><i class="fas fa-search"></i></button>
 					</form>
 				</div>
 				<h4 class="object-list-header song-border">楽曲タグ</h4>
 				<div class="search-container">
-					<form action="{% url 'moviedatabase:songtagsearch' %}" method="get" class="search-form">
-						<input type="textbox" name="word" class="search-box" value="{{ word }}">
+					<form action="{% url 'moviedatabase:movielist' %}" method="get" class="search-form">
+						<input type="textbox" name="song_tag" class="search-box" value="{{ word }}">
 						<button class="search-button" type="submit"><i class="fas fa-search"></i></button>
 					</form>
 				</div>
