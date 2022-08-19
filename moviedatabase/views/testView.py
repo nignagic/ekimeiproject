@@ -97,7 +97,7 @@ def mail(request):
 	dealing = ac.dealing
 
 	subject = "【駅名動画DB】作者紐づけ申請"
-	message = "作者紐づけの申請を受信しました。\n\n--------\nユーザー名：" + username + "\n作者：" + creator + "\n日時：" + reg_date + "\n動画の扱い：" + dealing + "\n--------\n\n駅名動画データベース STANMIC DATABASE stanmic.com\n© 2021 nignagIC"
+	message = "作者紐づけの申請を受信しました。\n\n--------\nユーザー名：" + username + "\n作者：" + creator + "\n日時：" + reg_date + "\n動画の扱い：" + dealing + "\n--------\n\n駅名動画データベース STANMIC DATABASE stanmic.com\n© 2022 nignagIC"
 	
 	from_email = "stanmic.database@gmail.com"
 	recipient_list = ["icnignag@gmail.com"]
