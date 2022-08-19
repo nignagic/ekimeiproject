@@ -135,7 +135,7 @@
 							<td class="song-name"><a href="{% url 'moviedatabase:movielist' %}?song={{ songnew.song_name }}">{{ songnew.song_name }}</a></td>
 							<td class="artist-name">
 								{% for n in songnew.artist_name_all %}
-								<a href="{% url 'moviedatabase:artistsearch' %}?word={{ n }}">{{ n }}</a>
+								<a href="{% url 'moviedatabase:movielist' %}?artist={{ n }}">{{ n }}</a>
 								{% endfor %}
 							</td>
 						</tr>
@@ -285,9 +285,9 @@
 								<th class="part-detail-label">使用楽曲</th>
 								<td class="part-detail-content">
 										{% for songnew in part.songnew.all %}
-											<a href="{% url 'moviedatabase:songsearch' %}?word={{ songnew.song_name }}">{{ songnew.song_name }}</a> - 
+											<a href="{% url 'moviedatabase:movielist' %}?song={{ songnew.song_name }}">{{ songnew.song_name }}</a> - 
 												{% for n in songnew.artist_name_all %}
-												<a href="{% url 'moviedatabase:artistsearch' %}?word={{ n }}" class="part-artist-name">{{ n }}</a>
+												<a href="{% url 'moviedatabase:movielist' %}?artist={{ n }}" class="part-artist-name">{{ n }}</a>
 												{% endfor %}
 												</span>
 											{% if songnew.tag %}
