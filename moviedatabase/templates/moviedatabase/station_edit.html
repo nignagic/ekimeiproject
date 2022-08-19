@@ -213,7 +213,7 @@
 						</ul>
 						<div class="station-option-list">
 							<div class="tab-content-group">
-								<div class="station-pref-list-tab tab-content is-show">
+								<div class="tab-content station-pref-list-tab is-show">
 									<div class="list-container">
 										<h5>都道府県</h5>
 										<div name="pref" id="pref-select" class="select-div">
@@ -228,7 +228,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="station-company-list-tab tab-content">
+								<div class="tab-content station-company-list-tab">
 									<div class="list-container">
 										<h5>事業者名</h5>
 										<div name="company" id="company-select" class="select-div">
@@ -256,31 +256,39 @@
 										</div>
 									</div>
 								</div>
-								<div class="station-other-list-tab tab-content">
+								<div class="tab-content station-other-list-tab">
 									<div class="list-container">
 										<h5>その他</h5>
 										<div style="display: flex; flex: 1;">
-											<select name="other" id="other-select-non-rep" class="select-div" multiple="" style="width: auto;">
+											<select name="other" id="other-select" class="select-div" multiple="" style="width: auto;">
+												<optgroup label="駅オブジェクト">
 												{% for other in other_stations %}
 													<option value="{{ other.pk }}" data-name="{{ other.name }}" data-get_group_station="{{ other.station.get_group_station_id }}" data-line_service_pk="{{ other.line_service.pk }}" data-category="{{ other.line_service.category.icon }}" data-pref="{{ other.get_pref }}" data-get_color="{{ other.get_color }}"  data-is_representative="{{ other.is_representative }}" data-other_option="{{ other.line_service.company.other_option }}" data-status="" data-line="{{ other.line_service }}" class="other-option">{{ other.name }}</option>
 												{% endfor %}
-											</select>
-											<select name="other" id="other-select-rep" class="select-div" multiple="" style="width: auto;">
+												</optgroup>
+												<optgroup label="路線オブジェクト">
 												{% for other in other_lines %}
 													<option value="{{ other.pk }}" data-name="{{ other.name }}" data-get_group_station="{{ other.station.get_group_station_id }}" data-line_service_pk="{{ other.line_service.pk }}" data-category="{{ other.line_service.category.icon }}" data-pref="{{ other.get_pref }}" data-get_color="{{ other.get_color }}"  data-is_representative="{{ other.is_representative }}" data-other_option="{{ other.line_service.company.other_option }}" data-status="" data-line="{{ other.line_service }}" class="other-option">{{ other.name }}</option>
 												{% endfor %}
+												</optgroup>
 											</select>
 										</div>
 									</div>
 								</div>
 							</div>
 							<div class="station-queue-container">
-								<div class="station-queue">
+								<div class="queue-content station-queue is-queue-show">
 									<div class="station-queue-header">
 										<h5>駅</h5>
 										<div class="station-reverse"><i class="fas fa-sort-amount-down"></i> 逆順</div>
 									</div>
 									<select name="s1" id="id_station-select" class="station-select" data-line_name="" multiple="true"></select>
+								</div>
+								<div class="queue-content station-name-input-container">
+									<div class="station-queue-header">
+										<h5>駅</h5>
+									</div>
+									<textarea name="station_name" id="station-name-input"></textarea>
 								</div>
 							</div>
 						</div>
