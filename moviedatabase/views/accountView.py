@@ -27,7 +27,8 @@ def AccountAndCreatorApplicationView(request):
 def send_application_mail(ac):
 	username = ac.user.username
 	creator = ac.creator.name
-	reg_date = ac.reg_date.strftime('%Y/%m/%d %H:%M:%S')
+	reg_date_jst = ac.reg_date.astimezone(datetime.timezone(datetime.timedelta(hours=+9)))
+	reg_date = reg_date_jst.strftime('%Y/%m/%d %H:%M:%S')
 	dealing = ac.dealing
 
 	subject = "【駅名動画DB】作者紐づけ申請"
