@@ -24,6 +24,20 @@ def AccountAndCreatorApplicationView(request):
 
 	return render(request, 'moviedatabase/application/account_and_creator.html', context)
 
+def send_application_mail(ac):
+	username = ac.user.username
+	creator = ac.creator.name
+	reg_date = ac.reg_date.strftime('%Y/%m/%d %H:%M:%S')
+	dealing = ac.dealing
+
+	subject = "【駅名動画DB】作者紐づけ申請"
+	message = "作者紐づけの申請を受信しました。\n\n--------\nユーザー名：" + username + "\n作者：" + creator + "\n日時：" + reg_date + "\n動画の扱い：" + dealing + "\n--------\n\n駅名動画データベース STANMIC DATABASE stanmic.com\n© 2021 nignagIC"
+	
+	from_email = "stanmic.database@gmail.com"
+	recipient_list = ["icnignag@gmail.com"]
+
+	send_mail(subject, message, from_email, recipient_list)
+
 def AccountAndCreatorApplicationConfirmView(request, creator):
 	if (request.user is None or request.user.creator_applied):
 		return render(request, '403.html')
@@ -41,6 +55,9 @@ def AccountAndCreatorApplicationConfirmView(request, creator):
 		dealing = request.POST['dealing']
 		ac = AccountAndCreatorApplication(user=request.user, creator=creator, reg_date=timezone.now(), dealing=dealing)
 		ac.save()
+
+		send_application_mail(ac)
+
 		return render(request, 'moviedatabase/application/account_and_creator_complete.html', context)
 
 	return render(request, 'moviedatabase/application/account_and_creator_confirm.html', context)

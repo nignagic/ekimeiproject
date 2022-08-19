@@ -12,12 +12,6 @@ from django.contrib.auth.views import (
 	LoginView, LogoutView
 )
 
-import environ
-env = environ.Env()
-env.read_env('.env')
-
-import twitter
-
 def getTodayMovies():
 	now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
 	m = Movie.objects.filter(published_at_month=now.month, published_at_day=now.day)
@@ -77,17 +71,6 @@ def Mypage(request):
 	return render(request, 'moviedatabase/mypage.html', context)
 
 def Terms(request):
-	# # 取得したキーとアクセストークンを設定する
-	# auth = twitter.OAuth(consumer_key=env('API_KEY'),
-	# 					consumer_secret=env('API_KEY_SECRET'),
-	# 					token=env('ACCESS_TOKEN'),
-	# 					token_secret=env('ACCESS_TOKEN_SECRET'))
-
-	# t = twitter.Twitter(auth=auth)
-
-	# # twitterへメッセージを投稿する
-	# t.statuses.update(status="あー")
-
 	return render(request, 'moviedatabase/static-page/terms.html')
 
 def Privacy(request):
