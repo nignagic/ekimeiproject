@@ -1,0 +1,140 @@
+body {
+	font-family: "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック体", YuGothic, "Noto Sans Japanese", Meiryo, メイリオ, "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", sans-serif;
+	margin: 0;
+	padding: 0;
+	color: #000;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: 1;
+	letter-spacing: calc(33em / 1000);
+}
+
+* {
+	box-sizing: border-box;
+	word-wrap: break-word;
+	line-height: 1.5em;
+	margin: 0;
+	/*padding: 0;*/
+}
+
+a {
+	text-decoration: none;
+	color: #cc5c00;
+	transition: all .3s
+}
+
+a:hover {
+	color: #ad896b;
+}
+
+a. button {
+	color: inherit;
+	font-weight: inherit;
+	cursor: pointer;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-size: 100%;
+	font-weight: inherit;
+	line-height: inherit;
+}
+
+ul, li {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.background {
+	background-color: #ffe3cb;
+	background-position: center center;
+	position: relative;
+	z-index: 0;
+	padding: 0;
+}
+
+.main-container {
+	max-width: 1080px;
+	padding: 3.0rem;
+	margin: 0 auto;
+	background: white;
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.mypage-header {
+	margin: 2rem auto;
+	text-align: center;
+}
+
+.fullname {
+	font-size: 1.6rem;
+}
+
+.username {
+	font-weight: normal;
+	color: #777;
+}
+
+.profile-table {
+	padding: 1rem 0;
+	width: 100%;
+}
+
+.profile-table th,
+.profile-table td {
+	padding: 0.8rem 1.5rem;
+}
+
+.profile-table th {
+	width: 20rem;
+	text-align: right;
+	background-color: #cc5c00;
+	color: #fff;
+}
+
+.profile-table td {
+	background-color: #f7f7f7;
+}
+
+.weight-normal {
+	font-weight: normal;
+}
+
+.channel-list {
+	max-height: 15rem;
+	overflow-y: scroll;
+	font-size: 0.95rem;
+}
+
+.channel-list a {
+	color: #a74c00;
+}
+
+.channel-list a:hover {
+	color: #cc5c00;
+}
+
+.updateinformation-container {
+	margin-top: 2rem;
+}
+
+.updateinformation-list {
+	padding: 0.5rem;
+	height: 20rem;
+	overflow-y: scroll;
+}
+
+.updateinformation {
+	padding: 0.5rem 0;
+	border-bottom: 1px solid #ccc;
+}
+
+.updateinformation-upper {
+	font-size: 0.9rem;
+	font-weight: normal;
+}
+
+.updateinformation-lower {
+
+}

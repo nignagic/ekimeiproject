@@ -287,5 +287,7 @@ function station_display(id, stations_for_display) {
 			middle_station();
 		})
 	})
+
 	$(station_list).children('.station-loading').remove()
+	
 }

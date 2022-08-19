@@ -1,0 +1,296 @@
+.railway-header {
+	min-height: 256px;
+	padding: 64px 0;
+	width: 100%;
+	font-size: 1.0em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.4));
+
+	position: relative;
+	z-index: 0;
+	overflow: hidden;
+}
+
+.railway-header:before {
+	content: '';
+	background: inherit;
+	-webkit-filter: blur(16px);
+	-moz-filter: blur(16px);
+	-o-filter: blur(16px);
+	-ms-filter: blur(16px);
+	filter: blur(16px) brightness(80%);
+	position: absolute;
+	top: -16px;
+	left: -16px;
+	right: -16px;
+	bottom: -16px;
+	z-index: -1;
+	background-color: rgba(255, 255, 255, 0.8);
+}
+
+.railway-header-content {
+	width: 100%;
+	filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.5))drop-shadow(0px 0px 1px rgba(255, 255, 255, 0.4))drop-shadow(0px 0px 1px rgba(255, 255, 255, 0.4))drop-shadow(0px 0px 1px rgba(255, 255, 255, 0.4))drop-shadow(0px 0px 1px rgba(255, 255, 255, 0.4))drop-shadow(0px 0px 2px rgba(255, 255, 255, 0.4))drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.4));
+}
+
+.company-link {
+	margin-top: 1.0rem;
+	font-size: 1.2rem;
+}
+
+.main-name {
+	margin-top: 0.5rem;
+	font-size: 2.0em;
+}
+
+.main-name-small {
+	font-size: 0.7em;
+}
+
+.sub-name {
+	margin: 1.0em 0 0 0;
+	padding: 4px 0;
+}
+
+.sub-name-inner {
+	max-width: 1280px;
+	width: 100%;
+	height: 100%;
+	margin: 0 auto;
+	padding: 0;
+	position: relative;
+}
+
+.sub-name a {
+	text-decoration: underline;
+}
+
+.sub-link {
+	top: 0;
+	font-size: 1.2em;
+}
+
+.station-before,
+.station-after {
+	position: absolute;
+	bottom: 0;
+}
+
+.station-before {
+	left: 2.0em;
+}
+
+.station-after {
+	right: 2.0em;
+}
+
+.under-color {
+	width: 100%;
+	padding: 0;
+	margin: 0 0 1.0em 0;
+	display: flex;
+}
+
+.under-color-before,
+.under-color-after {
+	height: 8px;
+	width: 50%;
+}
+
+.under-color-inner {
+	height: 8px;
+	width: 100%;
+}
+
+.line-bottom {
+	margin-bottom: 1.0em;
+}
+
+.line-bottom-title {
+	margin-bottom: 0.5em;
+}
+
+.railway-movie-list {
+	width: 64%;
+}
+
+.railway-side {
+	width: 36%;
+	margin: 0;
+	padding-left: 1.0rem;
+}
+
+.station-lines-ul {
+	margin: 0;
+	padding: 0;
+}
+
+.transfer-line-formal {
+	background: #031d29;
+	padding: 8px 1.0rem;
+}
+
+.transfer-line-formal a {
+	color: #fff;
+	display: block;
+}
+
+.line-name-small:first-child {
+	margin-right: 0.2em;
+}
+
+.line-name-small {
+	font-size: 0.8em;
+}
+
+.service-ul {
+	margin: 0;
+	padding: 0 0 0 1em;
+}
+
+.service-li {
+	padding: 8px 8px 8px 8px;
+	border-left: 1em solid;
+	background: #f2f2f2;
+	display: flex;
+	flex-wrap: wrap;
+	position: relative;
+}
+
+.transfer-station-prev-color,
+.transfer-station-next-color {
+	position: absolute;
+	left: -1em;
+	height: 50%;
+	width: 1em;
+}
+
+.transfer-station-prev-color {
+	top: 0;
+}
+
+.transfer-station-next-color {
+	bottom: 0;
+}
+
+.service-li {
+	font-size: 0.9rem;
+}
+
+.service-li a {
+	color: #333;
+}
+
+.service-li-same {
+	color: #aaa;
+}
+
+.service-li-same a {
+	color: #aaa;
+}
+
+.transfer-station-name {
+}
+
+.transfer-line-name {
+	padding: 0 0 0 1em;
+	transition: transform 0.1s;
+}
+
+.transfer-line-name:hover {
+	transform: translate(8px, 0);
+}
+
+.line-service-name-sub {
+	font-size: 0.8em;
+}
+
+/*line*/
+.station-list-ul {
+	margin: 0;
+	padding: 0;
+}
+
+.station-list-li {
+	margin-bottom: 4px;
+}
+
+.station-list-li:hover .li-station-name {
+	transform: translate(8px, 0);
+}
+
+.li-station-info {
+	/*padding: 8px 20px;*/
+	padding: 8px 1.0rem 8px 8px;
+	display: flex;
+	justify-content: space-between;
+	position: relative;
+	border-left: 1.0rem solid;
+}
+
+.li-station-prev-color,
+.li-station-next-color {
+	position: absolute;
+	left: -1em;
+	height: 50%;
+	width: 1em;
+	background-color: #001619;
+}
+
+.li-station-prev-color {
+	top: 0;
+}
+
+.li-station-next-color {
+	bottom: 0;
+}
+
+.li-station-name {
+	transition: transform 0.1s;
+}
+
+.li-station-numbering {
+	text-align: right;
+}
+
+.li-station-info:after {
+	display: block;
+	/*content: '';*/
+	position: absolute;
+	top: 1.0rem;
+	left: 4px;
+	width: 6px;
+	height: 6px;
+	border-right: 1px solid #fff;
+	border-bottom: 1px solid #fff;
+	-webkit-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+}
+
+@media (max-width: 768px) {
+	.railway-header {
+		padding: 32px 0;
+		font-size: 0.7rem;
+		min-height: 128px;
+	}
+
+	.sub-name-station {
+		height: 4em;
+	}
+
+	.railway-movie-list {
+		width: 100%;
+	}
+
+	.railway-side {
+		padding: 0;
+		width: 100%;
+	}
+
+	.station-list-ul {
+		font-size: 0.8rem;
+	}
+}
