@@ -1,3 +1,5 @@
+/* modified in 2022/8/22 */
+
 //YouTubeジャンプ
 $('.youtube-jump').on('click', function() {
 	time = $(this).siblings('.start_time').val()
