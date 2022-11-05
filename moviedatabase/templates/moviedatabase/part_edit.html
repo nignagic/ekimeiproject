@@ -132,7 +132,7 @@
 			}
 		})
 
-		var totalManageElement = $('input#id_part_set-TOTAL_FORMS');
+		var totalManageElement = $('input#id_part-TOTAL_FORMS');
 		var currentFileCount = parseInt(totalManageElement.val());
 		$('.part-add').on('click', function(){
 			p = part_text(false, currentFileCount);
@@ -170,16 +170,16 @@
 		}
 		p = "<div class='part-header'>"
 		p += "<div class='part-handle'><a class='sortable-handle'><i class='fas fa-bars'></i></a></div>"
-		p += "<input type='hidden' name='part_set-" + currentFileCount + "-id' id='id_part_set-" + currentFileCount + "-id'>"
-		p += "<input type='hidden' name='part_set-" + currentFileCount + "-sort_by_movie' class='sort_by_movie' id='id_part_set-" + currentFileCount + "-sort_by_movie'>"
-		p += "<input type='hidden' name='part_set-" + currentFileCount + "-movie' value='' id='id_part_set-" + currentFileCount + "-movie'>"
+		p += "<input type='hidden' name='part-" + currentFileCount + "-id' id='id_part-" + currentFileCount + "-id'>"
+		p += "<input type='hidden' name='part-" + currentFileCount + "-sort_by_movie' class='sort_by_movie' id='id_part-" + currentFileCount + "-sort_by_movie'>"
+		p += "<input type='hidden' name='part-" + currentFileCount + "-movie' value='' id='id_part-" + currentFileCount + "-movie'>"
 
-		p += "<input type='hidden' name='part_set-" + currentFileCount + "-explanation' class='explanation' id='id_part_set-" + currentFileCount + "-explanation'>"
-		p += "<div class='part-name-short'>番号<br><input type='text' name='part_set-" + currentFileCount + "-short_name' class='short_name' maxlength='10' id='id_part_set-" + currentFileCount + "-short_name' value='" + v + "'><div class='error-message'></div></div>"
+		p += "<input type='hidden' name='part-" + currentFileCount + "-explanation' class='explanation' id='id_part-" + currentFileCount + "-explanation'>"
+		p += "<div class='part-name-short'>番号<br><input type='text' name='part-" + currentFileCount + "-short_name' class='short_name' maxlength='10' id='id_part-" + currentFileCount + "-short_name' value='" + v + "'><div class='error-message'></div></div>"
 		p += "<div class='part-name'>"
-		p += "<table><tr><td>路線説明/パート名</td><td><input type='text' name='part_set-" + currentFileCount + "-name' class='name' maxlength='200' id='id_part_set-" + currentFileCount + "-name'><p class='error-message'></p></td></tr>"
+		p += "<table><tr><td>路線説明/パート名</td><td><input type='text' name='part-" + currentFileCount + "-name' class='name' maxlength='200' id='id_part-" + currentFileCount + "-name'><p class='error-message'></p></td></tr>"
 
-		p += "<tr><td>開始位置</td><td><input type='text' name='part_set-" + currentFileCount + "-start_time' value='" + t + "' class='start_time' id='id_part_set-" + currentFileCount + "-start_time'><input type='button' class='time-set' value='現在位置に指定'></td></tr></table>"
+		p += "<tr><td>開始位置</td><td><input type='text' name='part-" + currentFileCount + "-start_time' value='" + t + "' class='start_time' id='id_part-" + currentFileCount + "-start_time'><input type='button' class='time-set' value='現在位置に指定'></td></tr></table>"
 
 		p += "<div class='part-start-time'><p><span class='participant-list'></span><span class='part-song-list'></span></p></div></div>"
 		p += "<div class='detail-link'><div class='delete-button'>削除</div></div>"

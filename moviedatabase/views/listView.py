@@ -7,7 +7,7 @@ from ..models import *
 
 from .searchsets import *
 
-def organize_movie_query(q, sort="published", order="newer"):
+def organize_movie_query(query, sort="published", order="newer"):
 	"""
 	sort,orderにより並べ替えを行う。
 	sort -> published(投稿日時), view(再生回数)
@@ -15,23 +15,23 @@ def organize_movie_query(q, sort="published", order="newer"):
 	非アクティブな動画を除外し、一意にする
 	"""
 
-	q = q.exclude(is_active=False).order_by('-published_at').distinct()
+	query = query.exclude(is_active=False).order_by('-published_at').distinct()
 
 	if sort == "published":
 
 		if order == "older":
-			q = q.order_by('published_at')
+			query = query.order_by('published_at')
 		elif order == "newer":
-			q = q.order_by('-published_at')
+			query = query.order_by('-published_at')
 
 	elif sort == "view":
 
 		if order == "max":
-			q = q.order_by('-n_view')
+			query = query.order_by('-n_view')
 		elif order == "min":
-			q = q.order_by('n_view')
+			query = query.order_by('n_view')
 
-	return q
+	return query
 
 class MovieListView(PaginationMixin, generic.ListView):
 	model = Movie
@@ -43,48 +43,47 @@ class MovieListView(PaginationMixin, generic.ListView):
 	def get_queryset(self):
 		queryset = super().get_queryset()
 
-		q_word = self.request.GET.get('word')
-		if q_word:
-			queryset = search_keyword(queryset, q_word)
+		key_word = self.request.GET.get('word')
+		if key_word:
+			queryset = search_keyword(queryset, key_word)
 
-		q_is_collab = self.request.GET.getlist('is_collab')
-		if q_is_collab:
-			queryset = search_is_collab(queryset, q_is_collab)
+		key_is_collab = self.request.GET.getlist('is_collab')
+		if key_is_collab:
+			queryset = search_is_collab(queryset, key_is_collab)
 
-		q_channel = self.request.GET.get('channel')
-		if q_channel:
-			queryset = queryset.filter(channel__name__icontains=q_channel)
+		key_channel = self.request.GET.get('channel')
+		if key_channel:
+			queryset = queryset.filter(channel__name__icontains=key_channel)
 
-		q_sung_name = self.request.GET.get('sung_name')
-		if q_sung_name:
-			queryset = search_sung_name(queryset, q_sung_name)
+		key_sung_name = self.request.GET.get('sung_name')
+		if key_sung_name:
+			queryset = search_sung_name(queryset, key_sung_name)
 
-		q_line_name_customize = self.request.GET.get('line_name_customize')
-		if q_line_name_customize:
-			queryset = search_line_name_customize(queryset, q_line_name_customize)
+		key_line_name_customize = self.request.GET.get('line_name_customize')
+		if key_line_name_customize:
+			queryset = search_line_name_customize(queryset, key_line_name_customize)
 
-		q_song = self.request.GET.get('song')
-		if q_song:
-			queryset = search_song(queryset, q_song)
+		key_song = self.request.GET.get('song')
+		if key_song:
+			queryset = search_song(queryset, key_song)
 
-		q_artist = self.request.GET.get('artist')
-		if q_artist:
-			queryset = search_artist(queryset, q_artist)
+		key_artist = self.request.GET.get('artist')
+		if key_artist:
+			queryset = search_artist(queryset, key_artist)
 
-		q_song_tag = self.request.GET.get('song_tag')
-		if q_song_tag:
-			queryset = search_song_tag(queryset, q_song_tag)
+		key_song_tag = self.request.GET.get('song_tag')
+		if key_song_tag:
+			queryset = search_song_tag(queryset, key_song_tag)
 
-		q_published_at_start = self.request.GET.get('published_at_start')
-		q_published_at_end = self.request.GET.get('published_at_end')
-		if q_published_at_start and q_published_at_end:
-			queryset = search_published_at(queryset, q_published_at_start, q_published_at_end)
+		key_published_at_start = self.request.GET.get('published_at_start')
+		key_published_at_end = self.request.GET.get('published_at_end')
+		if key_published_at_start and key_published_at_end:
+			queryset = search_published_at(queryset, key_published_at_start, key_published_at_end)
 			
-		q_information_time_point_start = self.request.GET.get('information_time_point_start')
-		q_information_time_point_end = self.request.GET.get('information_time_point_end')
-		if q_information_time_point_start and q_information_time_point_end:
-			queryset = search_information_time_point(queryset, q_information_time_point_start, q_information_time_point_end)
-		
+		key_information_time_point_start = self.request.GET.get('information_time_point_start')
+		key_information_time_point_end = self.request.GET.get('information_time_point_end')
+		if key_information_time_point_start and key_information_time_point_end:
+			queryset = search_information_time_point(queryset, key_information_time_point_start, key_information_time_point_end)
 
 		return organize_movie_query(queryset, "published", "newer")
 
@@ -92,22 +91,32 @@ class MovieListView(PaginationMixin, generic.ListView):
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)
 		
-		context['word'] = self.request.GET.get('word')
-		context['is_collab'] = self.request.GET.getlist('is_collab')
-		context['channel'] = self.request.GET.get('channel')
-		context['sung_name'] = self.request.GET.get('sung_name')
-		context['line_name_customize'] = self.request.GET.get('line_name_customize')
-		context['song'] = self.request.GET.get('song')
-		context['artist'] = self.request.GET.get('artist')
-		context['song_tag'] = self.request.GET.get('song_tag')
-		context['published_at_start'] = self.request.GET.get('published_at_start')
-		context['published_at_end'] = self.request.GET.get('published_at_end')
-		context['information_time_point_start'] = self.request.GET.get('information_time_point_start')
-		context['information_time_point_end'] = self.request.GET.get('information_time_point_end')
+		keys = [
+			'word',
+			'channel',
+			'sung_name',
+			'line_name_customize',
+			'song',
+			'artist',
+			'song_tag',
+			'published_at_start',
+			'published_at_end',
+			'information_time_point_start',
+			'information_time_point_end'
+		]
+
+		context['key'] = {}
 		context['is_detail_search'] = False
 
-		if (context['word'] or context['is_collab'] or context['channel'] or context['sung_name'] or context['line_name_customize'] or context['song'] or context['artist'] or context['published_at_start'] or context['published_at_end'] or context['information_time_point_start'] or context['information_time_point_end']):
-			context['is_detail_search'] = True
+		for key in keys:
+			context['key'][key] = self.request.GET.get(key)
+
+		context['key']['is_collab'] = self.request.GET.getlist('is_collab')
+
+		for key, value in context['key'].items():
+			if (value):
+				context['is_detail_search'] = True
+			
 
 		return context
 
