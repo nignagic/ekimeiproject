@@ -72,7 +72,6 @@ urlpatterns = [
 
 	path('movie/edit/<slug:main_id>/statistics/update', views.movie_statistics_update, name='movie_statistics_update'),
 
-	path('updateinformation/<slug:main_id>/', views.UpdateInformation, name='updateinformation'),
 	path('updateinformationforuser/<int:creator>/', views.UpdateInformationforCreator, name='updateinformationforcreator'),
 
 	path('application/account_and_creator/', views.AccountAndCreatorApplicationView, name='accountandcreatorapplication'),

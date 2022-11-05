@@ -105,24 +105,29 @@ class MovieRegisterForm(forms.ModelForm):
 			}
 		}
 
+	# MovieRegisterViewからrequestの中身を受け取る
 	def __init__(self, *args, **kwargs):
 		self.request = kwargs.pop('request')
 		super(MovieRegisterForm, self).__init__(*args, **kwargs)
 
+	# バリデーションチェック
 	def clean(self):
-		channel = self.cleaned_data['channel']
-		cs = self.request.user.all_can_edit_channel()
-		flag = False
-		for c in cs:
-			if (c == channel):
-				flag = True
+		
+		if ('channel' in self.cleaned_data):
+			movie_channel = self.cleaned_data['channel']
+			can_edit_channels = self.request.user.all_can_edit_channel()
+			flag = False
+			for channel in can_edit_channels:
+				if (channel == movie_channel):
+					flag = True
 
-		if not flag:
-			raise forms.ValidationError("このチャンネルの動画はログイン中のユーザーでは登録できません")
+			if not flag:
+				raise forms.ValidationError("このチャンネルの動画はログイン中のユーザーでは登録できません")
 
 		if Movie.objects.filter(main_id=self.cleaned_data['main_id']).exists():
 			raise forms.ValidationError("この動画は既にデータベース上に存在しています。")
 
+# YouTube情報更新
 class MovieStatisticsUpdateForm(forms.ModelForm):
 	class Meta:
 		model = Movie

@@ -68,21 +68,27 @@
 		<div class="submit-banner-inner">
 			<div class="submit-content">
 				<div class="submit-form-status">
+
 					{% for form in formset %}
+
 						{% if form.errors %}
 							{{ form.non_field_errors }}
 						{% endif %}
+
 						{% for field, errors in form.errors.items %}
 							{% for error in errors %}
 								<p>{{ error }} (Error in {{ field }})</p>
 							{% endfor %}
 						{% endfor %}
+						
 					{% endfor %}
+
 					{% for field, errors in form.errors.items %}
 						{% for error in errors %}
 							<p>{{ error }} (Error in {{ field }})</p>
 						{% endfor %}
 					{% endfor %}
+
 				</div>
 				{% if partcount == 0 %}
 					<button class="multiple-button" form="main-form" name="multiple" onclick="submit();">パート分けありとして登録<span class="button-sub">合作など</span></button>
