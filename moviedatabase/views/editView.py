@@ -298,14 +298,15 @@ def detail_movie(request, main_id):
 	if (movie.is_active == False and can_edit == False):
 		return render(request, '403.html')
 
+	# 編集後に登録ボタンから遷移してきた場合
 	if 'confirm' in request.POST:
 		for part in parts:
 			lineinmovies = LineInMovie.objects.filter(part=part)
 			categories = BelongsCategory.objects.none()
 			for l in lineinmovies:
 				categories |= BelongsCategory.objects.filter(pk=l.line_service.category.pk)
+			
 			text = ""
-
 			for c in categories:
 				if c.object_name and part.category:
 					if part.category.object_name:

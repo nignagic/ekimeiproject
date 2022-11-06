@@ -27,7 +27,6 @@ urlpatterns = [
 	path('railway/', views.RailwayTopView.as_view(), name='railwaytop'),
 	path('railway/belongs_category/<int:category>/', views.MovieListbyBelongsCategoryView.as_view(), name='movielistbybelongscategory'),
 	path('railway/movie_category/<int:category>/', views.MovieListbyMovieCategoryView.as_view(), name='movielistbymoviecategory'),
-	path('railway/region/<int:region>/', views.CompanyListbyRegionView.as_view(), name='companylistbyregion'),
 	path('railway/pref/<int:pref>/line/', views.LineServiceListbyPrefectureView.as_view(), name='lineservicelistbyprefecture'),
 	path('railway/company/<int:company>/line/', views.LineServiceListbyCompanyView.as_view(), name='lineservicelistbycompany'),
 	path('railway/company/<int:company>/pref/<int:pref>/line/', views.LineServiceListbyCompanyandPrefectureView.as_view(), name='lineservicelistbycompanyandprefecture'),
