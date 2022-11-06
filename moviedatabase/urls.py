@@ -19,10 +19,8 @@ urlpatterns = [
 	path('line_customize_guide/', views.LineCustomizeGuide, name='linecustomizeguide'),
 
 	path('test/', views.test, name='test'),
-	# path('mail/', views.mail, name='mail'),
-	# path('send_twitter', views.send_twitter, name="send_twitter"),
-	# path('twitter', views.tweet, name="twitter"),
-	# path('callback', views.callback, name="callback"),
+	path('mail/', views.mail, name='mail'),
+	path('send_twitter', views.send_twitter, name="send_twitter"),
 
 	path('search/', views.FreeSearchView, name='freesearch'),
 

@@ -2,6 +2,32 @@ from django.db.models import Q, Prefetch
 
 from ..models import *
 
+def organize_movie_query(query, sort="published", order="newer"):
+	"""
+	sort,orderにより並べ替えを行う。
+	sort -> published(投稿日時), view(再生回数)
+	order -> older, newer(published), max, min(view)
+	非アクティブな動画を除外し、一意にする
+	"""
+
+	query = query.exclude(is_active=False).order_by('-published_at').distinct()
+
+	if sort == "published":
+
+		if order == "older":
+			query = query.order_by('published_at')
+		elif order == "newer":
+			query = query.order_by('-published_at')
+
+	elif sort == "view":
+
+		if order == "max":
+			query = query.order_by('-n_view')
+		elif order == "min":
+			query = query.order_by('n_view')
+
+	return query
+
 def search_keyword(queryset, word):
     if word is None:
         return Movie.objects.none()

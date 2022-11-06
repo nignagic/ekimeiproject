@@ -10,61 +10,6 @@ import csv
 import environ
 
 import twitter
-import tweepy
-
-
-@permission_required('songdata.change_songnew')
-def tweet(self):
-	"""
-	Twitterの認証画面
-	"""
-
-	env = environ.Env()
-	env.read_env('.env')
-
-	# 認証準備
-	auth = tweepy.OAuthHandler(env('TWITTER_API_KEY'), env('TWITTER_API_KEY_SECRET'))
-
-	# Twitter認証画面URLを取得
-	try:
-		redirect_url = auth.get_authorization_url()
-	except tweepy.TweepyException:
-		print("Error! Failed to get request token.")
-
-	# ここで認証ページに遷移する
-	return redirect(redirect_url)
-
-
-@permission_required('songdata.change_songnew')
-def callback(request):
-	# 認証画面でキャンセルしたときの戻り先
-	if 'denied' in request.GET.dict():
-		return redirect('moviedatabase:top')
-
-
-	env = environ.Env()
-	env.read_env('.env')
-
-	# 認証した場合の処理
-	# ツイートするユーザーのトークンを取得する準備
-	auth = tweepy.OAuthHandler(env('TWITTER_API_KEY'), env('TWITTER_API_KEY_SECRET'))
-	auth.request_token['oauth_token'] = env('TWITTER_DB_OAUTH_TOKEN')
-	auth.request_token['oauth_token_secret'] = oauth_verifier = env('TWITTER_DB_OAUTH_VERIFIER')
-	
-	# ツイートするユーザーのシークレットトークンを取得する
-	try:
-		auth.get_access_token(oauth_verifier)
-	except tweepy.TweepyException:
-		print("Error! Failed to get request token.")
-
-	# ツイートする
-	auth.set_access_token(auth.access_token, auth.access_token_secret)
-	api = tweepy.API(auth)
-	api.update_status("テスト投稿です。")
-
-	# Twitterにリダイレクトする
-	return redirect('https://twitter.com/home')
-
 
 @permission_required('songdata.change_songnew')
 def send_twitter(request):
@@ -72,19 +17,15 @@ def send_twitter(request):
 	env.read_env('.env')
 
 	# 取得したキーとアクセストークンを設定する
-	auth = twitter.OAuth(consumer_key=env('TWITTER_API_KEY'),
-						consumer_secret=env('TWITTER_API_KEY_SECRET'),
-						token=env('TWITTER_DB_OAUTH_TOKEN'),
-						token_secret=env('TWITTER_DB_OAUTH_VERIFIER'))
-	# auth = twitter.OAuth(consumer_key=env('TWITTER_API_KEY'),
-	# 					consumer_secret=env('TWITTER_API_KEY_SECRET'),
-	# 					token=env('TWITTER_ACCESS_TOKEN'),
-	# 					token_secret=env('TWITTER_ACCESS_TOKEN_SECRET'))
+	auth = twitter.OAuth(consumer_key=env('TWITTER_DB_API_KEY'),
+						consumer_secret=env('TWITTER_DB_API_KEY_SECRET'),
+						token=env('TWITTER_DB_ACCESS_TOKEN'),
+						token_secret=env('TWITTER_DB_ACCESS_TOKEN_SECRET'))
 
 	t = twitter.Twitter(auth=auth)
 
 	# twitterへメッセージを投稿する
-	t.statuses.update(status="あー")
+	t.statuses.update(status="テスト投稿")
 	return HttpResponse('twitter')
 
 @permission_required('songdata.change_songnew')

@@ -1,4 +1,4 @@
-/* modified in 2022/8/22 */
+/* modified in 2022/11/06 */
 
 //YouTubeジャンプ
 $('.youtube-jump').on('click', function() {

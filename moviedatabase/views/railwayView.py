@@ -4,6 +4,8 @@ from ..models import *
 from pure_pagination.mixins import PaginationMixin
 from django.db.models import Q
 
+from .searchsets import *
+
 def moviequery(q, sort, order):
 	if sort == "pub":
 		if order == "o":
@@ -14,7 +16,7 @@ def moviequery(q, sort, order):
 		elif order == "n":
 			q = q.order_by('n_view')
 	return q
-    
+
 class RailwayTopView(generic.TemplateView):
 	template_name = 'moviedatabase/railway/railwaytop.html'
 
@@ -394,6 +396,25 @@ class MovieListbyStationServiceView(PaginationMixin, generic.ListView):
 		stationservice = StationService.objects.get(pk=self.kwargs['station_service'])
 		stationinmovies = StationInMovie.objects.filter(station_service=stationservice)
 		
+		# stationservice = get_object_or_404(StationService, pk=self.kwargs['station_service'])
+		
+		# a = []
+		# for s in StationService.objects.all():
+		# 	stationinmovies = StationInMovie.objects.filter(station_service=s)
+
+		# 	movielists = stationinmovies.values_list('part__movie__pk', flat=True)
+		# 	for movie in movielists:
+		# 		queryset |= Movie.objects.filter(pk=movie)
+			
+		# 	movies = Movie.objects.filter(
+		# 		part__stationinmovie__station_service__pk=s.pk
+		# 	)
+		# 	movielists2 = movies.order_by('pk').values_list('pk', flat=True)
+		# 	a.append({
+		# 		'stationservice': s,
+		# 		'diff': set(movielists).difference(set(movielists2))
+		# 	})
+
 		movies = stationinmovies.values_list('part__movie__pk', flat=True)
 		for movie in movies:
 			queryset |= Movie.objects.filter(pk=movie)
@@ -409,6 +430,7 @@ class MovieListbyStationServiceView(PaginationMixin, generic.ListView):
 		queryset = queryset.exclude(is_active=False).order_by('-published_at')
 		sort = self.request.GET.get('sort')
 		order = self.request.GET.get('order')
+		
 		return moviequery(queryset, sort, order)
 
 	def get_context_data(self, **kwargs):
