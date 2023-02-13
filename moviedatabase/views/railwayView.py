@@ -7,17 +7,6 @@ from django.db.models import Q
 
 from .searchsets import *
 
-# def moviequery(q, sort, order):
-# 	if sort == "pub":
-# 		if order == "o":
-# 			q = q.order_by('published_at')
-# 	elif sort == "view":
-# 		if order == "x":
-# 			q = q.order_by('-n_view')
-# 		elif order == "n":
-# 			q = q.order_by('n_view')
-# 	return q
-
 class RailwayTopView(generic.TemplateView):
 	template_name = 'moviedatabase/railway/railwaytop.html'
 
