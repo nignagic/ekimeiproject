@@ -67,7 +67,7 @@ urlpatterns = [
 	path('popup/related_movie_setting/', views.popup_related_movie_setting, name='popup_related_movie_setting'),
 	path('popup/participant_setting/', views.popup_participant_setting, name='popup_participant_setting'),
 
-	path('movie/edit/<slug:main_id>/statistics/update', views.movie_statistics_update, name='movie_statistics_update'),
+	path('movie/edit/<slug:main_id>/statistics/update', views.update_movie_statistics, name='update_movie_statistics'),
 
 	path('updateinformationforuser/<int:creator>/', views.UpdateInformationforCreator, name='updateinformationforcreator'),
 

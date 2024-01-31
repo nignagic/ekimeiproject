@@ -1,0 +1,73 @@
+{% extends 'moviedatabase/base.html' %}
+{% load tz %}
+
+{% block title %}動画 - YouTube情報更新{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/register.css' %}">
+<div class="background">
+	<div class="main-container">
+		<h2 class="register-header">動画基本情報の更新</h2>
+		<div class="title-line"></div>
+		<p class="register-notice">動画のYouTube情報（タイトル、概要欄、再生回数など）を更新します。YouTubeからの情報取得回数に制限があるため、1動画につき1日1回まで更新が可能です。</p>
+		<div class="register-form-container">
+			<form name="y_idForm">
+				<input class="search-input" type="hidden" name="y_idtextbox" value="{{ movie.main_id }}">
+			</form>
+		</div>
+
+		<div id="hidden-data" style="display: none">
+			<p id="before-title">{{ movie.title }}</p>
+			<p id="before-main_id">{{ movie.main_id }}</p>
+			<p id="before-channel_name">{{ movie.channel.name }}</p>
+			<p id="before-published_at_U">{{ movie.published_at|date:"Y-m-d H:i:s" }}</p>
+			<p id="before-published_at_J">{{ movie.published_at|timezone:'Asia/Tokyo'|date:"Y-m-d H:i:s" }}</p>
+			<p id="before-n_view">{{ movie.n_view }}</p>
+			<p id="before-n_like">{{ movie.n_like }}</p>
+			<p id="before-n_dislike">{{ movie.n_dislike }}</p>
+			<p id="before-n_comment">{{ movie.n_comment }}</p>
+			<p id="before-description">{{ movie.description | urlize | linebreaksbr }}</p>
+		</div>
+		<div id="list-area-before" class="list-area"></div>
+
+		<div class="before-after-arrow">
+			<p><i class="fas fa-arrow-down"></i></p>
+		</div>
+
+		<div id="list-area"></div>
+
+		<form action="" method="POST" id="main-form">
+			{% for f in form %}
+				{{ f }}
+			{% endfor %}
+			{% csrf_token %}
+		</form>
+	</div>
+	
+	<div class="submit-banner">
+		<div class="submit-banner-inner">
+			<div class="submit-content">
+				<div class="submit-form-status">
+					{% for field, errors in form.errors.items %}
+						{% for error in errors %}
+							<p>{{ error }} (Error in {{ field }})</p>
+						{% endfor %}
+					{% endfor %}
+				</div>
+				<button class="submit-button" form="main-form" disabled="true">更新</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script src="{% static 'moviedatabase/getYoutubeData.js' %}"></script>
+<script>	
+	$(function () {
+		applyBeforeData();
+		sendYoutubeJSON();
+	})
+</script>
+{% endblock %}

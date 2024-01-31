@@ -27,7 +27,7 @@ a:hover {
 	color: #1cb1c4;
 }
 
-a. button {
+a, button {
 	color: inherit;
 	font-weight: inherit;
 	cursor: pointer;

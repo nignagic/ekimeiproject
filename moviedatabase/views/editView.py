@@ -71,7 +71,7 @@ class MovieRegisterView(PermissionRequiredMixin, generic.CreateView):
 
 # YouTube情報更新
 @permission_required('moviedatabase.add_movie')
-def movie_statistics_update(request, main_id):
+def update_movie_statistics(request, main_id):
 	
 	if not can_edit_movie(request, main_id):
 		return redirect('moviedatabase:login')
@@ -80,8 +80,7 @@ def movie_statistics_update(request, main_id):
 
 	movie = get_object_or_404(Movie, main_id=main_id)
 
-	can_statistics_update = is_can_statistics_update(movie)
-	if not can_statistics_update:
+	if not is_can_statistics_update(movie):
 		return render(request, '403.html')	
 
 	form = forms.MovieStatisticsUpdateForm(request.POST or None, instance=movie)
@@ -95,7 +94,7 @@ def movie_statistics_update(request, main_id):
 		'form': form
 	}
 
-	return render(request, 'moviedatabase/movie_statistics_update.html', context)
+	return render(request, 'moviedatabase/update_movie_statistics.html', context)
 
 
 # 動画情報編集

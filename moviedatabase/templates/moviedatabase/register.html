@@ -10,7 +10,10 @@
 	<div class="main-container">
 		<h2 class="register-header">動画登録</h2>
 		<div class="title-line"></div>
-		<p class="register-notice">動画の登録を開始します。下の欄に動画のURLまたはIDを入力し、「動画情報取得」をクリックしてください。成功すると、取得した動画の情報が下部に表示されます。</p>
+		<p class="register-notice">
+			動画の登録を開始します。<br>
+			下の欄に動画のURLまたはIDを入力し、「動画情報取得」をクリックしてください。<br>
+			成功すると、取得した動画の情報が下部に表示されます。</p>
 		<div class="register-form-container">
 			<div class="register-form-info">URLまたは動画IDを入力</div>
 			<div class="register-form-area">
@@ -20,7 +23,7 @@
 			</div>
 			<div class="register-form-lower">
 				<div class="register-form-status"></div>
-				<button class="search-button" onclick="youtube_json()">
+				<button class="search-button" onclick="sendYoutubeJSON()">
 					動画情報取得
 				</button>
 			</div>
@@ -54,193 +57,5 @@
 {% endblock %}
 
 {% block extrajs %}
-<script type="text/javascript">
-	var xml = {}
-	function youtube_json() {
-		videoId = y_idForm.y_idtextbox.value;
-
-		Idstartnum = videoId.indexOf("v=");
-		if (Idstartnum != -1) {
-			videoId = videoId.substr(Idstartnum+2, 11);
-		};
-
-		Idstartnum = videoId.indexOf("youtu.be/");
-		if (Idstartnum != -1) {
-			videoId = videoId.substr(Idstartnum+9, 11);
-		};
-
-		function toDoubleDigits(num) {
-			num += "";
-			if (num.length === 1) {
-				num = "0" + num;
-			}
-			return num;
-		};
-		function ISO8601toUTCStringTimeonly(iso){
-			var date = new Date(iso);
-			return toDoubleDigits(date.getUTCHours()) + ":" +
-			toDoubleDigits(date.getUTCMinutes()) + ":" +
-			toDoubleDigits(date.getUTCSeconds());
-		};
-		function ISO8601toUTCStringDateonly(iso){
-			var date = new Date(iso);
-			return date.getUTCFullYear() + "-" +
-			toDoubleDigits((date.getUTCMonth() + 1)) + "-" +
-			toDoubleDigits(date.getUTCDate());
-		};
-		function ISO8601toJPNStringTimeonly(iso){
-			var date = new Date(iso);
-			return toDoubleDigits(date.getHours()) + ":" +
-			toDoubleDigits(date.getMinutes()) + ":" +
-			toDoubleDigits(date.getSeconds());
-		};
-		function ISO8601toJPNStringDateonly(iso){
-			var date = new Date(iso);
-			return date.getFullYear() + "-" +
-			toDoubleDigits((date.getMonth() + 1)) + "-" +
-			toDoubleDigits(date.getDate());
-		};
-
-		var APIKEY = "AIzaSyCmUf6ZZ6qGrdXTu3RnxCcoll7acMsr9L4"
-		$.ajax({
-			"timeout": 5000,
-			"url": "https://www.googleapis.com/youtube/v3/videos",
-			"type": "GET",
-			"dataType": "json",
-			"async": false,
-			"data": {
-				"part": "id, snippet, statistics, contentDetails",
-				"key": APIKEY,
-				"id": videoId
-			}
-		}).done(function(resv) {
-			if (!resv.items[0]) {
-				error_append("動画が見つかりませんでした");
-				return false;
-			}
-			if (videoId == "undefined") {
-				title = "<i>動画は削除されました</i>";
-				image = "";
-				channel = "-";
-				duration = "-";
-				view = "-";
-				like = "-";
-				dislike = "-";
-				comment = "-";
-				timeU = "";
-				dateU = "-";
-				timeJ = "";
-				dateJ = "-";
-			} else {
-				var isodate = resv.items[0].snippet.publishedAt;
-				timeU = ISO8601toUTCStringTimeonly(isodate);
-				dateU = ISO8601toUTCStringDateonly(isodate);
-				timeJ = ISO8601toJPNStringTimeonly(isodate);
-				dateJ = ISO8601toJPNStringDateonly(isodate);
-
-				title = resv.items[0].snippet.title;
-				image = resv.items[0].snippet.thumbnails.high.url;
-				channel = resv.items[0].snippet.channelTitle;
-				channelId = resv.items[0].snippet.channelId;
-				duration = resv.items[0].contentDetails.duration;
-				view = resv.items[0].statistics.viewCount;
-				like = resv.items[0].statistics.likeCount;
-				dislike = resv.items[0].statistics.dislikeCount;
-				comment = resv.items[0].statistics.commentCount;
-				if (!like) {
-					like= "-1";
-					dislike = "-1";
-				}
-				if (!comment) {
-					comment = "-1";
-				}	
-				description = resv.items[0].snippet.description;
-
-				data_append();
-			};
-		}).fail(function() {
-			text = "情報取得に失敗しました。URLに間違いがない場合は、不具合の可能性があります。運営に問い合わせてください。"
-			$('.register-form-status').append("<p>" + text + "</p>")
-			return false;
-		}).always(function() {
-		});
-
-		function error_append(txt) {
-			$('.register-form-status').empty();
-			$('.register-form-status').append(txt);
-		}
-
-		function data_append() {
-
-			error_append("")
-
-			d = "<section class='video-item-section'><div class='video-item'><article class='videoTile'><div class='video-number'>" + "</div><div class='videoTile-inner'><div class='videoTile-head'><a href='https://www.youtube.com/watch?v=" + videoId + "' target='_blank' class='video-link'>";
-			d += "<div class='videoTile-img-box'><div class='videoTile-img' style='background-image:url(" + image + ")'></div></div>"
-			d += "<div class='videoTile-content'>"
-			d += "<h2 class='video-title'>" + title + "</h2>"
-			d += "<div class='video-channel'><span>" + channel + "</span></div>"
-			// if (document.PLform.durationcheck.checked == true) {
-			// 	d += "<div class='video-duration'><span>" + toStringDuration(durations[j]) + "</span></div>"
-			// }
-			d += "</div></a></div><div class='video-middle'><div class='video-middle-1'><div class='video-statistics'>"
-			d += "<div class='video-statistics-item'><div class='video-statistics-num'>" + view + "</div><div class='video-statistics-name'>再生回数</div></div>"
-			d += "<div class='video-statistics-item'><div class='video-statistics-num"
-			if (like == "-1") {
-				d += " font-20";
-			}
-			d += "'>" + like + "</div><div class='video-statistics-name'>高評価数</div></div>"
-			// d += "<div class='video-statistics-item'><div class='video-statistics-num"
-			// if (like == "-1") {
-			// 	d += " font-20";
-			// }
-			// d += "'>" + dislike + "</div><div class='video-statistics-name'>低評価数</div></div>"
-			d += "<div class='video-statistics-item'><div class='video-statistics-num"
-			if (comment == "-1") {
-				d += " font-20";
-			}
-			d += "'>" + comment + "</div><div class='video-statistics-name'>コメント数</div></div>"
-			d += "</div>"
-			d += "<div class='video-time'><h3 class='video-time-head'>投稿日時</h3><table class='video-time-content'>"
-			d += "<tr><td>世界標準時</td><td class='video-time-iso'>" + dateU + " " + timeU + "</td></tr>"
-			d += "<tr><td>日本時間</td><td class='video-time-jpn'>" + dateJ + " " + timeJ + "</td></tr>"
-			d += "</table></div></div>"
-			if (description) {
-				var descriptionreplaced = description.replace( /\n/g, "<br>");
-			} else {
-				var descriptionreplaced = "-"
-			}
-			d += "<div class='video-description'><p>" + descriptionreplaced + "</p></div>"
-			d += "</div></div></article></div></section>"
-
-			$('#list-area').html(d);
-
-			// $(".youtube").append("<iframe src='https://www.youtube.com/embed/" + videoId + "' frameborder='0' gesture='media' allowfullscreen></iframe>");
-
-			var now = new Date().toUTCString();
-			nowtext = ISO8601toUTCStringDateonly(now) + " " + ISO8601toUTCStringTimeonly(now);
-
-			$('input.title').val(title);
-			$('#channel').val(channelId);
-			$('input.main_id').val(videoId);
-			$('input.youtube_id').val(videoId);
-			$('input.published_at').val(dateU + " " + timeU);
-			$('input.published_at_year').val(dateJ.split('-')[0]);
-			$('input.published_at_month').val(dateJ.split('-')[1]);
-			$('input.published_at_day').val(dateJ.split('-')[2]);
-			$('input.published_at_hour').val(timeJ.split(':')[0]);
-			$('input.published_at_minute').val(timeJ.split(':')[1]);
-			$('input.published_at_second').val(timeJ.split(':')[2]);
-			$('input.duration').val(duration);
-			$('input.n_view').val(view);
-			$('input.n_like').val(like);
-			$('input.n_dislike').val(dislike);
-			$('input.n_comment').val(comment);
-			$('input.reg_date').val(nowtext);
-			$('input.statistics_update_date').val(nowtext);
-			$('input.description').val(descriptionreplaced);
-
-			$('.submit-button').prop('disabled', false)
-		}
-	}
-</script>
+<script src="{% static 'moviedatabase/getYoutubeData.js' %}"></script>
 {% endblock %}

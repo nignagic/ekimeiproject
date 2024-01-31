@@ -7,14 +7,21 @@ from django.contrib.auth.forms import (
 )
 
 class LoginForm(AuthenticationForm):
-	"""ログインフォーム"""
+	"""login form"""
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 
 class MovieRegisterForm(forms.ModelForm):
 	class Meta:
 		model = Movie
-		fields = ('title', 'channel', 'main_id', 'youtube_id', 'niconico_id', 'published_at', 'published_at_year', 'published_at_month', 'published_at_day', 'published_at_hour', 'published_at_minute', 'published_at_second', 'duration', 'n_view', 'n_like', 'n_dislike', 'n_comment', 'description', 'reg_date', 'statistics_update_date')
+		fields = ('title','channel',
+			'main_id', 'youtube_id', 'niconico_id',
+			'published_at', 'published_at_year',
+			'published_at_month', 'published_at_day',
+			'published_at_hour','published_at_minute',
+			'published_at_second', 'duration',
+			'n_view', 'n_like', 'n_dislike', 'n_comment',
+			'description', 'reg_date', 'statistics_update_date')
 		widgets = {
 			'title': forms.HiddenInput(attrs={
 				'class': 'title',
@@ -110,9 +117,8 @@ class MovieRegisterForm(forms.ModelForm):
 		self.request = kwargs.pop('request')
 		super(MovieRegisterForm, self).__init__(*args, **kwargs)
 
-	# バリデーションチェック
+	# validation check
 	def clean(self):
-		
 		if ('channel' in self.cleaned_data):
 			movie_channel = self.cleaned_data['channel']
 			can_edit_channels = self.request.user.all_can_edit_channel()
@@ -131,7 +137,11 @@ class MovieRegisterForm(forms.ModelForm):
 class MovieStatisticsUpdateForm(forms.ModelForm):
 	class Meta:
 		model = Movie
-		fields = ('title', 'channel', 'main_id', 'youtube_id', 'niconico_id', 'published_at', 'duration', 'n_view', 'n_like', 'n_dislike', 'n_comment', 'description', 'statistics_update_date')
+		fields = ('title', 'channel',
+			'main_id', 'youtube_id', 'niconico_id',
+			'published_at', 'duration',
+			'n_view', 'n_like', 'n_dislike', 'n_comment',
+			'description', 'statistics_update_date')
 		widgets = {
 			'title': forms.HiddenInput(attrs={
 				'class': 'title',
@@ -203,7 +213,13 @@ class MovieStatisticsUpdateForm(forms.ModelForm):
 class MovieUpdateForm(forms.ModelForm):
 	class Meta:
 		model = Movie
-		fields = ('title', 'channel', 'main_id', 'youtube_id', 'niconico_id', 'published_at', 'duration', 'n_view', 'n_like', 'n_dislike', 'n_dislike', 'n_comment', 'description', 'reg_date', 'songnew', 'is_collab', 'parent', 'related', 'explanation', 'is_active')
+		fields = ('title', 'channel',
+			'main_id', 'youtube_id', 'niconico_id',
+			'published_at', 'duration',
+			'n_view', 'n_like', 'n_dislike','n_comment',
+			'description', 'reg_date',
+			'songnew', 'is_collab', 'parent',
+			'related', 'explanation', 'is_active')
 		widgets = {
 			'title': forms.HiddenInput(attrs={
 				'class': 'title',
@@ -259,7 +275,8 @@ class MovieUpdateForm(forms.ModelForm):
 class PartEditFormforinline(forms.ModelForm):
 	class Meta:
 		model = Part
-		fields = ('sort_by_movie', 'short_name', 'name', 'movie', 'participant', 'start_time', 'songnew', 'explanation')
+		fields = ('sort_by_movie', 'short_name', 'name', 'movie',
+			'participant', 'start_time', 'songnew', 'explanation')
 		widgets = {
 			'sort_by_movie': forms.HiddenInput(attrs={
 				'class': 'sort_by_movie',
@@ -289,7 +306,9 @@ class PartEditFormforinline(forms.ModelForm):
 
 	def __init__(self, *args, **kwargs):
 		super(PartEditFormforinline, self).__init__(*args, **kwargs)
-		self.fields['short_name'].error_messages = {'required': 'パート番号を入力するか、削除してください'}
+		self.fields['short_name'].error_messages = {
+			'required': 'パート番号を入力するか、削除してください'
+			}
 
 PartEditFormset = forms.inlineformset_factory(
 	parent_model = Movie,
@@ -309,7 +328,10 @@ class PartEditForm(forms.ModelForm):
 
 	class Meta:
 		model = Part
-		fields = ('name', 'movie', 'participant', 'category', 'start_time', 'songnew', 'vocalnew', 'explanation', 'incomplete', 'information_time_point')
+		fields = ('name', 'movie', 'participant',
+			'category', 'start_time',
+			'songnew', 'vocalnew', 'explanation',
+			'incomplete', 'information_time_point')
 		widgets = {
 			'name': forms.TextInput(attrs={
 				'class': 'name',
@@ -348,7 +370,10 @@ class StationInMovieEditForm(forms.ModelForm):
 	)
 	class Meta:
 		model = StationInMovie
-		fields = ('sort_by_part', 'part', 'station_service', 'line_service_on_other_options', 'line_name_customize', 'sung_name', 'back_rel', 'explanation')
+		fields = ('sort_by_part', 'part', 'station_service',
+			'line_service_on_other_options',
+			'line_name_customize', 'sung_name',
+			'back_rel', 'explanation')
 		widgets = {
 			'sort_by_part': forms.HiddenInput(attrs={
 				'class': 'sort_by_part',
