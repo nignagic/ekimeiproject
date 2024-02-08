@@ -2,7 +2,6 @@ from django.views import generic
 from ..models import *
 
 from django.shortcuts import get_object_or_404
-from pure_pagination.mixins import PaginationMixin
 from django.db.models import Q
 
 from .searchsets import *
@@ -19,7 +18,7 @@ class RailwayTopView(generic.TemplateView):
 
 		return context
 
-class MovieListbyBelongsCategoryView(PaginationMixin, generic.ListView):
+class MovieListbyBelongsCategoryView(generic.ListView):
 	model = Movie
 	paginate_by = 30
 	template_name = 'moviedatabase/railway/movielistbybelongscategory.html'
@@ -44,7 +43,7 @@ class MovieListbyBelongsCategoryView(PaginationMixin, generic.ListView):
 
 		return context
 
-class MovieListbyMovieCategoryView(PaginationMixin, generic.ListView):
+class MovieListbyMovieCategoryView(generic.ListView):
 	model = Movie
 	paginate_by = 30
 	template_name = 'moviedatabase/railway/movielistbymoviecategory.html'
@@ -69,7 +68,7 @@ class MovieListbyMovieCategoryView(PaginationMixin, generic.ListView):
 
 		return context
 
-class LineServiceListbyPrefectureView(PaginationMixin, generic.ListView):
+class LineServiceListbyPrefectureView(generic.ListView):
 	model = LineService
 	paginate_by = 50
 	template_name = 'moviedatabase/railway/lineservicelistbyprefecture.html'
@@ -95,7 +94,7 @@ class LineServiceListbyPrefectureView(PaginationMixin, generic.ListView):
 
 		return context
 
-class LineServiceListbyCompanyView(PaginationMixin, generic.ListView):
+class LineServiceListbyCompanyView(generic.ListView):
 	model = LineService
 	paginate_by = 30
 	template_name = 'moviedatabase/railway/lineservicelistbycompany.html'
@@ -126,7 +125,7 @@ class LineServiceListbyCompanyView(PaginationMixin, generic.ListView):
 
 		return context
 
-class LineServiceListbyCompanyandPrefectureView(PaginationMixin, generic.ListView):
+class LineServiceListbyCompanyandPrefectureView(generic.ListView):
 	model = LineService
 	paginate_by = 30
 	template_name = 'moviedatabase/railway/lineservicelistbycompanyandprefecture.html'
@@ -152,7 +151,7 @@ class LineServiceListbyCompanyandPrefectureView(PaginationMixin, generic.ListVie
 
 		return context
 
-class LineServiceSearchView(PaginationMixin, generic.ListView):
+class LineServiceSearchView(generic.ListView):
 	model = LineService
 	paginate_by = 30
 	template_name = 'moviedatabase/railway/lineservicesearch.html'
@@ -175,7 +174,7 @@ class LineServiceSearchView(PaginationMixin, generic.ListView):
 
 		return context
 
-class StationServiceSearchView(PaginationMixin, generic.ListView):
+class StationServiceSearchView(generic.ListView):
 	model = StationService
 	paginate_by = 30
 	template_name = 'moviedatabase/railway/stationservicesearch.html'
@@ -200,7 +199,7 @@ class StationServiceSearchView(PaginationMixin, generic.ListView):
 
 		return context
 
-class MovieListbyStationInMovieSearchView(PaginationMixin, generic.ListView):
+class MovieListbyStationInMovieSearchView(generic.ListView):
 	model = Movie
 	paginate_by = 30
 	template_name = 'moviedatabase/railway/movielistbystationinmoviesearch.html'
@@ -225,7 +224,7 @@ class MovieListbyStationInMovieSearchView(PaginationMixin, generic.ListView):
 
 		return context
 
-class MovieListbyLineView(PaginationMixin, generic.ListView):
+class MovieListbyLineView(generic.ListView):
 	model = Movie
 	paginate_by = 30
 	template_name = 'moviedatabase/railway/movielistbyline.html'
@@ -263,7 +262,7 @@ class MovieListbyLineView(PaginationMixin, generic.ListView):
 
 		return context
 
-class MovieListbyStationView(PaginationMixin, generic.ListView):
+class MovieListbyStationView(generic.ListView):
 	model = Movie
 	paginate_by = 30
 	template_name = 'moviedatabase/railway/movielistbystation.html'
@@ -298,7 +297,7 @@ class MovieListbyStationView(PaginationMixin, generic.ListView):
 		return context
 
 # このテンプレートの高速化をしたい
-class MovieListbyLineServiceView(PaginationMixin, generic.ListView):
+class MovieListbyLineServiceView(generic.ListView):
 	model = Movie
 	paginate_by = 30
 	template_name = 'moviedatabase/railway/movielistbylineservice.html'
@@ -334,7 +333,7 @@ class MovieListbyLineServiceView(PaginationMixin, generic.ListView):
 
 		return context
 
-class MovieListbyStationServiceView(PaginationMixin, generic.ListView):
+class MovieListbyStationServiceView(generic.ListView):
 	model = Movie
 	paginate_by = 30
 	template_name = 'moviedatabase/railway/movielistbystationservice.html'

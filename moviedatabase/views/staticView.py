@@ -2,8 +2,6 @@ import datetime
 import pytz
 from django.shortcuts import render
 
-from pure_pagination.mixins import PaginationMixin
-
 from ..models import *
 from .. import forms
 
@@ -39,12 +37,12 @@ class Top(generic.ListView):
 
 		return context
 
-class NoticeList(PaginationMixin, generic.ListView):
+class NoticeList(generic.ListView):
 	model = NoticeInformation
 	paginate_by = 30
 	template_name = 'moviedatabase/notice/notice_list.html'
 
-class UpdateList(PaginationMixin, generic.ListView):
+class UpdateList(generic.ListView):
 	model = MovieUpdateInformation
 	paginate_by = 30
 	template_name = 'moviedatabase/notice/update_list.html'

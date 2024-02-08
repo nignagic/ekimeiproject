@@ -1,14 +1,11 @@
 from django.db.models import Q
-from pure_pagination.mixins import PaginationMixin
 from django.views import generic
 from django.shortcuts import render
 
 from ..models import *
-
 from .searchsets import *
 
-
-class MovieListView(PaginationMixin, generic.ListView):
+class MovieListView(generic.ListView):
 	model = Movie
 	template_name = 'moviedatabase/movielist.html'
 	queryset = Movie.objects.all()
@@ -243,7 +240,7 @@ def initial_query(q, kana):
 					q2 |= q.filter(name_kana__istartswith=d)
 		return q2.order_by('name_kana')
 
-# class ArtistSearchView(PaginationMixin, generic.ListView):
+# class ArtistSearchView(generic.ListView):
 # 	model = Movie
 # 	paginate_by = 30
 # 	template_name = 'moviedatabase/music/artistsearch.html'
@@ -273,7 +270,7 @@ def initial_query(q, kana):
 
 # 		return context
 
-class CreatorTopView(PaginationMixin, generic.ListView):
+class CreatorTopView(generic.ListView):
 	model = Creator
 	paginate_by = 200
 	template_name = 'moviedatabase/creator/creatorlist.html'
@@ -300,12 +297,12 @@ class CreatorTopView(PaginationMixin, generic.ListView):
 
 		return context
 
-class ChannelListView(PaginationMixin, generic.ListView):
+class ChannelListView(generic.ListView):
 	model = YoutubeChannel
 	paginate_by = 30
 	template_name = 'moviedatabase/creator/youtubechannellist.html'
 
-class CreatorSearchView(PaginationMixin, generic.ListView):
+class CreatorSearchView(generic.ListView):
 	model = Creator
 	paginate_by = 30
 	template_name = 'moviedatabase/creator/creatorsearch.html'
@@ -327,7 +324,7 @@ class CreatorSearchView(PaginationMixin, generic.ListView):
 
 		return context
 
-class MovieListbyCreatorView(PaginationMixin, generic.ListView):
+class MovieListbyCreatorView(generic.ListView):
 	model = Movie
 	paginate_by = 30
 	template_name = 'moviedatabase/creator/movielistbycreator.html'
@@ -378,7 +375,7 @@ class MovieListbyCreatorView(PaginationMixin, generic.ListView):
 
 		return context
 
-class MovieListbyNameView(PaginationMixin, generic.ListView):
+class MovieListbyNameView(generic.ListView):
 	model = Movie
 	paginate_by = 30
 	template_name = 'moviedatabase/creator/movielistbyname.html'
@@ -408,7 +405,7 @@ class MovieListbyNameView(PaginationMixin, generic.ListView):
 
 		return context
 
-class MovieListbyChannelView(PaginationMixin, generic.ListView):
+class MovieListbyChannelView(generic.ListView):
 	model = Movie
 	paginate_by = 30
 	template_name = 'moviedatabase/creator/movielistbychannel.html'
@@ -433,7 +430,7 @@ class MovieListbyChannelView(PaginationMixin, generic.ListView):
 
 		return context
 
-class MovieListbyNiconicoView(PaginationMixin, generic.ListView):
+class MovieListbyNiconicoView(generic.ListView):
 	model = Movie
 	paginate_by = 30
 	template_name = 'moviedatabase/creator/movielistbyniconico.html'
