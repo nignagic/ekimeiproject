@@ -152,6 +152,9 @@
 								</a>
 							</li>
 						{% endif %}
+						{% if admin %}
+						<a href="{% url 'stationdata:stationserviceedit' stationservice.pk %}" target="blank">所属路線変更</a>
+						{% endif %}
 					{% endfor %}
 				</ul>
 			</div>

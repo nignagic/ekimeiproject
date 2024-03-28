@@ -742,6 +742,36 @@ def StationServiceRegisterView(request, line_service):
 
 	return render(request, 'stationdata/stationserviceregister.html', context)
 
+@permission_required('moviedatabase.change_lineservice')
+def StationEditView(request, station):
+	station = get_object_or_404(Station, id=station)
+	form = forms.StationUpdateForm(request.POST or None, instance=station)
+	if request.method == 'POST' and form.is_valid():
+		form.save()
+		return redirect('moviedatabase:movielistbystation', station=station.pk)
+
+	context = {
+		'station': station,
+		'form': form,
+	}
+
+	return render(request, 'stationdata/stationedit.html', context)
+
+@permission_required('moviedatabase.change_lineservice')
+def StationServiceEditView(request, stationservice):
+	stationservice = get_object_or_404(StationService, id=stationservice)
+	form = forms.StationServiceUpdateForm(request.POST or None, instance=stationservice)
+	if request.method == 'POST' and form.is_valid():
+		form.save()
+		return redirect('moviedatabase:movielistbystationservice', station_service=stationservice.pk)
+
+	context = {
+		'station': stationservice,
+		'form': form,
+	}
+
+	return render(request, 'stationdata/stationserviceedit.html', context)
+
 @permission_required('stationdata.change_line')
 def lineprefset(request):
 	stations = Station.objects.all()

@@ -93,6 +93,9 @@
 									</div>
 								</div>
 							</a>
+							{% if admin %}
+							<a href="{% url 'stationdata:stationedit' station.pk %}" target="blank">所属路線変更</a>
+							{% endif %}
 						</li>
 					{% endfor %}
 				</ul>

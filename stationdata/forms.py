@@ -46,6 +46,16 @@ StationRegisterFormset = forms.inlineformset_factory(
 	can_delete = False
 )
 
+class StationUpdateForm(forms.ModelForm):
+	class Meta:
+		model = Station
+		fields = ('name', 'line')
+
+class StationServiceUpdateForm(forms.ModelForm):
+	class Meta:
+		model = StationService
+		fields = ('name', 'line_service')
+
 class CompanyUpdateForm(forms.ModelForm):
 	class Meta:
 		model = Company
