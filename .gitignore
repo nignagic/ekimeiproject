@@ -8,3 +8,9 @@ backup_db_local.py
 .venv
 maintenance_mode_state.txt
 db_backup
+.github
+.vscode
+data-csv
+
+Dockerfile
+docker-compose.yml
