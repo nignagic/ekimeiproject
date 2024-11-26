@@ -6,6 +6,9 @@ import environ
 env = environ.Env()
 env.read_env('.env')
 
+PROJECT_DIR = environ.Path(__file__) - 2
+BASE_DIR = environ.Path(__file__) - 3
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 
@@ -21,9 +24,11 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': env('DATABASE_NAME'),
-        'USER': env('DATABASE_USER'),
-        'PASSWORD': env('DATABASE_PASS'),
+        'NAME': env('MYSQL_DATABASE'),
+        'USER': env('MYSQL_USER'),
+        'PASSWORD': env('MYSQL_PASSWORD'),
+        'HOST': 'db',
+        'PORT': '3306'
     }
 }
 
@@ -33,6 +38,13 @@ CACHES = {
         'LOCATION': env('CACHE_TABLE'),
     }
 }
+
+# 追加もしくは変更
+STATIC_ROOT = BASE_DIR("static")
+STATIC_URL = "/static/"
+
+MEDIA_ROOT = BASE_DIR("media")
+MEDIA_URL = "/media/"
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')

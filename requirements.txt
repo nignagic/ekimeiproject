@@ -35,5 +35,6 @@ stone==3.3.1
 twitter==1.19.6
 tzdata==2023.4
 urllib3==2.1.0
+uWSGI==2.0.21
 wheel==0.42.0
 yarg==0.1.9

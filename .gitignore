@@ -10,6 +10,3 @@ maintenance_mode_state.txt
 db_backup
 .vscode
 data-csv
-
-Dockerfile
-docker-compose.yml
