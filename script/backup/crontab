@@ -1,0 +1,4 @@
+# set to `cron -e` from host (out of docker container)
+# confirm to `cat /var/log/syslog`
+
+0 4 * * * docker exec -i prod-stanmicdb-db python /home/admin/ekimeiproject/script/backup/backup_db.py >> /tmp/backup_db.log 2>&1

@@ -42,7 +42,12 @@ services:
       - db
 
   db:
-    image: mysql:8.3
+    build:
+        context: .
+        args:
+          - WORK_DIR=${WORK_DIR}
+          - WORK_USER=${WORK_USER}
+        dockerfile: Dockerfile-mysql
     container_name: ${DB_CONTAINER_NAME}
     restart: always
     env_file: ./.env

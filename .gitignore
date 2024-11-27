@@ -10,3 +10,6 @@ maintenance_mode_state.txt
 db_backup
 .vscode
 data-csv
+
+nginx/ssl_certs/
+src/static/
