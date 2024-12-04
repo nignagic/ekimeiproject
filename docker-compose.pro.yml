@@ -37,7 +37,7 @@ services:
       - ./log:/tmp
     expose:
       - ${WEB_CONTAINER_PORT}
-    command: uwsgi --socket :${WEB_CONTAINER_PORT} --module ${PROJECT_DIR}.wsgi
+    command: uwsgi --socket :${WEB_CONTAINER_PORT} --module ${PROJECT_DIR}.wsgi --logto /tmp/uwsgi.log
     depends_on:
       - db
 
@@ -56,7 +56,7 @@ services:
     expose:
       - ${DB_CONTAINER_PORT}
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
