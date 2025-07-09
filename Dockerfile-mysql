@@ -1,0 +1,11 @@
+FROM mysql:8.3
+
+ARG WORK_DIR
+ARG WORK_USER
+
+RUN mkdir -p /home/$WORK_USER/$WORK_DIR/script
+WORKDIR /home/$WORK_USER/$WORK_DIR
+COPY ./script /home/$WORK_USER/$WORK_DIR/script
+
+RUN pip3 install --upgrade pip \
+  && pip3 install -r /home/$WORK_USER/$WORK_DIR/script/backup/requirements-mysql.txt

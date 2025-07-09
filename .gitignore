@@ -8,3 +8,8 @@ backup_db_local.py
 .venv
 maintenance_mode_state.txt
 db_backup
+.vscode
+data-csv
+
+nginx/ssl_certs/
+src/static/

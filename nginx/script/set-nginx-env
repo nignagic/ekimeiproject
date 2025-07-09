@@ -1,0 +1,5 @@
+#!/usr/bin/with-contenv /bin/bash
+cp /etc/nginx/conf.d/$WORK_DIR.conf.temp /etc/nginx/conf.d/$WORK_DIR.conf
+sed -i -e "s/WEB_CONTAINER_NAME/$WEB_CONTAINER_NAME/g" /etc/nginx/conf.d/$WORK_DIR.conf
+sed -i -e "s/WEB_CONTAINER_PORT/$WEB_CONTAINER_PORT/g" /etc/nginx/conf.d/$WORK_DIR.conf
+sed -i -e "s/NGINX_WATCH_PORT/$NGINX_WATCH_PORT/g" /etc/nginx/conf.d/$WORK_DIR.conf

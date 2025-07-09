@@ -1,0 +1,25 @@
+upstream WEB_CONTAINER_NAME {
+    ip_hash;
+    server WEB_CONTAINER_NAME:WEB_CONTAINER_PORT;
+}
+
+server {
+    listen      NGINX_WATCH_PORT;
+    server_name dockerhost;
+    charset     utf-8;
+
+    client_max_body_size 100M;
+
+    location /static {
+        alias /static;
+    }
+
+    location /media {
+        alias /media;
+    }
+
+    location / {
+        uwsgi_pass  WEB_CONTAINER_NAME;
+        include     /etc/nginx/uwsgi_params;
+    }
+}
