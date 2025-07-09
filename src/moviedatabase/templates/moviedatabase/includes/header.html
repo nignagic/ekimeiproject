@@ -19,11 +19,14 @@
 					<div class="login-out">
 					{% if user.is_authenticated %}
 						<p class="display-4">
-							<a class="mypage" href="{% url 'moviedatabase:mypage' %}">マイページ</a>
-							{% if user.creator %}
-							<a class="mypage" href="{% url 'moviedatabase:register' %}">動画登録</a>
-							{% endif %}
-							<a class="lead login-out-button" href="{% url 'moviedatabase:logout' %}">ログアウト</a>
+							<form method="post" action="{% url 'moviedatabase:logout' %}">
+								<a class="mypage" href="{% url 'moviedatabase:mypage' %}">マイページ</a>
+								{% if user.creator %}
+								<a class="mypage" href="{% url 'moviedatabase:register' %}">動画登録</a>
+								{% endif %}
+								{% csrf_token %}
+								<button class="lead login-out-button" type="submit">ログアウト</a>
+							</form>
 						</p>
 					{% else %}
 						<a class="lead login-out-button" href="{% url 'moviedatabase:login' %}">ログイン</a>
