@@ -1,0 +1,74 @@
+ol {
+	counter-reset: item;
+	list-style-type: none;
+	padding-left: 0;
+}
+
+ol ol{
+	padding-left: 2em;
+	margin: 0.5rem 0;
+}
+
+.article > li {
+	margin-bottom: 2rem;
+	background-color: #fafafa;
+	border-radius: 1rem;
+	padding: 2rem 2rem;
+}
+
+.article > li > h2 {
+	font-size: 1.1rem;
+	margin-bottom: 0.8rem;
+}
+.article > li > h2:before {
+	counter-increment: item;
+	content: '第'counter(item)'条';
+	/* 以下は自由に装飾... */
+	padding-right: .5em;
+	font-weight: bold;
+	color: #cc5c00;
+}
+
+.article p {
+	font-weight: normal;
+	text-indent: 1.0em;
+	padding-left: 1.3em;
+
+}
+
+.article > li > ol {
+}
+
+.article > li > ol > li {
+	font-weight: normal;
+	text-indent: -1.5em;
+	padding-left: 1.5em;
+}
+
+.article > li > ol > li:before {
+	counter-increment: item;
+	content: counter(item)'.';
+	/* 以下は自由に装飾... */
+	padding-right: .5em;
+	font-weight: normal;
+	color: #cc5c00;
+}
+
+.article > li > ol > li > ol > li {
+	font-weight: normal;
+	text-indent: -1.5em;
+	padding-left: 1.5em;
+}
+
+.article > li > ol > li > ol > li:before {
+	counter-increment: item;
+	content: '('counter(item)')';
+	/* 以下は自由に装飾... */
+	padding-right: .5em;
+	font-weight: normal;
+	color: #cc5c00;
+}
+
+.terms-p {
+	font-weight: normal;
+}

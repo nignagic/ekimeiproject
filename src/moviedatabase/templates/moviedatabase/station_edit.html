@@ -1,0 +1,434 @@
+{% extends 'moviedatabase/base.html' %}
+{% load tags %}
+
+{% block title %}駅編集 - {{ part }}{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/station_edit2.css' %}">
+<link rel="stylesheet" href="{% static 'moviedatabase/detail_station_list.css' %}">
+
+<div class="background">
+	<form action="" method="post" enctype="multipart/form-data">
+		<!-- <h2>駅情報編集</h2>
+		<div>{{ part }} > {% if part.participant.all %}{% for p in part.participant.all %}{{ p }}{% endfor %}{% endif %}</div> -->
+		<div class="screen-area">
+			<div class="edit-area">
+				<div class="edit-upper">
+					<div class="youtube-container shadow">
+						<div class="youtube-content">
+							<div class="youtube-frame">
+								<div id="player"></div>
+								<script>
+									var tag = document.createElement('script');
+
+									tag.src = "https://www.youtube.com/iframe_api";
+									var firstScriptTag = document.getElementsByTagName('script')[0];
+									firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+									var player;
+									function onYouTubeIframeAPIReady() {
+										player = new YT.Player('player', {
+											    videoId: '{{ part.movie.youtube_id }}',
+										})
+									}
+
+									$(document).on('click', '.time-set', function() {
+										t = parseInt(player.getCurrentTime())
+										$(this).siblings('.start_time').val(inttosecond(t))
+									})
+									function inttosecond(t) {
+										s = (t % 60) % 60
+										if (s < 10) s = "0" + s
+										m = Math.floor(t / 60) % 60
+										if (m < 10) m = "0" + m
+										h = Math.floor(t / 3600)
+										if (h < 10) h + "0" + h
+										return h + ":" + m + ":" + s
+									}
+								</script>
+							</div>
+							<div class="youtube-right">
+								<h2 class="youtube-header">{{ part.movie }}</h2>
+								<p class="movie-description">{{ part.movie.description | linebreaksbr }}</p>
+							</div>
+						</div>
+					</div>
+					<div class="part-detail-container shadow">
+					{% if partcount == 1 %}
+						<h2 class="part-detail-header">
+							詳細情報
+						</h2>
+						<div class="part-detail">
+							<div class="part-detail-left">
+								<div>
+									<div class="part-detail-left-row">
+										<div class="part-detail-left-title">種類</div>
+										<div class="part-detail-left-content">{{ part_form.category }}</div>
+									</div>
+									<div class="part-detail-left-row">
+										<div class="part-detail-left-title">使用ボーカル</div>
+										<div class="part-detail-left-content">
+											<div id="selected_vocal_list">
+												{{ part_form.vocalnew }}
+											</div>
+											<div id="selected_vocal_name"></div>
+											<div class="setting-button" style="text-align: right;">
+												<a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_vocal_setting' %}', 'subwin', 'height=500');">変更</a>
+											</div>
+										</div>
+									</div>
+									<div class="part-detail-left-row">
+										<div>{{ part_form.incomplete }} 情報が不完全</div>
+									</div>
+								</div>
+								{{ part_form.movie }}
+							</div>
+							<div class="part-detail-right">
+								<table>
+									<tr>
+										<th>参加者</th>
+										<td>
+											<div id="selected_participant_list">
+												{{ part_form.participant }}
+											</div>
+											<div id="selected_participant_name"></div>
+											<div class="setting-button" style="text-align: right;">
+												<a href="javascript:void(0);" onclick="window.open('{% url 'moviedatabase:popup_participant_setting' %}', 'subwin', 'height=500');">変更</a>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>使用楽曲</th>
+										<td>
+											<div id="selected_song_in_part_list">
+												{{ part_form.songnew }}
+											</div>
+											<div id="selected_song_in_part_name"></div>
+											<div class="setting-button" style="text-align: right;">
+												<a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_song_setting' %}', 'subwin', 'height=500');">変更</a>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>補足説明</th>
+										<td>{{ part_form.explanation }}</td>
+									</tr>
+									<tr>
+										<th>情報の日付</th>
+										<td>{{ part_form.information_time_point }}<br><small>動画の投稿日：{{ original_date|date:"Y/n/j" }}</small></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					{% else %}
+						<h2 class="part-detail-header">
+							パート情報 - #{{ part.part_num }}（パート番号：{% if part.short_name %}{{ part.short_name }}{% else %}未設定{% endif %}）
+						</h2>
+						<div class="part-detail">
+							<div class="part-detail-left">
+								<div>
+									<div class="part-detail-left-row">
+										<div class="part-detail-left-title">路線説明/パート名</div>
+										<div class="part-detail-left-content">{{ part_form.name }}</div>
+									</div>
+									<div class="part-detail-left-row">
+										<div class="part-detail-left-title">開始時間</div>
+										<div class="part-detail-left-content">
+											{{ part_form.start_time }}<br>
+											<input type="button" class="youtube-jump" value="この位置にジャンプ">
+											<input type="button" class="time-set" value="現在位置に指定">
+										</div>
+									</div>
+									<div class="part-detail-left-row">
+										<div class="part-detail-left-title">補足説明</div>
+										<div class="part-detail-left-content">{{ part_form.explanation }}</div>
+									</div>
+									<div class="part-detail-left-row">
+										<div>{{ part_form.incomplete }} 情報が不完全</div>
+									</div>
+								</div>
+								{{ part_form.movie }}
+							</div>
+							<div class="part-detail-right">
+								<table>
+									<tr>
+										<th>種類</th>
+										<td>{{ part_form.category }}</td>
+									</tr>
+									<tr>
+										<th>参加者</th>
+										<td>
+											<div id="selected_participant_list">
+												{{ part_form.participant }}
+											</div>
+											<div id="selected_participant_name"></div>
+											<div class="setting-button" style="text-align: right;">
+												<a href="javascript:void(0);" onclick="window.open('{% url 'moviedatabase:popup_participant_setting' %}', 'subwin', 'height=500');">変更</a>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>使用楽曲<br><small>(パート単体)</small></th>
+										<td>
+											<div id="selected_song_in_part_list">
+												{{ part_form.songnew }}
+											</div>
+											<div id="selected_song_in_part_name"></div>
+											<div class="setting-button" style="text-align: right;">
+												<a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_song_setting' %}', 'subwin', 'height=500');">変更</a>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>使用ボーカル</th>
+										<td>
+											<div id="selected_vocal_list">
+												{{ part_form.vocalnew }}
+											</div>
+											<div id="selected_vocal_name"></div>
+											<div class="setting-button" style="text-align: right;">
+												<a href="javascript:void(0);" onclick="window.open('{% url 'songdata:popup_vocal_setting' %}', 'subwin', 'height=500');">変更</a>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<th>情報の日付</th>
+										<td>{{ part_form.information_time_point }}<br><small>動画の投稿日：{{ original_date|date:"Y/n/j" }}</small></td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					{% endif %}
+					</div>
+				</div>
+				<div class="edit-lower">
+					<div class="station-list-container shadow">
+						<ul class="tab-container">
+							<li class="tab is-active">都道府県から</li>
+							<li class="tab">事業者から</li>
+							<li class="tab">駅名検索</li>
+							<li class="tab tab-transfer">乗換駅</li>
+							<li class="tab tab-other">その他</li>
+						</ul>
+						<div class="station-option-list">
+							<div class="tab-content-group">
+								<div class="tab-content station-pref-list-tab is-show">
+									<div class="list-container">
+										<h5>都道府県</h5>
+										<div name="pref" id="pref-select" class="select-div">
+											{% for pref in prefs %}
+												<div value="{{ pref.pk }}">{{ pref }}</div>
+											{% endfor %}
+										</div>
+									</div>
+									<div class="list-container list-container-line">
+										<h5>路線</h5>
+										<div name="s0" class="pref-line-select line-select select-div">
+										</div>
+									</div>
+								</div>
+								<div class="tab-content station-company-list-tab">
+									<div class="list-container">
+										<h5>事業者名</h5>
+										<div name="company" id="company-select" class="select-div">
+											{% for company in companies %}
+												<div value="{{ company.pk }}">{{ company.short_name }}</div>
+											{% endfor %}
+										</div>
+									</div>
+									<div class="list-container list-container-line">
+										<h5>路線</h5>
+										<div name="s0" class="company-line-select line-select select-div">
+										</div>
+									</div>
+								</div>
+								<div class="tab-content station-search-tab">
+									<div class="search-box">
+										<h5>駅名検索(仮)</h5>
+										<input type="textbox" class="namesearch"><input type="button" name="namesearch" class="namesearchbutton" value="検索">
+									</div>
+								</div>
+								<div class="tab-content station-transfer-tab">
+									<div class="list-container">
+										<h5>駅の乗り換え路線</h5>
+										<div name="s0" class="transfer-line-select line-select select-div">
+										</div>
+									</div>
+								</div>
+								<div class="tab-content station-other-list-tab">
+									<div class="list-container">
+										<h5>その他</h5>
+										<div style="display: flex; flex: 1;">
+											<select name="other" id="other-select" class="select-div" multiple="" style="width: auto;">
+												<optgroup label="駅オブジェクト">
+												{% for other in other_stations %}
+													<option value="{{ other.pk }}" data-name="{{ other.name }}" data-get_group_station="{{ other.station.get_group_station_id }}" data-line_service_pk="{{ other.line_service.pk }}" data-category="{{ other.line_service.category.icon }}" data-pref="{{ other.get_pref }}" data-get_color="{{ other.get_color }}"  data-is_representative="{{ other.is_representative }}" data-other_option="{{ other.line_service.company.other_option }}" data-status="" data-line="{{ other.line_service }}" class="other-option">{{ other.name }}</option>
+												{% endfor %}
+												</optgroup>
+												<optgroup label="路線オブジェクト">
+												{% for other in other_lines %}
+													<option value="{{ other.pk }}" data-name="{{ other.name }}" data-get_group_station="{{ other.station.get_group_station_id }}" data-line_service_pk="{{ other.line_service.pk }}" data-category="{{ other.line_service.category.icon }}" data-pref="{{ other.get_pref }}" data-get_color="{{ other.get_color }}"  data-is_representative="{{ other.is_representative }}" data-other_option="{{ other.line_service.company.other_option }}" data-status="" data-line="{{ other.line_service }}" class="other-option">{{ other.name }}</option>
+												{% endfor %}
+												</optgroup>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="station-queue-container">
+								<div class="queue-content station-queue is-queue-show">
+									<div class="station-queue-header">
+										<h5>駅</h5>
+										<div class="station-reverse"><i class="fas fa-sort-amount-down"></i> 逆順</div>
+									</div>
+									<select name="s1" id="id_station-select" class="station-select" data-line_name="" multiple="true"></select>
+								</div>
+								<div class="queue-content station-name-input-container">
+									<div class="station-queue-header">
+										<h5>駅</h5>
+									</div>
+									<textarea name="station_name" id="station-name-input"></textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="station-append shadow"><i class="fas fa-caret-right"></i><br>追加</div>
+					<div class="selected-list-container shadow">
+						<div class="selected-list-header">
+							<h3>登録駅</h3>
+							<div id="line-customize-modal-open">路線編集/表示確認</div>
+						</div>
+						{{ formset.management_form }}
+						<div class="selected-list" id="selected-list">
+							{% for form in formset %}
+								<div class="station_form">
+									{{ form.non_field_errors }}
+									<div class="station-content">
+										<div class="station-relation">
+											{{ form.id }}
+											{{ form.sort_by_part }}
+											<input type='hidden' class='get_group_station' value="{{ form.station_service.value | get_group_station_from_service }}">
+											<input type='hidden' class='line_service_pk' value="{{ form.station_service.value | line_service_pk }}">
+											<input type='hidden' class='category' value="{{ form.station_service.value | category }}">
+											<input type='hidden' class='pref' value="{{ form.station_service.value | pref }}">
+											<input type='hidden' class='get_color' value="{{ form.station_service.value | get_color }}">
+											<input type='hidden' class='is_representative' value="{{ form.station_service.value | is_representative }}">
+											<input type='hidden' class='other_option' value="{{ form.station_service.value | other_option }}">
+											{{ form.line_service_on_other_options }}
+											{{ form.line_name_customize }}
+											<div class="station-relation-line"></div>
+											<div class="station-relation-select">
+												{{ form.back_rel }}
+											</div>
+										</div>
+										<div class="station-box">
+											<div class="station-sortable">
+												<a class="sortable-handle"><i class="fas fa-bars"></i></a>
+											</div>
+											<div class="station-line-search">
+												<a class="station-line-search-button">路線検索</a>
+											</div>
+											<div class="station-info">
+												<div class="station-info-top">
+													{{ form.station_service }}
+													<div class="station-name-fixed">{{ form.station_service.value | get_station_service }}</div>
+													<div class="station-line-name">{{ form.station_service.value | get_line_service }}</div>
+												</div>
+												<div class="station-info-bottom">
+													<div class="station-sung-name">
+														歌唱名：{{ form.sung_name }}
+													</div>
+													<div class="station-explanation">
+														備考：{{ form.explanation }}
+													</div>
+												</div>
+											</div>
+											<div class="station-delete">
+												<a class="sortable-delete">
+													{{ form.DELETE }}<i class="fas fa-times"></i>
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+						{% csrf_token %}
+					</div>
+				</div>
+			</div>
+			<div class="submit-banner">
+				<div class="submit-banner-inner">
+					<div class="submit-content">
+						<div class="submit-form-status">
+							{% if part_form.errors %}
+								{{ part_form.non_field_errors }}
+							{% endif %}
+							{% for form in formset %}
+								{% if form.errors %}
+									{{ form.non_field_errors }}
+								{% endif %}
+							{% endfor %}
+							{% for field, errors in form.errors.items %}
+								{% for error in errors %}
+									<p>{{ error }} (Error in {{ field }})</p>
+								{% endfor %}
+							{% endfor %}
+							{% for field, errors in part_form.errors.items %}
+								{% for error in errors %}
+									<p>{{ error }} (Error in {{ field }})</p>
+								{% endfor %}
+							{% endfor %}
+							<p>戻るボタンは使わないでください。情報が変更、削除される可能性があります。</p>
+						</div>
+						<a class="back-button" href="{% url 'moviedatabase:part_edit' part.movie.main_id %}">パート編集に戻る<small> ※保存されません</small></a>
+						<button onclick="submit();" class="submit-button">登録</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+<div id="line-customize-modal-content">
+	<div id="line-customize-inner">
+		<div id="line-customize-upper">
+			<div id="line-customize-editor">
+				<ul class="tab-container">
+					<li class="modal-tab modal-is-active">廃駅等の路線設定</li>
+					<li class="modal-tab">路線名カスタマイズ</li>
+				</ul>
+				<div class="modal-tab-content-container">
+					<div class="modal-tab-content-group">
+						<div id="other_option-line-editor" class="modal-tab-content modal-is-show">
+							<div id="other_option-line-selector"></div>
+							<div id="other_option-line-detail-editor">
+							</div>
+						</div>
+						<div id="line-name-customize-editor" class="modal-tab-content">
+							<div id="line-name-customize-selector">
+							</div>
+							<div id="line-name-customize-detail-editor">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="station-display-check-wrapper">
+				<div>表示プレビュー</div>
+				<div id="station-display-check">
+					<div class="station-list"></div>
+				</div>
+			</div>
+		</div>
+		<div id="line-customize-lower">
+			<button id="line-customize-modal-close">キャンセル</button>
+			<button id="line-customize-modal-determine">決定</button>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script src="{% static 'moviedatabase/station_edit2.js' %}"></script>
+{% endblock %}

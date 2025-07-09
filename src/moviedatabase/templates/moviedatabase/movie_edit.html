@@ -1,0 +1,114 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}動画情報編集 - {{ movie }}{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/part_edit.css' %}">
+<div class="background">
+	<form name="part_add" method="post" id="main-form">
+		<h2>動画情報編集</h2>
+		<div class="main-container">
+			{% include 'moviedatabase/includes/movie_edit_base.html' %}
+			<div class="movie-part-list">
+				{% if partcount != 0 %}
+					{% for part in parts %}
+					<div class="part-container">
+						<div class="simple-part-header" {% if onlyonepart %}style="display: none;"{% endif %}>
+							<div class="simple-part-name-short">
+								<span>
+								{% if part.short_name %}
+									{{ part.short_name }}
+								{% endif %}
+								</span>
+							</div>
+							<table class="simple-part-table" data-part_id="{{ part.id }}" data-category="{{ part.category }}">
+								<tr>
+									<td class="part-header-up">
+										{% if part.name %}
+											{{ part.name }}
+										{% else %}
+										　
+										{% endif %}
+									</td>
+								</tr>
+								<tr class="row-2">
+									<td>
+										{% if part.participant.all %}
+											{% for participant in part.participant.all %}
+												{{ participant }}
+												{% if forloop.last %}
+												{% else %}
+													<span>/</span>
+												{% endif %}
+											{% endfor %}
+											{% endif %}
+										{% if part.songnew.all %}
+										 - 
+											{% for song in part.songnew.all %}
+												{{ song }}
+												{% if forloop.last %}
+												{% else %}
+													<span>/</span>
+												{% endif %}
+											{% endfor %}
+										{% endif %}
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					{% endfor %}
+				{% endif %}
+			</div>
+		</div>
+		{% csrf_token %}
+	</form>
+	<div class="submit-banner">
+		<div class="submit-banner-inner">
+			<div class="submit-content">
+				<div class="submit-form-status">
+
+					{% for form in formset %}
+
+						{% if form.errors %}
+							{{ form.non_field_errors }}
+						{% endif %}
+
+						{% for field, errors in form.errors.items %}
+							{% for error in errors %}
+								<p>{{ error }} (Error in {{ field }})</p>
+							{% endfor %}
+						{% endfor %}
+						
+					{% endfor %}
+
+					{% for field, errors in form.errors.items %}
+						{% for error in errors %}
+							<p>{{ error }} (Error in {{ field }})</p>
+						{% endfor %}
+					{% endfor %}
+
+				</div>
+				{% if partcount == 0 %}
+					<button class="multiple-button" form="main-form" name="multiple" onclick="submit();">パート分けありとして登録<span class="button-sub">合作など</span></button>
+					<button class="submit-button" form="main-form" name="single" onclick="submit();">パート分けなしとして登録<span class="button-sub">単作など</span></button>
+				{% else %}
+					<button class="submit-button" form="main-form" name="multiple" onclick="submit();">保存して次へ</button>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	</form>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+	{% include 'moviedatabase/includes/movie_edit_base_script.html' %}
+<script type="text/javascript">
+	$(function() {
+		d = $('.movie-description').text().replace(/<br>/g, '<br>');
+		$('.movie-description').html(d)
+	})
+</script>
+{% endblock %}

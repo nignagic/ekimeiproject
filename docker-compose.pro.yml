@@ -1,0 +1,67 @@
+services:
+  https-portal:
+    image: steveltn/https-portal:1.17
+    container_name: ${HTTPS_PORTAL_CONTAINER_NAME}
+    env_file: ./.env
+    restart: always
+    volumes:
+      - https-portal-data:/var/lib/https-portal
+      - ./nginx/ssl_certs:/var/lib/https-portal
+      - ./nginx/conf/${WORK_DIR}.conf.temp:/etc/nginx/conf.d/${WORK_DIR}.conf.temp
+      - ./nginx/script/set-nginx-env:/etc/cont-init.d/set-nginx-env
+      - ./nginx/uwsgi_params:/etc/nginx/uwsgi_params
+      - ./src/static:/static
+      - ./src/media:/media
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      DOMAINS: ${DOMAIN_NAME} -> http://${HTTPS_PORTAL_CONTAINER_NAME}:${NGINX_WATCH_PORT}/
+      CLIENT_MAX_BODY_SIZE: 100M
+      STAGE: 'production'
+    depends_on:
+      - web
+
+  web:
+    build:
+        context: .
+        args:
+          - WORK_DIR=${WORK_DIR}
+          - WORK_USER=${WORK_USER}
+    container_name: ${WEB_CONTAINER_NAME}
+    env_file: ./.env
+    restart: always
+    tty: true
+    volumes:
+      - ./src:/home/${WORK_USER}/${WORK_DIR}
+      - ./log:/tmp
+    expose:
+      - ${WEB_CONTAINER_PORT}
+    command: uwsgi --socket :${WEB_CONTAINER_PORT} --module ${PROJECT_DIR}.wsgi --logto /tmp/uwsgi.log
+    depends_on:
+      - db
+
+  db:
+    build:
+        context: .
+        args:
+          - WORK_DIR=${WORK_DIR}
+          - WORK_USER=${WORK_USER}
+        dockerfile: Dockerfile-mysql
+    container_name: ${DB_CONTAINER_NAME}
+    restart: always
+    env_file: ./.env
+    volumes:
+      - mysql_data:/var/lib/mysql
+    expose:
+      - ${DB_CONTAINER_PORT}
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      TZ: 'Asia/Tokyo'
+
+volumes:
+  mysql_data:
+  https-portal-data:

@@ -1,0 +1,61 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}動画 - 登録{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/register.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="main-container">
+		<h2 class="register-header">動画登録</h2>
+		<div class="title-line"></div>
+		<p class="register-notice">
+			動画の登録を開始します。<br>
+			下の欄に動画のURLまたはIDを入力し、「動画情報取得」をクリックしてください。<br>
+			成功すると、取得した動画の情報が下部に表示されます。</p>
+		<div class="register-form-container">
+			<div class="register-form-info">URLまたは動画IDを入力</div>
+			<div class="register-form-area">
+				<form name="y_idForm">
+					<input class="search-input" type="textbox" name="y_idtextbox">
+				</form>
+			</div>
+			<div class="register-form-lower">
+				<div class="register-form-status"></div>
+				<button class="search-button" onclick="sendYoutubeJSON()">
+					動画情報取得
+				</button>
+			</div>
+		</div>
+
+		<div id="list-area"></div>
+
+		<form action="" method="POST" id="main-form">
+			{% for f in form %}
+				{{ f }}
+			{% endfor %}
+			{% csrf_token %}
+		</form>
+	</div>
+	<div class="submit-banner">
+		<div class="submit-banner-inner">
+			<div class="submit-content">
+				<div class="submit-form-status">
+					{% for field, errors in form.errors.items %}
+						{% for error in errors %}
+							<p>{{ error }} (Error in {{ field }})</p>
+						{% endfor %}
+					{% endfor %}
+				</div>
+				<button class="submit-button" form="main-form" disabled="true">登録</button>
+			</div>
+		</div>
+	</div>
+	{% include 'moviedatabase/includes/footer.html' %}
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script src="{% static 'moviedatabase/getYoutubeData.js' %}"></script>
+{% endblock %}

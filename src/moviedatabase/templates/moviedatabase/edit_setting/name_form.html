@@ -1,0 +1,51 @@
+{% extends 'moviedatabase/base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/setting.css' %}">
+	<form action="" method="POST">
+		<div class="background">
+			<table class="name-table">
+				<tr>
+					<th></th>
+					<th>名称</th>
+				</tr>
+				<tr>
+					<th class="right">名義</th>
+					<td>{{ form.name }}</td>
+				</tr>
+				<tr>
+					<th class="right">
+						作者</span>
+					</th>
+					<td>{{ form.creator }}</td>
+				</tr>
+			</table>
+			{% csrf_token %}
+			<div class="submit-banner">
+				<div class="submit-banner-inner">
+					<div class="submit-content">
+						<div class="submit-form-status">
+						</div>
+						<button onclick="submit();" class="submit-button">登録</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+{% endblock %}
+{% block extrajs %}
+	<script type="text/javascript">
+		window.onload = function() {
+			// 親ウィンドウの存在チェック
+			if (!window.opener || window.opener.closed || !window.opener.document.getElementById('is-name-setting')) {
+				console.log('There is no window opener');
+			} else {
+				// 親ウィンドウのartistのセレクトボックスが何か選択された状態で、かつ子ウィンドウのartistが何も選択されていない状態
+				// 後者：子ウィンドウのアーティストが選択されているのに変更されてしまうのを防ぐ
+				if ((a = window.opener.document.getElementById('id_creator').value) && !document.getElementById('id_creator').value) {
+					document.getElementById('id_creator').value = a;
+				}
+			}
+		}
+	</script>
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}検索結果 - 路線 - {{ word }}{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
+<link rel="stylesheet" href="{% static 'moviedatabase/objectlist.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="detail-header">
+		<div class="detail-header-content">
+			<div class="detail-name">{% if word %}{{ word }}{% endif %}</div>
+			<div class="detail-name-sub">路線</div>
+			<div class="sub-name">
+				{% if word %}
+					キーワード：{{ word }}
+				{% endif %}
+			</div>
+			<div class="under-color line-background">
+				{{ paginator.count }}件
+			</div>
+			<div class="line-bottom">
+				<form action="" method="get" class="search-form">
+					<input type="textbox" name="word" class="search-box" value="{% if word %}{{ word }}{% endif %}">
+					<button class="search-button" type="submit"><i class="fas fa-search"></i></button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="main-content">
+		<div class="main-content-inner">
+			<div class="object-list">
+				<ul class="object-list-ul">
+				{% for l in lineservice_list %}
+					<li class="object-list-li">
+						<a href="{% url 'moviedatabase:movielistbylineservice' l.pk %}" class="line-color">
+							<div>
+								<span class="object-list-li-small">{{ l.company.short_text }}</span>
+								<span>{{ l.name }}</span>
+								{% if l.name_sub %}
+								<span class="object-list-li-small">({{ l.name_sub }})</span>
+								{% endif %}
+								{% if l.f_or_s %}
+								<span class="object-list-li-small">{{ l.f_or_s }}</span>
+								{% endif %}
+								{% if l.status_text %}
+								<span class="object-list-li-small">{{ l.status_text }}</span>
+								{% endif %}
+							</div>
+						</a>
+					</li>
+				{% endfor %}
+				{% include 'moviedatabase/includes/pagination.html' %}
+				</ul>
+			</div>
+			<div class="detail-side">
+			</div>
+		</div>
+	</div>
+	{% include 'moviedatabase/includes/footer.html' %}
+</div>
+{% endblock %}

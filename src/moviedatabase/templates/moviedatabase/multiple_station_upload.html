@@ -1,0 +1,401 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}exoファイルインポート{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/multiple_station_upload.css' %}">
+<div class="background">
+	<div class="main-container">
+		<h2 class="exo-upload-header">exoファイルインポート</h2>
+		<div class="title-line"></div>
+		<p class="exo-upload-notice">exoファイルをインポートします。インポートするとタイムラインが表示されます。ここから、駅名・路線名が並んでいるレイヤーを選択してください。</p>
+		<div class="exo-upload-form-container">
+			<div class="exo-upload-form-info">exoファイルを選択</div>
+			<div class="exo-upload-form-area">
+				<input type="file" id="exo" />
+			</div>
+			<div class="exo-upload-form-lower">
+				<div class="exo-upload-form-status"></div>
+				<button class="exo-upload-button" onclick="content()">内容表示</button>
+			</div>
+		</div>
+		<div class="title-line"></div>
+		<h3 class="exo-upload-h3">ファイル解析結果</h3>
+		<div id="timeline">
+
+			<div class="timeline-header">
+				<div id="timeline-left-header" class="layer-row">
+					<div class='timeline-header-station'>駅</div>
+					<div class='timeline-header-line'>路線</div>
+					<div class='timeline-header-num'>layer</div>
+				</div>
+			</div>
+
+			<div class="timeline-content">
+				<div class="timeline-left">
+					<div id="timeline-content-left-container">
+					</div>
+				</div>
+				<div class="timeline-right">
+					<div id="timeline-content-right-container">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="layer-determine-form">
+			<div class="layer-determine-form-status"></div>
+			<button class="layer-determine-button" onclick="layer_determine()">駅・路線レイヤー決定</button>
+		</div>
+		<div id="determined-timeline">
+			<div class="determined-timeline-content">
+				<div class="timeline-left">
+					<div id="determined-timeline-content-left-container">
+						<div class="timeline-content-left layer-row">
+							<div class="timeline-header-num">駅</div>
+						</div>
+						<div class="timeline-content-left layer-row">
+							<div class="timeline-header-num">路線</div>
+						</div>
+					</div>
+				</div>
+				<div class="timeline-right">
+					<div id="determined-timeline-content-right-container">
+						<div class="layer-row" id="layer-station">
+							<div id="layer-content-area-station" class="layer-content-area">
+							</div>
+						</div>
+						<div class="layer-row" id="layer-line">
+							<div id="layer-content-area-line" class="layer-content-area">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="title-line"></div>
+		<h3 class="exo-upload-h3">駅・路線編集</h3>
+		<div class="station-line-table-area">
+			<table id="station-line-table">
+				<tbody id="station-line-tbody">
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="submit-banner">
+		<div class="submit-banner-inner">
+			<div class="submit-content">
+				<div class="submit-form-status">
+				</div>
+				<button class="submit-button" id="modal-open">検索開始</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="modal-content">
+	<p>駅・路線の対応関係の編集結果は、予期せず破棄される恐れがあります。メモ帳やエクセル等に一時保存しておくことをおすすめします。</p>
+	<p>下のテキストボックスの中身をメモ帳やエクセルにコピペすると、再利用できます。</p>
+	<form action="{% url 'moviedatabase:multiplestationsearch' %}" method="POST" id="station-line-form">
+		<textarea name="station-line-list" cols="80" rows="20" id="station-line-list"></textarea>
+		{% csrf_token %}
+	</form>
+	<button class="submit-button" id="modal-close">キャンセル</button>
+	<button class="submit-button" form="station-line-form">検索開始</button>
+</div>
+{% endblock %}
+
+{% load static %}
+{% block extrajs %}
+<script type="text/javascript" src="{% static 'moviedatabase/encoding.js' %}"></script>
+<script type="text/javascript">
+	class ExoObject {
+		constructor() {
+			this.ID;
+			this.name;
+			this.overlay;
+			this.start;
+			this.end;
+			this.layer;
+			this.text;
+		}
+	}
+
+	exoObjects = [];
+	exoObjects_dic = {}
+	project_length = 0;
+
+	window.addEventListener('load', () => {
+		$('#exo').on('change', function(e) {
+			exoObjects = []
+			let input = e.target;
+			if (input.files.length == 0) {
+				return;
+			}
+			const file = input.files[0];
+			const reader = new FileReader();
+			reader.readAsBinaryString(file);
+			reader.onload = function(e) {
+				var result = e.target.result;
+				var sjisArray = str2Array(result);
+				var uniArray = Encoding.convert(sjisArray, 'UNICODE', 'SJIS');
+				var data = Encoding.codeToString(uniArray);
+
+				var lines = data.split(/\r?\n/);
+				for (let i = 0; i < lines.length; i++) {
+					ExoRead(lines[i]);
+				}
+			};
+
+		})
+	})
+
+	function content() {
+		timeline()
+	}
+
+	function content_clear() {
+		$('#timeline-content-left-container').empty()
+		$('#timeline-content-right-container').empty()
+	}
+
+	function generate_item(exoObject) {
+		left = exoObject.start;
+		width = exoObject.end - left;
+		text = exoObject.text
+		name = exoObject.name
+		if (text) {
+			return "<div class='layer-content layer-content-text' style='left: " + left + "px; width: " + width + "px;' title='" + text + "'>" + text + "</div>"
+		} else {
+			return "<div class='layer-content' style='left: " + left + "px; width: " + width + "px;' title='" + name + "'>" + name + "</div>"
+		}
+		
+	}
+
+	function layer_sort(layer) {
+		if (layer) {
+			layer.sort(function(a,b) {
+				return parseInt(a.start, 10) - parseInt(b.start, 10)
+			})
+			return layer
+		}
+		return []
+	}
+
+	function timeline() {
+		content_clear()
+		exoObjects_dic = {}
+		$('.layer-content-row').css('width', project_length + 'px')
+
+		maxlayer = 0
+		for (let i = 0; i < exoObjects.length; i++) {
+			l = parseInt(exoObjects[i].layer)
+			maxlayer = (maxlayer < l) ? l : maxlayer;
+		}
+
+		for (let i = 0; i < maxlayer; i++) {
+			left = "<div class='timeline-content-left layer-row'><div class='timeline-header-station'><input type='radio' name='station-layer' value=" + (i+1) + "></div><div class='timeline-header-line'><input type='radio' name='line-layer' value=" + (i+1) + "></div><div class='timeline-header-num'>" + (i+1) + "</div>"
+			$('#timeline-content-left-container').append(left)
+			right = "<div class='layer-row' id='layer-" + (i+1) + "' style='width: " + project_length + "px;'><div id='layer-content-area-" + (i+1) + "' class='layer-content-area'></div></div>"
+			$('#timeline-content-right-container').append(right)
+			exoObjects_dic[i+1] = []
+		}
+
+		for (let i = 0; i < exoObjects.length; i++) {
+			exoObjects_dic[exoObjects[i].layer].push(exoObjects[i])
+			text_item = generate_item(exoObjects[i])
+			$('#layer-content-area-' + exoObjects[i].layer).append(text_item)
+		}
+	}
+
+	function layer_determine() {
+		station_layer_num = parseInt($('input[name=station-layer]:checked').val())
+		line_layer_num = parseInt($('input[name=line-layer]:checked').val())
+
+		station_layer = layer_sort(exoObjects_dic[station_layer_num]);
+		line_layer = layer_sort(exoObjects_dic[line_layer_num]);
+
+		$('#station-layer-content-area').empty();
+		$('#line-layer-content-area').empty();
+
+		nowline = 0;
+		lstart = 0;
+		j = 0;
+		station_line_dic = new Array(station_layer.length);
+		for (let i = 0; i < station_layer.length; i++) {
+			text_item = generate_item(station_layer[i])
+			$('#layer-content-area-station').append(text_item)
+
+			if (station_layer[i].text == undefined) continue;
+			station_line_dic[i] = {
+				station: station_layer[i],
+				line: []
+			}
+
+			sstart = parseInt(station_layer[i].start)
+			send = parseInt(station_layer[i].end) + 1
+			nowline = sstart
+
+			while (nowline < send) {
+				if (j > line_layer.length-1) break;
+				lstart = parseInt(line_layer[j].start)
+				lend = parseInt(line_layer[j].end) + 1
+				if (Math.max(sstart, lstart) < Math.min(send, lend)) {
+					station_line_dic[i].line.push(line_layer[j])
+				}
+				nowline = Math.min(send, lend)
+				if (lend <= send) j++;
+			}
+			nowline = send
+		}
+
+		for (let i = 0; i < line_layer.length; i++) {
+			text_item = generate_item(line_layer[i])
+			$('#layer-content-area-line').append(text_item)
+		}
+
+		station_line_result = []
+		for (let i = 0; i < station_line_dic.length; i++) {
+			dic = station_line_dic[i]
+			if (!dic) continue;
+			if (dic.line.length == 0) {
+				ele = {
+					station: dic.station.text,
+					line: ""
+				}
+				station_line_result.push(ele)
+			} else {
+				for (let j = 0; j < dic.line.length; j++) {
+					ele = {
+						station: dic.station.text,
+						line: dic.line[j].text
+					}
+					station_line_result.push(ele)
+				}
+			}
+		}
+
+		$('#station-line-tbody').empty();
+		for (let i = 0; i < station_line_result.length; i++) {
+			tr = generate_tr(station_line_result[i].station, station_line_result[i].line)
+			$('#station-line-tbody').append(tr)
+		}
+
+		$('.submit-button').prop('disabled', false)
+	}
+
+	function generate_tr(station, line) {
+		return "<tr><td><div class='station-line-sortable'><a class='sortable-handle'><i class='fas fa-bars' aria-hidden='true'></i></a></div></td><td><input type='text' value='" + station + "' class='station-input'></td><td><input type='text' value='" + line + "' class='line-input'></td><td><div class='station-line-delete'><a class='sortable-delete'><i class='fas fa-times' aria-hidden='true'></i></a></div></td><td><div class='station-line-insert'><button class='sortable-insert'>下に挿入</button></div></td></tr>"
+	}
+
+	function str2Array(str) {
+		var array = [], i, il=str.length;
+		for(i=0;i<il;i++) array.push(str.charCodeAt(i));
+		return array;
+	}
+
+	var flag = -1;
+
+	function ExoRead(text) {
+		var arr = text.split('=');
+		if (arr[0] == "length") project_length = arr[1]
+
+		if (arr.length == 1) {
+			if (arr[0][0] == '[') {
+				arr = arr[0].split('[')[1].split(']')[0].split('.');
+				if (arr.length == 1) {
+					if (arr[0] != "exedit") {
+						let object_num = arr[0];
+						var exoObject = new ExoObject();
+						exoObject.ID = object_num;
+						exoObjects.push(exoObject)
+					}
+				} else {
+					var object_num_sub = arr[1];
+					if (object_num_sub == 0) {
+						flag = 1;
+					}
+				}
+			}
+		} else if (arr[0] == "chain") {
+			exoObjects[exoObjects.length - 2].end = exoObjects[exoObjects.length - 1].end;
+			exoObjects.pop()
+		} else if (arr[0] == "_name" && flag == 1) {
+			exoObjects[exoObjects.length - 1].name = arr[1];
+			flag = -1;
+		} else if (arr[0] == "overlay") {
+			exoObjects[exoObjects.length - 1].overlay = arr[1];
+		} else if (arr[0] == "start") {
+			exoObjects[exoObjects.length - 1].start = arr[1];
+		} else if (arr[0] == "end") {
+			exoObjects[exoObjects.length - 1].end = arr[1];
+		} else if (arr[0] == "layer") {
+			exoObjects[exoObjects.length - 1].layer = arr[1];
+		} else if (arr[0] == "text") {
+			var hex = arr[1].match(/.{1,4}/g) || [];
+			var string = '';
+			for (let i = 0; i < hex.length; i++) {
+				if (hex[i] == "0000") break;
+				var h = hex[i].substr(2,2) + hex[i].substr(0,2)
+				string += String.fromCharCode(parseInt(h, 16))
+			}
+			exoObjects[exoObjects.length - 1].text = string;
+		}
+	}
+
+	$(function() {
+		$('#station-line-tbody').sortable({
+			handle: ".sortable-handle",
+		});
+	})
+
+	$(document).on('click', '.sortable-delete', function() {
+		$(this).parents("tr").remove();
+	})
+
+	$(document).on('click', '.sortable-insert', function() {
+		tr = generate_tr("", "")
+		$(this).parents("tr").after(tr);
+	})
+
+	$('#modal-open').click(function() {
+		$(this).blur();
+		if ($('#modal-overlay')[0]) return false;
+
+		text = ""
+		$("#station-line-tbody tr").each(function(i, val) {
+			station = $(val).find('.station-input').val()
+			line = $(val).find('.line-input').val()
+			text += station + "\t" + line;
+			if (i != $("#station-line-tbody tr").length-1) text += "\n"
+		})
+		$('#station-line-list').val(text)
+
+		$('body').append("<div id='modal-overlay'></div>");
+		$('#modal-overlay').fadeIn("fast");
+
+		centeringModalSyncer();
+		$('#modal-content').fadeIn("fast");
+
+		$("#modal-overlay,#modal-close").unbind().click(function() {
+			$("#modal-content, #modal-overlay").fadeOut("fast", function() {
+				$("#modal-overlay").remove();
+			})
+		})
+	})
+
+	$(window).resize(centeringModalSyncer)
+
+	function centeringModalSyncer() {
+		var w = window.innerWidth;
+		var h = window.innerHeight;
+		var cw = $("#modal-content").outerWidth();
+		var ch = $("#modal-content").outerHeight();
+		var pxleft = ((w-cw)/2);
+		var pxtop = ((h-ch)/2);
+		$('#modal-content').css({"left": pxleft + "px"});
+		$('#modal-content').css({"top": pxtop + "px"});
+	}
+
+</script>
+{% endblock %}

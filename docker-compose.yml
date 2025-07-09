@@ -1,0 +1,30 @@
+version: '3'
+services:
+  web:
+    container_name: "stanmicdb_web"
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    command: python3 src/manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  db:
+    container_name: "stanmicdb_db"
+    image: mysql:8.3
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_USER: ${DATABASE_USER}
+      MYSQL_PASSWORD: ${DATABASE_PASS}
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASS}
+    volumes:
+      - mysql:/var/lib/mysql
+    ports: 
+      - "3306"
+        
+volumes:
+  mysql:

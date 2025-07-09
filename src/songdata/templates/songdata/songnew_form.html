@@ -1,0 +1,54 @@
+{% extends 'moviedatabase/base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/setting.css' %}">
+	<form action="" method="POST">
+		<div class="background">
+			<table class="song-table">
+				<tr>
+					<th></th>
+					<th>名称</th>
+					<th>読みカナ</th>
+				</tr>
+				<tr>
+					<th class="right">曲名</th>
+					<td>{{ form.song_name }}</td>
+					<td>{{ form.song_name_kana }}</td>
+				</tr>
+				<tr>
+					<th class="right">
+						アーティスト名<br>
+						<span class="form-notice">複数いる場合は、改行で区切ってください。</span>
+					</th>
+					<td>{{ form.artist_name }}</td>
+					<td>{{ form.artist_name_kana }}</td>
+				</tr>
+				<tr>
+					<th class="right">
+						タグ<br>
+						<span class="form-notice">複数ある場合は、改行で区切ってください。</span>
+					</th>
+					<td>{{ form.tag }}</td>
+					<td></td>
+				</tr>
+			</table>
+			{% csrf_token %}
+			<div class="submit-banner">
+				<div class="submit-banner-inner">
+					<div class="submit-content">
+						<div class="submit-form-status">
+							{% for field, errors in form.errors.items %}
+								{% for error in errors %}
+									<p>{{ error }} (Error in {{ field }})</p>
+								{% endfor %}
+							{% endfor %}
+						</div>
+						<button onclick="submit();" class="submit-button">登録</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+{% endblock %}
+{% block extrajs %}
+{% endblock %}

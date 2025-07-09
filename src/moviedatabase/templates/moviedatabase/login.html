@@ -1,0 +1,41 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}ログイン{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/login.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="login-main-container">
+		<h2 class="login-header">ログイン</h2>
+		<div class="login-box">
+			<a href="{% url 'social:begin' 'google-oauth2' %}" class="google-button">
+				<img src="{% static 'moviedatabase/base/btn_google_signin_dark_normal_web.png' %}">
+				<img src="{% static 'moviedatabase/base/btn_google_signin_dark_focus_web.png' %}">
+			</a>
+			<div class="login-border"></div>
+			<form method="post">
+				<div class="login-form">
+					{% csrf_token %}
+					<div>
+						<p>ユーザー名</p>
+						<p>{{ form.username }}</p>
+					</div>
+					<div>
+						<p>パスワード</p>
+						<p>{{ form.password }}</p>
+					</div>
+				</div>
+				<div class="login-border"></div>
+				<div class="button-container">
+					<button type="submit">ログイン</button>
+					<input type="hidden" name="next" value="{{ next }}">
+				</div>
+				<p class="login-p">会員登録またはログインすると、<a href="{% url 'moviedatabase:terms' %}">利用規約</a>及び<a href="{% url 'moviedatabase:privacy' %}">プライバシーポリシー</a>に同意したものとします。</p>
+			</form>
+		</div>
+	</div>
+	{% include 'moviedatabase/includes/footer.html' %}
+</div>
+{% endblock %}

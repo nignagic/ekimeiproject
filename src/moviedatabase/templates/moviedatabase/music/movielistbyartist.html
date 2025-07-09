@@ -1,0 +1,87 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}{{ artist }}{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="detail-header">
+		<div class="detail-header-content">
+			<span class="detail-category artist-background">アーティスト</span>
+			<div class="detail-name">{{ artist }}</div>
+			<div class="detail-name-sub">{{ artist.name_kana }}</div>
+			<div class="sub-name">
+			</div>
+			<div class="under-color artist-background">
+			</div>
+			<div class="line-bottom">
+			</div>
+		</div>
+	</div>
+
+	<div class="main-content">
+		<div class="main-content-inner">
+			<div class="detail-movie-list">
+				<h4 class="movie-list-header artist-border">動画一覧</h4>
+				{% include 'moviedatabase/includes/movielist.html' %}
+				{% include 'moviedatabase/includes/pagination.html' %}
+			</div>
+			<div class="detail-side">
+				{% if artist.parent.all %}
+				<h4 class="side-header artist-border">所属</h4>
+				<ul class="side-list-ul">
+					{% for a in artist.parent.all %}
+					<li class="side-list-li">
+						<a href="{% url 'moviedatabase:movielistbyartist' a.pk sort order %}" class="artist-color">{{ a }}</a>
+					</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+				{% if artist.related.all %}
+				<h4 class="side-header artist-border">関連アーティスト</h4>
+				<ul class="side-list-ul">
+					{% for a in artist.related.all %}
+					<li class="side-list-li">
+						<a href="{% url 'moviedatabase:movielistbyartist' a.pk sort order %}" class="artist-color">{{ a }}</a>
+					</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+				{% if artist.cv.set.all %}
+				<h4 class="side-header artist-border">担当</h4>
+				<ul class="side-list-ul">
+					{% for a in artist.cv.set.all %}
+					<li class="side-list-li">
+						<a href="{% url 'moviedatabase:movielistbyartist' a.pk sort order %}" class="artist-color">{{ a }}</a>
+					</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+				{% if artist.cv %}
+				<h4 class="side-header artist-border">担当声優</h4>
+				<li class="side-list-li">
+					<a href="{% url 'moviedatabase:movielistbyartist' artist.cv.pk sort order %}" class="artist-color">{{ artist.cv }}</a>
+				</li>
+				{% endif %}
+
+				<h4 class="side-header song-border">楽曲</h4>
+				{% if songs %}
+				<ul class="side-list-ul">
+					{% for song in songs %}
+					<li class="side-list-li">
+						<a href="{% url 'moviedatabase:movielistbysong' song.pk sort order %}" class="song-color">{{ song }}</a>
+					</li>
+					{% endfor %}
+				</ul>
+				<div style="text-align: right;"><a href="{% url 'moviedatabase:songlistbyartist' artist.pk 'all' %}" class="side-right-a song-background song-color song-border">＞ もっと見る</a></div>
+				{% else %}
+				<p class="side-p">該当する楽曲が見つかりませんでした。</p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	{% include 'moviedatabase/includes/footer.html' %}
+</div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% load static %}
+	
+	<div class="header-container">
+		<div class="header">
+			<h1 class="header-title">
+				<a href="{% url 'moviedatabase:top' %}">
+					<img class="header-logo" src="{% static 'moviedatabase/base/logo.png' %}">
+					<img class="header-logo-sp" src="{% static 'moviedatabase/base/sp_banner.png' %}">
+				</a>
+			</h1>
+			<div class="header-content">
+				<div class="header-content-upper">
+					<p class="header-search-title">フリー検索</p>
+					<form action="{% url 'moviedatabase:freesearch' %}" method="get" class="header-search-form">
+						<input type="textbox" name="word" class="header-search-box" value="">
+						<button class="header-search-button" type="submit"><i class="fas fa-search"></i></button>
+					</form>
+					/
+					<div class="login-out">
+					{% if user.is_authenticated %}
+						<p class="display-4">
+							<a class="mypage" href="{% url 'moviedatabase:mypage' %}">マイページ</a>
+							{% if user.creator %}
+							<a class="mypage" href="{% url 'moviedatabase:register' %}">動画登録</a>
+							{% endif %}
+							<a class="lead login-out-button" href="{% url 'moviedatabase:logout' %}">ログアウト</a>
+						</p>
+					{% else %}
+						<a class="lead login-out-button" href="{% url 'moviedatabase:login' %}">ログイン</a>
+					{% endif %}
+					</div>
+				</div>
+				<ul class="header-menu">
+					<li class="header-menu-li">
+						<a href="{% url 'moviedatabase:railwaytop' %}" class="railway-background">
+							<div class="header-menu-li-a-inner">
+								<p class="railway-border">鉄道から探す</p>
+							</div>
+						</a>
+					</li>
+					<li class="header-menu-li">
+						<a href="{% url 'moviedatabase:creatortop' %}" class="creator-background">
+							<div class="header-menu-li-a-inner">
+								<p class="creator-border">作者から探す</p>
+							</div>
+						</a>
+					</li>
+					<li class="header-menu-li">
+						<a href="{% url 'moviedatabase:musictop' %}" class="music-background">
+							<div class="header-menu-li-a-inner">
+								<p class="music-border">楽曲から探す</p>
+							</div>
+						</a>
+					</li>
+				</ul>
+
+			</div>
+		</div>
+	</div>

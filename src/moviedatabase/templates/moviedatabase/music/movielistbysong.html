@@ -1,0 +1,105 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}{{ song }}{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="detail-header">
+		<div class="detail-header-content">
+			<span class="detail-category song-background">楽曲</span>
+			<div class="detail-name">{{ song }}</div>
+			<div class="detail-name-sub">{{ song.name_kana }}</div>
+			<div class="sub-name">
+			</div>
+			<div class="under-color song-background">
+				<div style="width: 80%; margin: 0 auto; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+					{% for a in artist %}
+						{{ a }}
+						{% if forloop.last %}
+						{% else %}
+						 / 
+						{% endif %}
+					{% endfor %}
+				</div>
+			</div>
+			<div class="line-bottom">
+			</div>
+		</div>
+	</div>
+
+	<div class="main-content">
+		<div class="main-content-inner">
+			<div class="detail-movie-list">
+				<h4 class="movie-list-header song-border">動画一覧</h4>
+				{% include 'moviedatabase/includes/movielist.html' %}
+				{% include 'moviedatabase/includes/pagination.html' %}
+			</div>
+			<div class="detail-side">
+				{% if song.original %}
+				<h4 class="side-header song-border">原作</h4>
+				<div id="song-original" class="youtube-frame" data-url="{{ song.original }}"></div>
+				{% endif %}
+				{% if artist %}
+				<h4 class="side-header song-border">アーティスト</h4>
+				<ul class="side-list-ul">
+					{% for a in artist %}
+					<li class="side-list-li">
+						<a href="{% url 'moviedatabase:movielistbyartist' a.pk sort order %}" class="artist-color">{{ a }}</a>
+					</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+				{% if song.tieup %}
+				<h4 class="side-header song-border">タイアップ等</h4>
+				<p class="side-p">{{ song.tieup }}</p>
+				{% endif %}
+				{% if song.description %}
+				<h4 class="side-header song-border">説明</h4>
+				<p class="side-p">{{ song.description }}</p>
+				{% endif %}
+				{% if song.parent.all %}
+				<h4 class="side-header song-border">関連楽曲</h4>
+				<ul class="side-list-ul">
+					{% for s in song.parent.all %}
+					<li class="side-list-li">
+						<a href="{% url 'moviedatabase:movielistbysong' s.pk sort order %}" class="song-color">{{ s }}</a>
+					</li>
+					{% endfor %}
+				</ul>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	{% include 'moviedatabase/includes/footer.html' %}
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script type="text/javascript">
+	$(function() {
+		url = $('#song-original').data('url');
+
+		YouTubeIdstartnum = url.indexOf("v=");
+		niconicoIdstartnum = url.indexOf("watch/");
+		if (YouTubeIdstartnum != -1) {
+			videoId = url.substr(YouTubeIdstartnum+2, 11);
+			$('#song-original').append("<iframe src='https://www.youtube.com/embed/" + videoId + "' width='1280' height='720' frameborder='0' gesture='media' allowfullscreen></iframe>");
+		} else if (niconicoIdstartnum != -1) {
+			videoId = url.substr(niconicoIdstartnum+6, 10);
+			target = document.getElementById('song-original');
+			var write = document.write;
+			document.write = function(arg) {
+				target.innerHTML = arg;
+				document.write = write;
+			}
+			script = document.createElement('script')
+			script.setAttribute('type', 'text/javascript');
+			script.setAttribute('src', "https://embed.nicovideo.jp/watch/" + videoId + "/script?w=640&h=360");
+			target.appendChild(script);
+		}
+	})
+</script>
+{% endblock %}

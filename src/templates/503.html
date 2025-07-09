@@ -1,0 +1,17 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}メンテナンス中{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/login.css' %}">
+<div class="background">
+	<div class="login-main-container">
+		<h2 class="login-header">メンテナンス中</h2>
+		<div class="login-box">
+			現在、メンテナンス中です。しばらくお待ちください。
+			<div class="login-p">駅名動画データベース 運営：(<a href="https://twitter.com/nignag_IC">@nignag_IC</a>)</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+<html>
+	<head></head>
+	<body>
+		<script type="text/javascript">
+			var list = '{{ movie_list }}';
+			var movie_type = '{{ movie_type }}'
+			window.opener.add_selected_movie(list, movie_type);
+			window.close();
+		</script>
+	</body>
+</html>

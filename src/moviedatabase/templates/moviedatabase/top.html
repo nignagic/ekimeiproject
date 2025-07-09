@@ -1,0 +1,114 @@
+{% extends 'moviedatabase/base.html' %}
+{% load tz %}
+
+{% block title %}トップ{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/top.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<section class="top-menu-container">
+		<div class="top-menu-background" style="background-image: url({% static 'moviedatabase/img-top/' %}{{ top_img.file_name }})">
+		</div>
+		<div class="top-search-container">
+			<div class="top-search">
+				フリーワード検索
+				<form action="{% url 'moviedatabase:freesearch' %}" method="get" class="search-form">
+					<input type="textbox" name="word" class="search-box" value="{% if word %}{{ word }}{% endif %}">
+					<button class="search-button" type="submit"><i class="fas fa-search"></i></button>
+				</form>
+			</div>
+		</div>
+		<nav class="top-menu">
+			<ul>
+				<li>
+					<a href="{% url 'moviedatabase:railwaytop' %}" class="railway-background">鉄道から探す</a>
+				</li>
+				<li>
+					<a href="{% url 'moviedatabase:creatortop' %}" class="creator-background">作者から探す</a>
+				</li>
+				<li>
+					<a href="{% url 'moviedatabase:musictop' %}" class="music-background">楽曲から探す</a>
+				</li>
+			</ul>
+		</nav>
+	</section>
+	<section class="top-movie-list">
+		{% load cache %}
+		{% cache 600 movielist %}
+		<div class="movie-list-left">
+			<h4 class="content-header movie-border">新着動画<span style="font-weight: normal;font-size: 0.7rem;padding-left: 1rem;">10分に一度更新</span></h4>
+			{% if movie_list %}
+				{% include 'moviedatabase/includes/movielist.html' %}
+			{% else %}
+				<p>該当する動画が見つかりませんでした。</p>
+			{% endif %}
+			<a href="{% url 'moviedatabase:movielist' %}">もっと見る</a>
+		</div>
+		{% endcache %}
+		<div class="movie-list-right">
+			<h4 class="content-header movie-border">公式ツイート</h4>
+			<div class="tweets">
+				<!-- <div class="movie-list-right-inner">ここに何かを置く(未定)</div> -->
+				<a class="twitter-timeline" href="https://twitter.com/STANMIC_DB?ref_src=twsrc%5Etfw">Tweets by STANMIC_DB</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+			</div>
+		</div>
+	</section>
+	<section class="top-movie-list">
+		<div class="top-today-movie">
+			<h5 class="content-header movie-border">今日の動画（{{ today|timezone:'Asia/Tokyo'|date:"n月j日" }}）</h5>
+			<div class="today-movie-container">
+			{% if todaymovie %}
+				<div class="movie-card">
+					<a href="{% url 'moviedatabase:detail' todaymovie.main_id %}">
+						<img class="movie-img" src="https://i.ytimg.com/vi/{{ todaymovie.youtube_id }}/hqdefault.jpg">
+						<div class="movie-info">
+				{% load tz %}
+							<p class="movie-published">{{ todaymovie.published_at|timezone:'Asia/Tokyo'|date:"Y/n/j" }}<span class="movie-category">{{ todaymovie.get_is_collab_display  }}</span>{% for c in movie.category %}{% if c %}<span class="movie-category">{{ c }}</span>{% endif %}{% endfor %}</p>
+							<p class="movie-title"><span>{{ todaymovie.title }}</span></p>
+							<p><span class="movie-channel">{{ todaymovie.channel }}</span><span class="movie-duration"> - {{ todaymovie.get_duration }}</span></p>
+						</div>
+					</a>
+				</div>
+			{% else %}
+				<div>今日の動画はありません</div>
+			{% endif %}
+				<p class="today-movie-description">ここでは、データベースにある動画の中から、今日と同じ日付に投稿された動画をランダムに紹介しています。
+			</div>
+		</div>
+	</section>
+	<section class="top-notice-container">
+		<div class="top-notice">
+			<h5 class="content-header movie-border">お知らせ</h5>
+			<ul class="notice-ul">
+				{% for info in notice_list %}
+				<li class="update-li">
+					<p class="update-top">{{ info.reg_date|timezone:'Asia/Tokyo'|date:"Y/n/j" }}　<span>{{ info.category }}</span></p>
+					<div class="update-bottom"><a href="{% url 'moviedatabase:notice' info.pk %}">{{ info.head }}</a></div>
+				</li>
+				{% endfor %}
+			</ul>
+			<a href="{% url 'moviedatabase:noticelist' %}">もっと見る</a>
+		</div>
+		<div class="top-update">
+			<h5 class="content-header movie-border">更新情報</h5>
+			<ul class="update-ul">
+				{% for info in update_list %}
+				<li class="update-li">
+					{% if info.movie %}
+						<p class="update-top">{{ info.reg_date|timezone:'Asia/Tokyo'|date:"Y/n/j" }}　<span>動画{{ info.get_is_create_display }}</span></p>
+						<div class="update-bottom">「<a href="{% url 'moviedatabase:detail' info.movie.main_id %}">{{ info.movie }}</a>」を{{ info.get_is_create_display }}しました</div>
+					{% elif info.creator %}
+						<p class="update-top">{{ info.reg_date|timezone:'Asia/Tokyo'|date:"Y/n/j" }}　<span>作者{{ info.get_is_create_display }}</span></p>
+						<div class="update-bottom">「<a href="{% url 'moviedatabase:movielistbycreator' info.creator.pk %}">{{ info.creator }}</a>」を{{ info.get_is_create_display }}しました</div>
+					{% endif %}
+				</li>
+				{% endfor %}
+			</ul>
+			<a href="{% url 'moviedatabase:updatelist' %}">もっと見る</a>
+		</div>
+	</section>
+	{% include 'moviedatabase/includes/footer.html' %}
+</div>
+{% endblock %}

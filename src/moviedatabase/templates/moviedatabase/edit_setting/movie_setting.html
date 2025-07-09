@@ -1,0 +1,117 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/setting.css' %}">
+	<form action="" method="POST">
+		<div class="background">
+			<div class="channel_movie_container" style="display: flex; height: 50%;">
+				<div class="channel">
+					<h3>チャンネル一覧</h3>
+					<select name="channel" id="id_channel" size="18">
+						{% for channel in channels %}
+						<option value="{{ channel.pk }}" class="channel-option">{{ channel }}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="movie">
+					<h3>動画</h3>
+					<select name="movie" id="id_movie" size="18">
+						{% for movie in movies %}
+						<option value="{{ movie.pk }}" class="movie-option" style="display: none;">{{ movie }}</option>
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+			<div class="channel_movie_container" style="display: flex; height:50%;">
+				<div id="selected-movie-container">
+					<h3>選択済みリスト[{% if movie_type == "parent" %}親作品{% else %}関連作品{% endif %}]</h3>
+					<div id="selected-movie-div-list">
+					</div>
+				</div>
+				<input type="hidden" name="selected-movie-list" id="selected-movie-list" value="">
+			{% csrf_token %}
+			</div>
+			{% if movie_type == "parent" %}
+				<input type="hidden" name="movie_type" value="parent">
+			{% else %}
+				<input type="hidden" name="movie_type" value="related">
+			{% endif %}
+			<div class="submit-banner">
+				<div class="submit-banner-inner">
+					<div class="submit-content">
+						<div class="submit-form-status">
+						</div>
+						<button onclick="submit();" class="submit-button">決定</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+{% endblock %}
+{% block extrajs %}
+	<script type="text/javascript">
+		selected_movies = []
+		
+		window.onload = function() {
+			type = $('input[name="movie_type"]').val()
+
+			if (type == "parent") {
+				opener_movies = window.opener.$('.selected_parent_movie')
+			} else if (type == "related") {
+				opener_movies = window.opener.$('.selected_related_movie')
+			}
+
+			// 親ウィンドウの存在チェック
+			if (!window.opener || window.opener.closed || !opener_movies) {
+				console.log('There is no window opener');
+			} else {
+				if (opener_movies) {
+					opener_movies.each(function(i, val) {
+						movie_append(val.value)
+					})
+				}
+			}
+
+			$(document).on('dblclick', '.movie-option', function() {
+				movie_append($(this).val())
+			})
+
+			$(document).on('click', '.delete-button', function() {
+				div = $(this).parent('.selected-movie')
+				div.hide();
+
+				val = div.data("id");
+				const new_selected_movies = selected_movies.filter(n => n !== String(val));
+				selected_movies = new_selected_movies
+				$('#selected-movie-list').val(selected_movies);
+			})
+
+		}
+
+		//チャンネル名を選択した時の挙動
+		$(document).on('click', '.channel-option', function() {
+			channel = $(this).val();
+			var s = "/api/channel/" + channel + "/movie/?format=json";
+			$('#id_movie').empty();
+			$.getJSON(s, function(data) {
+				for (var i in data) {
+					var op_movie = "<option value='" + data[i].movie_pk + "'  class='movie-option'>" + data[i].movie_name + "</option>"
+					$("#id_movie").append(op_movie);
+				}
+			})
+		})
+
+		function movie_append(val) {
+			selected_movies.push(val);
+			$('#selected-movie-list').val(selected_movies);
+
+			movie = $('select#id_movie option[value="'+val+'"]')
+			name = $(movie).text();
+			$('#selected-movie-div-list').append("<div class='selected-movie' data-id='"+val+"'><p>"+name+"</p><a class='delete-button'><i class='fas fa-times'></i></a></div>");
+
+			console.log($('#selected-movie-list').val())
+		}
+	</script>
+{% endblock %}

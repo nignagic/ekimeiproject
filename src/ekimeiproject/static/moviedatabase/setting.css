@@ -1,0 +1,232 @@
+body {
+	font-family: "游ゴシック Medium", "Yu Gothic Medium", "游ゴシック体", YuGothic, "Noto Sans Japanese", Meiryo, メイリオ, "Hiragino Kaku Gothic ProN", "ヒラギノ角ゴ ProN W3", sans-serif;
+	margin: 0;
+	padding: 0;
+	color: #000;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 700;
+	line-height: 1;
+	letter-spacing: calc(33em / 1000);
+}
+
+* {
+	box-sizing: border-box;
+	word-wrap: break-word;
+	line-height: 1.5em;
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	text-decoration: none;
+	color: #027181;
+}
+
+a:hover {
+	color: #1cb1c4;
+}
+
+a. button {
+	color: inherit;
+	font-weight: inherit;
+	cursor: pointer;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-size: 100%;
+	font-weight: inherit;
+	line-height: inherit;
+}
+
+ul, li {
+	list-style: none;
+}
+
+input, select {
+	font: inherit;
+	font-size: 0.9rem;
+	font-weight: normal;
+}
+
+.background {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.add_button {
+	display: inline-block;
+	color: #fff;
+	padding: 0.2rem 0.4rem;
+}
+
+.add_button:hover {
+	background-color: #ccc;
+}
+
+.creator_name_container,
+.channel_movie_container,
+.artist_song_container,
+.vocal_container {
+	margin: 0 auto;
+	padding: 2rem;
+	width: 100%;
+	max-width: 1080px;
+	display: flex;
+	flex: 1;
+}
+
+.creator,
+.channel,
+.vocal {
+	width: 100%;
+	flex: 1;
+	padding: 0 1rem 0 0;
+}
+
+.name {
+	width: 100%;
+	flex: 1;
+	padding: 0 1rem 0 0;
+}
+
+.movie,
+#selected-participant-container,
+#selected-movie-container,
+#selected-vocal-container {
+	width: 100%;
+	flex: 2;
+}
+
+select {
+	overflow-y: scroll;
+	border: 1px solid #ccc;
+	margin: 0 0.4rem 0 0;
+	padding: 2px;
+	width: 100%;
+	height: calc(100% - 2rem);
+	border: 0;
+}
+
+option {
+	padding: 2px 4px;
+	background-color: #eee;
+	margin: 2px;
+	font-weight: bold;
+}
+
+#selected-participant-div-list,
+#selected-movie-div-list,
+#selected-song-div-list,
+#selected-vocal-div-list {
+	padding: 0.5rem;
+}
+
+.selected-movie,
+.selected-participant,
+.selected-song,
+.selected-vocal {
+	margin-bottom: 4px;
+	padding: 0.5rem 1rem;
+	box-shadow: 0px 0px 8px rgb(0 0 0 / 40%);
+	display: flex;
+	justify-content: space-between;
+}
+
+.delete-button {
+	display: block;
+}
+
+.delete-button i {
+    color: #fff;
+    background-color: #d51111;
+    border: 2px solid #d51111;
+    padding: 2px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.song-table,
+.name-table {
+	padding: 1rem;
+}
+
+.song-table td,
+.song-table th {
+	padding: 0.4rem;
+}
+
+.name-table td,
+.name-table th {
+	padding: 1rem;
+}
+
+.song-table td,
+.name-table td {
+	background-color: #f7f7f7;
+}
+
+.right {
+	text-align: right;
+}
+
+.song-table input[type='text'],
+.song-table textarea,
+.name-table select {
+	width: 16rem;
+}
+
+.form-notice {
+	font-size: 0.8rem;
+	font-weight: normal;
+}
+
+/*送信ボタン*/
+.submit-banner {
+	width: 100%;
+	height: 80px;
+	background-color: white;
+	box-shadow: 0 -2px 8px 0px rgba(0, 0, 0, 0.4);
+}
+
+.submit-banner-inner {
+	width: 100%;
+	max-width: 1080px;
+	margin: 0 auto;
+	padding: 1rem 2rem;
+}
+
+.submit-content {
+	display: flex;
+	justify-content: flex-end;
+	align-items: flex-start;
+}
+
+.submit-form-status {
+	font-weight: normal;
+	font-size: 0.9rem;
+	color: #cc0000;
+	flex: 1;
+}
+
+.submit-button {
+	margin: 0 0 0 1rem;
+	padding: 0.6rem 1.2rem;
+	color: #fff;
+	border-radius: 0.4rem;
+	font: inherit;
+	display: block;
+	border: 2px solid #3846ac;
+	background-color: #3846ac;
+	cursor: pointer;
+	transition: all .3s;
+}
+
+.submit-button:hover {
+	background-color: #fff;
+	color: #3846ac;
+}

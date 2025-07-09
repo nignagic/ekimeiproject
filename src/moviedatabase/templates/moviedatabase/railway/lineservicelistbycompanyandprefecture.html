@@ -1,0 +1,59 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block title %}路線 - {{ company }} - {{ pref }}{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
+<link rel="stylesheet" href="{% static 'moviedatabase/objectlist.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="detail-header">
+		<div class="detail-header-content">
+			<div class="detail-name">{{ pref }}</div>
+			<div class="detail-name-sub">路線一覧</div>
+			<div class="sub-name">
+			</div>
+			<div class="under-color line-background">
+				事業者：{{ company.short_name }}
+			</div>
+			<div class="line-bottom">
+			</div>
+		</div>
+	</div>
+
+	<div class="main-content">
+		<div class="main-content-inner">
+			<div class="object-list">
+				<ul class="object-list-ul">
+				{% for l in lineservice_list %}
+					<li class="object-list-li">
+						<a href="{% url 'moviedatabase:movielistbylineservice' l.pk %}" class="line-color">
+							<span class="object-list-li-small">{{ l.company.short_text }}</span>
+							<span>{{ l.name }}</span>
+							{% if l.name_sub %}
+							<span class="object-list-li-small">({{ l.name_sub }})</span>
+							{% endif %}
+							{% if l.f_or_s %}
+							<span class="object-list-li-small">{{ l.f_or_s }}</span>
+							{% endif %}
+							{% if l.status_text %}
+							<span class="object-list-li-small">{{ l.status_text }}</span>
+							{% endif %}
+						</a>
+					</li>
+				{% endfor %}
+				</ul>
+				{% include 'moviedatabase/includes/pagination.html' %}
+			</div>
+			<div class="detail-side">
+				<li class="side-list-li">
+					<a href="{% url 'moviedatabase:lineservicelistbyprefecture' pref.pk %}" class="line-color">{{ pref }} の路線をすべて見る</a>
+					<a href="{% url 'moviedatabase:lineservicelistbycompany' company.pk %}" class="line-color">{{ company.short_name }} の路線をすべて見る</a>
+				</li>
+			</div>
+		</div>
+	</div>
+	{% include 'moviedatabase/includes/footer.html' %}
+</div>
+{% endblock %}

@@ -1,0 +1,184 @@
+{% extends 'stationdata/base.html' %}
+{% load tags %}
+
+{% block title %}駅登録{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'stationdata/register.css' %}">
+
+<h2>駅登録 - <small>{{ line }}</small></h2>
+<div class="main-container">
+	<div class="station-list-container">
+		<div>名称<br><textarea name="station-list" cols="10" rows="10" id="station-name-list"></textarea></div>
+		<div>読み(かな)<br><textarea name="station-list" cols="10" rows="10" id="station-k-list"></textarea></div>
+		<div>都道府県<br><textarea name="station-list" cols="10" rows="10" id="station-pref-list"></textarea></div>
+		<div>状態<br><textarea name="station-list" cols="10" rows="10" id="station-status-list"></textarea></div>
+	</div>
+	<input type="button" class="station-append" value="駅追加">
+
+	<form action="" method="POST">
+		{{ formset.management_form }}
+		<div class="station-form-container">
+			{% for form in formset %}
+			<div class="station-each-form">
+				<div class="station-sortable">
+					<span class="sortable-handle">■</span>
+				</div>
+				<div class="group-station">
+					<div class="group-station-set">
+						<input type="text" data-id="{{ form.id.value }}" value="" class="group-station-searchbox" id="group-station-searchbox-{{ form.id.value }}">
+						<input type="button" class="group-station-search" data-id="{{ form.id.value }}" value="検索">
+						<br>
+						<select size="5" id="group-station-select-{{ form.id.value }}" data-id="{{ form.group_station_new.id_for_label }}"></select>
+					</div>
+					<div class="group-station-name">{{ form.group_station_new.value|get_group_station }}</div>
+					<div class="group-station-line-container">
+					{% for l in form.group_station_new.value|get_group_station_line %}
+						<div class="group-station-line">{{ l }}</div>
+					{% endfor %}
+					</div>
+				</div>
+				<table class="station-form">
+					{{ form.as_table }}
+				</table>
+			</div>
+			{% endfor %}
+		</div>
+		{% csrf_token %}
+		<button type="submit" class="btn">送信</button>
+	</form>
+	<div class="prefs">
+		{% for p in prefs %}
+		<div data-name="{{ p }}" data-id="{{ p.pk }}"></div>
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script>
+	$(function() {
+		var prefs = {}
+
+		$('.prefs').children('div').each(function() {
+			name = $(this).data("name")
+			prefid = $(this).data("id")
+			prefs[name] = prefid;
+		})
+
+		var totalManageElement = $('input#id_station_set-TOTAL_FORMS');
+		var currentFileCount = parseInt(totalManageElement.val());
+
+		$('.station-form-container').html(
+			$('.station-each-form').sort(function(a,b) {
+				return parseInt($(a).find('.sort_by_line').val(), 10) - parseInt($(b).find('.sort_by_line').val(), 10)
+			})
+		)
+
+		$('.station-append').on('click', function() {
+			n = $('#station-name-list').val().split('\n')
+			k = $('#station-k-list').val().split('\n')
+			p = $('#station-pref-list').val().split('\n')
+			s = $('#station-status-list').val().split('\n')
+			$.each(n, function(i, val) {
+				kana = ""
+				roma = ""
+				if (k[i]) kana = k[i]
+
+				list = text(i, val, kana, currentFileCount);
+
+
+				$('.station-form-container').append(list)
+
+				pv = prefs[p[i]]
+				$("#id_station_set-" + currentFileCount + "-pref").val(pv)
+				$("#id_station_set-" + currentFileCount + "-status").val(s[i])
+
+				$('.station-each-form').each(function(i, form) {
+					$(form).find('.sort_by_line').val(i+1);
+				})
+
+				currentFileCount += 1;
+				totalManageElement.attr('value', currentFileCount);
+			})
+		})
+
+		$('div.station-form-container').sortable({
+			handle: ".sortable-handle",
+			update: function() {
+				$('.station-each-form').each(function(i, form) {
+					$(form).find('.sort_by_line').val(i+1);
+				})
+			}
+		})
+
+		//駅名検索をした時の挙動
+		$('.group-station-searchbox').keypress(function(e) {
+			if (e.which == 13) {
+				id = $(this).data("id")
+				namesearch(id);
+			}
+		})
+		$('.group-station-search').on('click', function() {
+			id = $(this).data("id")
+			namesearch(id)
+		})
+		function namesearch() {
+			text = $('#group-station-searchbox-'+id).val();
+			console.log(text)
+			var s = "/api/groupstationsearch/" + text + "/?format=json";
+			$('#group-station-select-'+id).empty();
+			$.getJSON(s, function(data) {
+				for (var i in data) {
+					var op_station = "<option value='" + data[i].station_pk + "' data-name='" + data[i].__str__ + "' data-line='" + data[i].line_pk + "' class='station-option'>" + data[i].__str__ + " ‐ " + data[i].lines + "</option>"
+					$('#group-station-select-'+id).append(op_station)
+				}
+			})
+		}
+
+		$(document).on('dblclick', '.station-option', function() {
+			group_id = $(this).val();
+			input = $(this).parent().data("id");
+			$('#'+input).val(group_id);
+			console.log(group_id, id)
+		})
+
+		$(document).ready(function() {
+			$('input,textarea[readonly]').not($('input[type="button"],input[type="submit"]')).keypress(function (e) {
+				if (!e) var e = window.event;
+				if (e.keyCode == 13) return false;
+			})
+		})
+
+		function text(i, val, kana, currentFileCount) {
+			list = "<div class='station-each-form'>"
+			list += "<div class='station-sortable'><span class='sortable-handle'>■</span></div>"
+			list += "<table class='station-form'>"
+			list += "<tr><th><label for='id_station_set-" + currentFileCount + "-name'>駅名:</label></th><td><input type='text' name='station_set-" + currentFileCount + "-name' value='" + val + "' maxlength='200' id='id_station_set-" + currentFileCount + "-name'></td></tr>"
+			list += "<tr><th><label for='id_station_set-" + currentFileCount + "-name_kana'>駅名読み:</label></th><td><input type='text' name='station_set-" + currentFileCount + "-name_kana' value='" + kana + "' maxlength='200' id='id_station_set-" + currentFileCount + "-name_kana'></td></tr>"
+			list += "<tr><th><label for='id_station_set-" + currentFileCount + "-sort_by_line'>路線ごとの並び順:</label></th><td><input type='text' name='station_set-" + currentFileCount + "-sort_by_line' value='0' class='sort_by_line' id='id_station_set-" + currentFileCount + "-sort_by_line'></td></tr>"
+			list += "<tr><th><label for='id_station_set-" + currentFileCount + "-open_ymd'>開業年月日:</label></th><td><input type='text' name='station_set-" + currentFileCount + "-open_ymd' id='id_station_set-" + currentFileCount + "-open_ymd'></td></tr>"
+			list += "<tr><th><label for='id_station_set-" + currentFileCount + "-close_ymd'>廃止年月日:</label></th><td><input type='text' name='station_set-" + currentFileCount + "-close_ymd' id='id_station_set-" + currentFileCount + "-close_ymd'></td></tr>"
+			list += "<tr><th><label for='id_station_set-" + currentFileCount + "-pref'>所在地:</label></th><td><select name='station_set-" + currentFileCount + "-pref' id='id_station_set-" + currentFileCount + "-pref' class='pref'><option value=''>---</option>"
+
+			$.each(prefs, function(name, prefid) {
+				list += "<option value='" + prefid + "'>" + name + "</option>"
+			})
+
+			list += "</select></td></tr>"
+			list += "<tr><th><label for='id_station_set-" + currentFileCount + "-status'>状態:</label></th><td><select name='station_set-" + currentFileCount + "-status' id='id_station_set-" + currentFileCount + "-status' class='status'>"
+
+			list += "<option value=''>---</option>"
+			list += "<option value='0' selected>運用中</option>"
+			list += "<option value='1'>運用前</option>"
+			list += "<option value='2'>廃止</option>"
+
+			list += "</select><input type='hidden' name='station_set-" + currentFileCount + "-line' value='{{ line.pk }}' id='id_station_set-" + currentFileCount + "-line'><input type='hidden' name='station_set-" + currentFileCount + "-id' id='id_station_set-" + currentFileCount + "-id'></td></tr>"
+			list += "</table></div>"
+
+			return list
+		}
+	})
+</script>
+{% endblock %}

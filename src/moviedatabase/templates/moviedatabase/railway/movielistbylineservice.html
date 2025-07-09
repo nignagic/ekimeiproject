@@ -1,0 +1,165 @@
+{% extends 'moviedatabase/base.html' %}
+
+{% block meta %}
+	<meta name="title" content="{{ lineservice }}｜駅名動画データベース">
+	<meta name="description" content="{{ lineservice }}を通る駅名動画を探す">
+	<meta property="og:site_name" content="駅名動画データベース">
+	<meta property="og:url" content="{{ request.build_absolute_uri }}">
+	<meta property="og:title" content="{{ lineservice }}｜駅名動画データベース">
+	<meta property="og:image" content="https://i.ytimg.com/vi/{{ movie_list.0.youtube_id }}/maxresdefault.jpg">
+	<meta property="og:image:width" content="1280">
+	<meta property="og:image:height" content="720">
+	<meta property="og:description" content="{{ lineservice }}を通る駅名動画を探す">
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:site" content="@STANMIC_DB">
+	<meta name="twitter:url" content="{{ request.build_absolute_uri }}">
+	<meta name="twitter:title" content="{{ lineservice }}｜駅名動画データベース">
+	<meta name="twitter:description" content="{{ lineservice }}を通る駅名動画を探す">
+	<meta name="twitter:image" content="https://i.ytimg.com/vi/{{ movie_list.0.youtube_id }}/maxresdefault.jpg">
+{% endblock %}
+
+{% block title %}{{ lineservice }}{% endblock %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/movielistbydetail.css' %}">
+<link rel="stylesheet" href="{% static 'moviedatabase/railway/movielistbyrailway.css' %}">
+<div class="background">
+	{% include 'moviedatabase/includes/header.html' %}
+	<div class="railway-header" {% if movie_list.0.youtube_id %}style="background: url(https://i.ytimg.com/vi/{{ movie_list.0.youtube_id }}/hqdefault.jpg) center; background-size: cover;"{% endif %}>
+		<div class="railway-header-content">
+			<span class="detail-category line-background">路線</span>
+			{% if lineservice.company.short_text %}<div class="company-link"><a href="{% url 'moviedatabase:lineservicelistbycompany' lineservice.company.pk %}">{{ lineservice.company.short_text }}</a></div>{% endif %}
+			<div class="main-name">
+				{{ lineservice.name }}
+				{% if lineservice.name_sub %}
+				<span class="main-name-small">({{ lineservice.name_sub }})</span>
+				{% endif %}
+				{% if lineservice.f_or_s %}
+				<span class="main-name-small">{{ lineservice.f_or_s }}</span>
+				{% endif %}
+				{% if lineservice.status_text %}
+				<span class="main-name-small">{{ lineservice.status_text }}</span>
+				{% endif %}
+			</div>
+			<div class="main-name-sub"></div>
+			<div class="sub-name black-background">
+				{% if lineservice.start_station and lineservice.end_station %}
+					{{ lineservice.start_station.name }}
+					{% if lineservice.start_station.status_text %}
+						<small>{{ lineservice.start_station.status_text }}</small>
+					{% endif %}
+					 ～
+					{{ lineservice.end_station.name }}
+					{% if lineservice.end_station.status_text %}
+						<small>{{ lineservice.end_station.status_text }}</small>
+					{% endif %}
+				{% endif %}
+			</div>
+			<div class="under-color gray-background">
+				{% for stationservice in stationservices %}
+				<div class="under-color-inner" style="background: {{ stationservice.get_color }};"></div>
+				{% endfor %}
+			</div>
+			<div class="line-bottom">
+				正式路線：
+				{% for line in lines %}
+					<a href="{% url 'moviedatabase:movielistbyline' line.pk %}">
+						{{ line.name }}
+						{% if line.name_sub %}
+						<small>({{ line.name_sub }})</small>
+						{% endif %}
+						{% if line.status_text %}
+						<small>{{ line.status_text }}</small>
+						{% endif %}
+					</a>
+					{% if forloop.last %}
+					{% else %}
+						<span>/</span>
+					{% endif %}
+				{% endfor %}
+			</div>
+			<div class="pref-list">
+				{% for pref in lineservice.prefs.all %}
+					<a href="{% url 'moviedatabase:lineservicelistbyprefecture' pref.pk %}">{{ pref }}</a>
+					{% if forloop.last %}
+					{% else %}
+						<span>/</span>
+					{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<div class="main-content">
+		<div class="main-content-inner">
+			<div class="railway-movie-list">
+				<div class="share-buttons" style="text-align: right;">
+					<a class="twitter-share-button"
+						href="https://twitter.com/intent/tweet"
+						data-text="{{ lineservice }}｜駅名動画データベース"
+						data-url="{{ request.build_absolute_uri }}"
+						data-hashtags="駅名動画DB">
+					</a>
+				</div>
+				<h4 class="movie-list-header line-border">動画一覧</h4>
+				{% include 'moviedatabase/includes/movielist.html' %}
+				{% include 'moviedatabase/includes/pagination.html' %}
+			</div>
+			<div class="railway-side">
+				<h4 class="side-header">駅一覧</h4>
+				{% if admin %}
+				<a href="{% url 'stationdata:stationserviceregister' lineservice.pk %}">駅情報編集</a>
+				{% endif %}
+				<ul class="station-list-ul">
+					{% for stationservice in stationservices %}
+						{% if stationservice.prev_group != stationservice.next_group %}
+							{% if stationservice.prev_group == stationservice %}
+							<li class="station-list-li">
+								<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.pk %}">
+									<div class="li-station-info black-background">
+										<div class="li-station-prev-color" style="background: {{ stationservice.prev_group.get_color }};"></div>
+										<div class="li-station-next-color" style="background: {{ stationservice.next_group.get_color }};"></div>
+										<div class="li-station-name">
+											{{ stationservice.name }}
+											{% if stationservice.status_text %}
+											<small>{{ stationservice.status_text }}</small>
+											{% endif %}
+										</div>
+										<div class="li-station-numbering">{{ stationservice.prev_group.get_numbering }}
+										{% if stationservice.prev_group.get_numbering != stationservice.next_group.get_numbering %}
+										 / {{ stationservice.next_group.get_numbering }}
+										 {% endif %}
+										</div>
+									</div>
+								</a>
+							</li>
+							{% endif %}
+						{% else %}
+							<li class="station-list-li">
+								<a href="{% url 'moviedatabase:movielistbystationservice' stationservice.pk %}">
+									<div class="li-station-info black-background">
+										<div class="li-station-prev-color" style="background: {{ stationservice.prev_group.get_color }};"></div>
+										<div class="li-station-next-color" style="background: {{ stationservice.next_group.get_color }};"></div>
+										<div class="li-station-name">
+											{{ stationservice.name }}
+											{% if stationservice.status_text %}
+											<small>{{ stationservice.status_text }}</small>
+											{% endif %}
+										</div>
+										<div class="li-station-numbering">{{ stationservice.prev_group.get_numbering }}</div>
+									</div>
+								</a>
+							</li>
+						{% endif %}
+						{% if admin %}
+						<a href="{% url 'stationdata:stationserviceedit' stationservice.pk %}" target="blank">所属路線変更</a>
+						{% endif %}
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+	</div>
+	{% include 'moviedatabase/includes/footer.html' %}
+</div>
+{% endblock %}
