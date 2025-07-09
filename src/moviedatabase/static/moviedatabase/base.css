@@ -337,11 +337,14 @@ input:focus {
 }
 
 .login-out-button {
+	display: inline;
 	background-color: #fff;
 	color: #338a9e;
+	border: none;
 	border-radius: 1rem;
 	margin: 0 0.5rem;
 	padding: 0.1rem 0.5rem;
+	cursor: pointer;
 }
 
 .header-content-lower {
