@@ -2,7 +2,7 @@ asgiref==3.7.2
 certifi==2023.11.17
 cffi==1.16.0
 charset-normalizer==3.3.2
-cryptography==42.0.0
+cryptography==44.0.1
 defusedxml==0.8.0rc2
 Django==5.0.1
 django-debug-toolbar==4.2.0
