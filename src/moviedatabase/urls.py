@@ -18,6 +18,7 @@ urlpatterns = [
 	path('startup_guide/', views.StartUpGuide, name='startupguide'),
 	path('line_customize_guide/', views.LineCustomizeGuide, name='linecustomizeguide'),
 	path('react-sample/', views.ReactSample, name='reactsample'),
+	path('app/', views.ReactSpaLauncher, name='reactspalauncher'),
 
 	path('test/', views.test, name='test'),
 	path('mail/', views.mail, name='mail'),
@@ -88,7 +89,9 @@ urlpatterns = [
 	path('api/partstation/<id>/', views.PartStationViewSet.as_view(), name='partstationapi'),
 	path('api/channel/<channel>/movie/', views.MoviebyChannelViewSet.as_view(), name='moviebychannelapi'),
 	path('api/movie/<movie>/', views.MovieViewSet.as_view(), name='movieapi'),
+	path('api/top/', views.TopPageViewSet.as_view(), name='topapi'),
 	path('api/creator/<creator>/name/', views.NamebyCreatorViewSet.as_view(), name='namebycreatorapi'),
 	path('api/name/<name>/', views.NameViewSet.as_view(), name='nameapi'),
 	path('api/movie_is_exist/<main_id>/', views.MovieIsExistViewSet.as_view(), name='movieisexistapi'),
 ]
+

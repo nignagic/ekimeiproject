@@ -16,6 +16,8 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env.bool('DEBUG',default=False)
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+# Local docker access via Vite proxy uses the internal service host.
+ALLOWED_HOSTS = list(dict.fromkeys(ALLOWED_HOSTS + ['web', 'stanmicdb_web', '0.0.0.0']))
 
 
 # Database

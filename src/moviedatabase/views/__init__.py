@@ -1,4 +1,4 @@
-# Create your views here.
+﻿# Create your views here.
 
 from .staticView import *
 from .accountView import *
@@ -12,3 +12,5 @@ from .popupView import *
 from .APIView import *
 
 from .testView import *
+from .spaView import *
+

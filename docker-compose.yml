@@ -1,5 +1,4 @@
-version: '3'
-services:
+﻿services:
   web:
     container_name: "stanmicdb_web"
     build:
@@ -12,6 +11,21 @@ services:
       - "8000:8000"
     depends_on:
       - db
+
+  frontend:
+    container_name: "stanmicdb_frontend"
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
+    environment:
+      BACKEND_HOST: http://web:8000
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "5173:5173"
+    depends_on:
+      - web
+
   db:
     container_name: "stanmicdb_db"
     image: mysql:8.3
@@ -23,8 +37,8 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - mysql:/var/lib/mysql
-    ports: 
+    ports:
       - "3306"
-        
+
 volumes:
   mysql:

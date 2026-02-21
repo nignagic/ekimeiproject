@@ -13,3 +13,4 @@ data-csv
 
 nginx/ssl_certs/
 src/static/
+frontend/node_modules/

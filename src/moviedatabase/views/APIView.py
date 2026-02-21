@@ -1,7 +1,80 @@
+import datetime
+import re
+import pytz
+
+from django.conf import settings
+from django.urls import reverse
+from django.utils import timezone
 from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from .. import serializer
 
 from ..models import *
+
+def _today_movies():
+	now = datetime.datetime.now(pytz.timezone('Asia/Tokyo'))
+	return Movie.objects.filter(published_at_month=now.month, published_at_day=now.day)
+
+def _serialize_movie(movie):
+	if not movie:
+		return None
+
+	published_at = movie.published_at.astimezone(pytz.timezone('Asia/Tokyo')) if movie.published_at else None
+	return {
+		'main_id': movie.main_id,
+		'title': movie.title,
+		'youtube_id': movie.youtube_id,
+		'published_at': published_at.isoformat() if published_at else None,
+		'published_at_text': published_at.strftime('%Y/%m/%d') if published_at else '',
+		'is_collab': movie.get_is_collab_display(),
+		'categories': movie.category(),
+		'channel': movie.channel.name if movie.channel else '',
+		'duration': movie.get_duration() if movie.duration else '',
+		'detail_url': reverse('moviedatabase:detail', kwargs={'main_id': movie.main_id}),
+	}
+
+class TopPageViewSet(APIView):
+	def get(self, request):
+		movies = Movie.objects.all().exclude(is_active=False)[:6]
+		update_list = MovieUpdateInformation.objects.all()[:10]
+		notice_list = NoticeInformation.objects.all()[:10]
+		top_img = TopImage.objects.all().order_by('?').first()
+		today_movie = _today_movies().order_by('?').first()
+
+		def to_jst_text(value):
+			if not value:
+				return ''
+			return timezone.localtime(value, pytz.timezone('Asia/Tokyo')).strftime('%Y/%m/%d')
+
+		payload = {
+			'today_text': timezone.localtime(timezone.now(), pytz.timezone('Asia/Tokyo')).strftime('%m/%d'),
+			'top_image_url': f"{settings.STATIC_URL}moviedatabase/img-top/{top_img.file_name}" if top_img and top_img.file_name else '',
+			'movies': [_serialize_movie(movie) for movie in movies],
+			'today_movie': _serialize_movie(today_movie),
+			'notices': [
+				{
+					'id': info.pk,
+					'reg_date': to_jst_text(info.reg_date),
+					'category': info.category or '',
+					'head': info.head or '',
+					'url': reverse('moviedatabase:notice', kwargs={'pk': info.pk}),
+				}
+				for info in notice_list
+			],
+			'updates': [
+				{
+					'reg_date': to_jst_text(info.reg_date),
+					'label': f"動画{info.get_is_create_display()}" if info.movie else f"製作者{info.get_is_create_display()}",
+					'text': info.text(),
+					'url': reverse('moviedatabase:detail', kwargs={'main_id': info.movie.main_id}) if info.movie else (
+						reverse('moviedatabase:movielistbycreator', kwargs={'creator': info.creator.pk}) if info.creator else ''
+					),
+				}
+				for info in update_list
+			],
+		}
+		return Response(payload)
 
 class StationServicebyLineServiceViewSet(generics.ListAPIView):
 	serializer_class = serializer.StationServiceSerializer
@@ -107,7 +180,7 @@ parentheses = "【(『「[<《{≪〈〔（＜［｛｟"
 parentheses_end = "】)』」]>》}≫〉〕）＞］｝｠"
 
 def text_normalization(s):
-	s = re.sub("\<.+?\>", "|", s)
+	s = re.sub(r"\<.+?\>", "|", s)
 	s = s.replace(' ', '|')
 	for h in hyphen:
 		s = s.replace(h, '|')
