@@ -85,3 +85,6 @@ def StartUpGuide(request):
 
 def LineCustomizeGuide(request):
 	return render(request, 'moviedatabase/static-page/line-customize-guide.html')
+
+def ReactSample(request):
+	return render(request, 'moviedatabase/react_sample.html')

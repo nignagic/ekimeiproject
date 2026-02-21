@@ -17,6 +17,7 @@ urlpatterns = [
 	path('guide_account_creator/', views.GuideAccountCreator, name='guideaccountcreator'),
 	path('startup_guide/', views.StartUpGuide, name='startupguide'),
 	path('line_customize_guide/', views.LineCustomizeGuide, name='linecustomizeguide'),
+	path('react-sample/', views.ReactSample, name='reactsample'),
 
 	path('test/', views.test, name='test'),
 	path('mail/', views.mail, name='mail'),

@@ -1,0 +1,53 @@
+{% extends 'moviedatabase/base.html' %}
+{% load static %}
+
+{% block title %}Reactサンプル{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'moviedatabase/react_sample.css' %}">
+<div class="react-sample-page">
+	{% include 'moviedatabase/includes/header.html' %}
+	<main class="react-sample-main">
+		<h1>Reactで作るトップメニュー（サンプル）</h1>
+		<p class="react-sample-lead">既存トップページの「鉄道から探す / 作者から探す / 楽曲から探す」を参考に、Reactでシンプルなカードメニューを描画しています。</p>
+		<div id="react-sample-root"></div>
+	</main>
+	{% include 'moviedatabase/includes/footer.html' %}
+</div>
+{% endblock %}
+
+{% block extrajs %}
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script>
+	(() => {
+		const menuItems = [
+			{ title: '鉄道から探す', description: '路線・駅・都道府県などから駅名動画を検索します。', url: '{% url "moviedatabase:railwaytop" %}' },
+			{ title: '作者から探す', description: '作者ごとの動画一覧や関連情報を確認できます。', url: '{% url "moviedatabase:creatortop" %}' },
+			{ title: '楽曲から探す', description: '使用楽曲から駅名動画を探せます。', url: '{% url "moviedatabase:musictop" %}' }
+		];
+
+		function MenuCard(props) {
+			return React.createElement(
+				'a',
+				{ className: 'react-menu-card', href: props.url },
+				React.createElement('h2', null, props.title),
+				React.createElement('p', null, props.description)
+			);
+		}
+
+		function App() {
+			return React.createElement(
+				'div',
+				{ className: 'react-menu-grid' },
+				menuItems.map((item) => React.createElement(MenuCard, { key: item.title, ...item }))
+			);
+		}
+
+		const rootElement = document.getElementById('react-sample-root');
+		if (rootElement) {
+			ReactDOM.createRoot(rootElement).render(React.createElement(App));
+		}
+	})();
+</script>
+{% endblock %}

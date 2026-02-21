@@ -1,0 +1,53 @@
+.react-sample-page {
+	background: #f4f6fa;
+	min-height: 100vh;
+}
+
+.react-sample-main {
+	max-width: 980px;
+	margin: 0 auto;
+	padding: 2rem 1rem 3rem;
+}
+
+.react-sample-main h1 {
+	font-size: 1.8rem;
+	margin-bottom: 0.75rem;
+}
+
+.react-sample-lead {
+	margin-bottom: 1.5rem;
+	color: #444;
+}
+
+.react-menu-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 1rem;
+}
+
+.react-menu-card {
+	display: block;
+	background: #fff;
+	padding: 1rem;
+	border-radius: 12px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	text-decoration: none;
+	color: #222;
+	transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.react-menu-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.react-menu-card h2 {
+	font-size: 1.1rem;
+	margin-bottom: 0.5rem;
+}
+
+.react-menu-card p {
+	font-size: 0.92rem;
+	line-height: 1.6;
+	margin: 0;
+}
