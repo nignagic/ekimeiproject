@@ -5,95 +5,8 @@ const LEGACY_BASE = "http://localhost:8000";
 const QUESTIONS_PER_PLAY = 5;
 const BASE_POINT = 10;
 
-const STATION_CHAINS = [
-  {
-    line: "山手線",
-    stations: [
-      { name: "東京", status: "active" },
-      { name: "有楽町", status: "active" },
-      { name: "新橋", status: "active" },
-      { name: "浜松町", status: "active" },
-      { name: "田町", status: "active" },
-      { name: "高輪ゲートウェイ", status: "active" },
-      { name: "品川", status: "active" },
-    ],
-  },
-  {
-    line: "中央線快速",
-    stations: [
-      { name: "東京", status: "active" },
-      { name: "神田", status: "active" },
-      { name: "御茶ノ水", status: "active" },
-      { name: "四ツ谷", status: "active" },
-      { name: "新宿", status: "active" },
-      { name: "中野", status: "active" },
-      { name: "吉祥寺", status: "active" },
-    ],
-  },
-  {
-    line: "東急東横線",
-    stations: [
-      { name: "渋谷", status: "active" },
-      { name: "代官山", status: "active" },
-      { name: "中目黒", status: "active" },
-      { name: "祐天寺", status: "active" },
-      { name: "学芸大学", status: "active" },
-      { name: "都立大学", status: "active" },
-      { name: "自由が丘", status: "active" },
-      { name: "田園調布", status: "active" },
-    ],
-  },
-  {
-    line: "サンプル廃駅付き路線",
-    stations: [
-      { name: "甲", status: "active" },
-      { name: "乙", status: "closed" },
-      { name: "丙", status: "active" },
-      { name: "丁", status: "active" },
-      { name: "戊", status: "closed" },
-      { name: "己", status: "active" },
-    ],
-  },
-];
-
 function normalizeText(value) {
   return value.replace(/\s+/g, "").trim();
-}
-
-function sampleQuestions(candidates, count) {
-  const pool = [...candidates];
-  for (let i = pool.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [pool[i], pool[j]] = [pool[j], pool[i]];
-  }
-  return pool.slice(0, Math.min(count, pool.length));
-}
-
-function makeQuestionPool(includeClosedStations) {
-  const candidates = [];
-
-  STATION_CHAINS.forEach((chain) => {
-    for (let i = 1; i < chain.stations.length - 1; i += 1) {
-      const prev = chain.stations[i - 1];
-      const current = chain.stations[i];
-      const next = chain.stations[i + 1];
-
-      const allActive =
-        prev.status === "active" && current.status === "active" && next.status === "active";
-      if (!includeClosedStations && !allActive) {
-        continue;
-      }
-
-      candidates.push({
-        line: chain.line,
-        prev: prev.name,
-        answer: current.name,
-        next: next.name,
-      });
-    }
-  });
-
-  return candidates;
 }
 
 function Home() {
@@ -250,7 +163,7 @@ function Home() {
 
 function StationQuiz() {
   const [includeClosedStations, setIncludeClosedStations] = useState(false);
-  const [questions, setQuestions] = useState(() => sampleQuestions(makeQuestionPool(false), QUESTIONS_PER_PLAY));
+  const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answerText, setAnswerText] = useState("");
   const [revealedChars, setRevealedChars] = useState(0);
@@ -259,14 +172,13 @@ function StationQuiz() {
   const [score, setScore] = useState(0);
   const [resultMessage, setResultMessage] = useState("");
   const [isAnswered, setIsAnswered] = useState(false);
+  const [loadingQuestions, setLoadingQuestions] = useState(true);
+  const [loadingError, setLoadingError] = useState("");
 
   const currentQuestion = questions[currentIndex];
-  const isGameFinished = questions.length === 0 || currentIndex >= questions.length;
+  const isGameFinished = !loadingQuestions && questions.length > 0 && currentIndex >= questions.length;
 
-  const restartGame = (nextIncludeClosed) => {
-    const includeClosed = nextIncludeClosed ?? includeClosedStations;
-    const pool = makeQuestionPool(includeClosed);
-    setQuestions(sampleQuestions(pool, QUESTIONS_PER_PLAY));
+  const resetQuestionState = () => {
     setCurrentIndex(0);
     setAnswerText("");
     setRevealedChars(0);
@@ -275,6 +187,40 @@ function StationQuiz() {
     setScore(0);
     setResultMessage("");
     setIsAnswered(false);
+  };
+
+  const fetchQuestions = (nextIncludeClosed) => {
+    setLoadingQuestions(true);
+    setLoadingError("");
+
+    fetch(`/api/station-quiz/questions/?count=${QUESTIONS_PER_PLAY}&include_closed=${nextIncludeClosed ? "1" : "0"}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((json) => {
+        setQuestions(Array.isArray(json.questions) ? json.questions : []);
+        resetQuestionState();
+      })
+      .catch((err) => {
+        setQuestions([]);
+        setLoadingError(`問題の取得に失敗しました: ${err.message}`);
+      })
+      .finally(() => {
+        setLoadingQuestions(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchQuestions(includeClosedStations);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const restartGame = (nextIncludeClosed) => {
+    const includeClosed = nextIncludeClosed ?? includeClosedStations;
+    fetchQuestions(includeClosed);
   };
 
   const openLengthHint = () => {
@@ -347,12 +293,19 @@ function StationQuiz() {
               restartGame(nextChecked);
             }}
           />
-          廃駅を含む（将来モードの先行スイッチ）
+          廃駅を含む
         </label>
         <button type="button" onClick={() => restartGame()}>
           最初からプレイ
         </button>
       </div>
+
+      {loadingQuestions ? <p>問題を読み込み中...</p> : null}
+      {loadingError ? <p className="error">{loadingError}</p> : null}
+
+      {!loadingQuestions && !loadingError && questions.length === 0 ? (
+        <p>出題可能な問題が見つかりませんでした。</p>
+      ) : null}
 
       {isGameFinished ? (
         <div className="quiz-finished">
@@ -361,7 +314,9 @@ function StationQuiz() {
             もう一度プレイ
           </button>
         </div>
-      ) : (
+      ) : null}
+
+      {!loadingQuestions && !loadingError && currentQuestion && currentIndex < questions.length ? (
         <>
           <p className="quiz-progress">
             第 {currentIndex + 1} 問 / {questions.length} 問 ・合計 {score}pt
@@ -407,7 +362,7 @@ function StationQuiz() {
             </button>
           ) : null}
         </>
-      )}
+      ) : null}
     </section>
   );
 }

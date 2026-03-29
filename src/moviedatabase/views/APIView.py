@@ -1,4 +1,5 @@
 import datetime
+import random
 import re
 import pytz
 
@@ -33,6 +34,59 @@ def _serialize_movie(movie):
 		'duration': movie.get_duration() if movie.duration else '',
 		'detail_url': reverse('moviedatabase:detail', kwargs={'main_id': movie.main_id}),
 	}
+
+
+
+class StationQuizQuestionView(APIView):
+	def get(self, request):
+		include_closed = request.GET.get('include_closed', '').lower() in ['1', 'true', 'yes', 'on']
+		count_text = request.GET.get('count', '5')
+		try:
+			count = max(1, min(int(count_text), 20))
+		except ValueError:
+			count = 5
+
+		stations = Station.objects.select_related('line').exclude(line__isnull=True).exclude(name__isnull=True).exclude(name='').order_by('line_id', 'sort_by_line', 'id')
+
+		by_line = {}
+		for station in stations:
+			line_id = station.line_id
+			if line_id not in by_line:
+				by_line[line_id] = []
+			by_line[line_id].append(station)
+
+		candidates = []
+		for line_stations in by_line.values():
+			if len(line_stations) < 3:
+				continue
+
+			for idx in range(1, len(line_stations) - 1):
+				prev_station = line_stations[idx - 1]
+				current_station = line_stations[idx]
+				next_station = line_stations[idx + 1]
+
+				if not include_closed:
+					if prev_station.status == 2 or current_station.status == 2 or next_station.status == 2:
+						continue
+					if (prev_station.line and prev_station.line.status == 2) or (current_station.line and current_station.line.status == 2) or (next_station.line and next_station.line.status == 2):
+						continue
+
+				candidates.append({
+					'line': current_station.line.with_sub() if current_station.line else '',
+					'prev': prev_station.name,
+					'answer': current_station.name,
+					'next': next_station.name,
+				})
+
+		random.shuffle(candidates)
+		selected = candidates[:count]
+
+		return Response({
+			'questions': selected,
+			'total_candidates': len(candidates),
+			'count': len(selected),
+			'include_closed': include_closed,
+		})
 
 class TopPageViewSet(APIView):
 	def get(self, request):
