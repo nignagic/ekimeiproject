@@ -190,3 +190,71 @@ a {
 .error {
   color: #a3262a;
 }
+
+.station-quiz {
+  display: grid;
+  gap: 12px;
+}
+
+.quiz-note,
+.quiz-progress {
+  margin: 0;
+  color: #4a5662;
+}
+
+.quiz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.quiz-question-box {
+  border: 1px solid #ccd5df;
+  background: #f9fcff;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.quiz-question-box p {
+  margin: 4px 0;
+}
+
+.quiz-answer-form {
+  display: flex;
+  gap: 8px;
+}
+
+.quiz-answer-form input {
+  flex: 1;
+  min-width: 220px;
+  padding: 10px;
+  border: 1px solid #ccd5df;
+  border-radius: 8px;
+}
+
+.quiz-answer-form button,
+.quiz-controls button,
+.quiz-finished button,
+.quiz-hints button,
+.station-quiz > button {
+  border: 1px solid #b7c3cf;
+  border-radius: 8px;
+  background: #f4f8fb;
+  padding: 8px 12px;
+}
+
+.quiz-hints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quiz-hint-list {
+  margin: 0;
+}
+
+.quiz-result {
+  margin: 0;
+  font-weight: 700;
+}
