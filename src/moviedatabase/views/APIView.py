@@ -88,6 +88,37 @@ class StationQuizQuestionView(APIView):
 			'include_closed': include_closed,
 		})
 
+
+
+class StationQuizLineModeView(APIView):
+	def get(self, request):
+		include_closed = request.GET.get('include_closed', '').lower() in ['1', 'true', 'yes', 'on']
+
+		stations = Station.objects.select_related('line').exclude(line__isnull=True).exclude(name__isnull=True).exclude(name='').order_by('line_id', 'sort_by_line', 'id')
+
+		by_line = {}
+		for station in stations:
+			if not include_closed and (station.status == 2 or (station.line and station.line.status == 2)):
+				continue
+			if station.line_id not in by_line:
+				by_line[station.line_id] = {
+					'line': station.line.with_sub() if station.line else '',
+					'stations': [],
+				}
+			by_line[station.line_id]['stations'].append(station.name)
+
+		line_candidates = [item for item in by_line.values() if len(item['stations']) >= 2]
+		if len(line_candidates) == 0:
+			return Response({'line': '', 'stations': [], 'include_closed': include_closed})
+
+		selected = random.choice(line_candidates)
+		return Response({
+			'line': selected['line'],
+			'stations': selected['stations'],
+			'station_count': len(selected['stations']),
+			'include_closed': include_closed,
+		})
+
 class TopPageViewSet(APIView):
 	def get(self, request):
 		movies = Movie.objects.all().exclude(is_active=False)[:6]

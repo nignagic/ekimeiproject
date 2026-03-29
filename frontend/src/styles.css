@@ -258,3 +258,50 @@ a {
   margin: 0;
   font-weight: 700;
 }
+
+.mode-switch {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.mode-switch button {
+  border: 1px solid #b7c3cf;
+  border-radius: 999px;
+  background: #f4f8fb;
+  padding: 8px 12px;
+}
+
+.mode-switch button.active {
+  background: #ddefff;
+  border-color: #95bde3;
+}
+
+.mode-card {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #dbe2ea;
+  border-radius: 12px;
+  background: #ffffffb8;
+}
+
+.answer-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.answer-chip {
+  border: 1px dashed #9ab0c7;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 13px;
+  background: #f7fbff;
+}
+
+.answer-chip.answered {
+  border-style: solid;
+  background: #e8f7e8;
+  border-color: #9cca9c;
+}
